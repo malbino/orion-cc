@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../../WEB-INF/systemTemplate.xhtml">
+
+            <ui:define name="content">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 ">
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <h2>Nueva Carrera <small>registrar nueva carrera</small></h2>
+
+                                <div class="clearfix"></div>
+                            </div>
+
+                            <div class="x_content">
+                                <h:form id="form">
+                                    <p:messages/>
+
+                                    <div class="ui-g ui-fluid">
+                                        <div class="ui-g-12 ui-md-4">
+                                            <p:outputLabel for="codigo" value="Codigo:" style="font-size: small"/>
+                                            <p:inputText id="codigo" value="#{CarreraController.nuevaCarrera.codigo}" required="true" requiredMessage="* Codigo requerido." />
+                                        </div>
+
+                                        <div class="ui-g-12 ui-md-4">
+                                            <p:outputLabel for="nombre" value="Nombre:" style="font-size: small"/>
+                                            <p:inputText id="nombre" value="#{CarreraController.nuevaCarrera.nombre}" required="true" requiredMessage="* Nombre requerido." />
+                                        </div>
+
+                                        <div class="ui-g-12 ui-md-4">
+                                            <p:outputLabel for="nivelAcademico" value="Nivel académico:" style="font-size: small"/>
+                                            <p:selectOneMenu id="nivelAcademico" value="#{CarreraController.nuevaCarrera.nivelAcademico}" converter="#{NivelAcademicoConverter}" autoWidth="false" required="true" requiredMessage="* Nivel académico requerido."> 
+                                                <f:selectItem itemLabel="" itemValue="" />
+                                                <f:selectItems value="#{CarreraController.listaNivelesAcademicos()}" var="nivelAcademico" itemLabel="#{nivelAcademico.toString()}" itemValue="#{nivelAcademico}"/>  
+                                            </p:selectOneMenu> 
+                                        </div>
+
+                                        <div class="ui-g-12 ui-md-4">
+                                            <p:outputLabel for="version" value="Versión:" style="font-size: small"/>
+                                            <p:inputText id="version" value="#{CarreraController.nuevaCarrera.version}" required="true" requiredMessage="* Versión requerida." />
+                                        </div>
+
+                                        <div class="ui-g-12 ui-md-4">
+                                            <p:outputLabel for="creditajeMatricula" value="Creditaje matricula:" style="font-size: small"/>
+                                            <p:inputText id="creditajeMatricula" value="#{CarreraController.nuevaCarrera.creditajeMatricula}" required="true" requiredMessage="* Creditaje matricula requerido." />
+                                        </div>
+
+                                        <div class="ui-g-12 ui-md-4">
+                                            <p:outputLabel for="jefeCarrera" value="Jefe Carrera:" style="font-size: small"/>
+                                            <p:autoComplete id="jefeCarrera" value="#{CarreraController.nuevaCarrera.jefeCarrera}" completeMethod="#{CarreraController.completarEmpleado}" minQueryLength="3" queryDelay="1000" scrollHeight="300"
+                                                            var="jefeCarrera" itemLabel="#{jefeCarrera.toString()}" itemValue="#{jefeCarrera}" converter="#{EmpleadoConverter}" forceSelection="true"
+                                                            required="true" requiredMessage="* Jefe de Carrera requerido."/>
+                                        </div>
+                                    </div>
+
+                                    <div class="ui-g ui-fluid">
+                                        <div class="ui-g-12 ui-md-2">
+                                            <p:commandButton value="Guardar" icon="fa fa-save" actionListener="#{CarreraController.crearCarrera()}" update="form"/>
+                                        </div>
+
+                                        <div class="ui-g-12 ui-md-2">
+                                            <p:commandButton value="Cancelar" icon="fa fa-remove" process="@this" actionListener="#{CarreraController.toCarreras()}"/>
+                                        </div>
+                                    </div>
+                                </h:form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ui:define>
+
+        </ui:composition>
+    </body>
+</html>

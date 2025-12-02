@@ -1,0 +1,307 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package org.malbino.orion.servlets;
+
+import com.itextpdf.text.BadElementException;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+import java.io.IOException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.ejb.EJB;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.malbino.orion.entities.Carrera;
+import org.malbino.orion.entities.Modulo;
+import org.malbino.orion.facades.ModuloFacade;
+import org.malbino.orion.util.Redondeo;
+
+/**
+ *
+ * @author tincho
+ */
+@WebServlet(name = "PlanEstudios", urlPatterns = {"/reportes/planEstudios/PlanEstudios"})
+public class PlanEstudios extends HttpServlet {
+
+    private static final String CONTENIDO_PDF = "application/pdf";
+
+    private static final Font TITULO = FontFactory.getFont(FontFactory.HELVETICA, 14, Font.BOLD, BaseColor.BLACK);
+    private static final Font SUBTITULO = FontFactory.getFont(FontFactory.HELVETICA, 12, Font.NORMAL, BaseColor.BLACK);
+    private static final Font NEGRITA = FontFactory.getFont(FontFactory.HELVETICA, 8, Font.BOLD, BaseColor.BLACK);
+    private static final Font NORMAL = FontFactory.getFont(FontFactory.HELVETICA, 8, Font.NORMAL, BaseColor.BLACK);
+
+    private static final int MARGEN_IZQUIERDO = -40;
+    private static final int MARGEN_DERECHO = -40;
+    private static final int MARGEN_SUPERIOR = 30;
+    private static final int MARGEN_INFERIOR = 30;
+
+    @EJB
+    ModuloFacade moduloFacade;
+
+    @Override
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        this.generarPDF(request, response);
+    }
+
+    @Override
+    public void doPost(HttpServletRequest request, HttpServletResponse response) {
+        this.generarPDF(request, response);
+    }
+
+    public void generarPDF(HttpServletRequest request, HttpServletResponse response) {
+        Carrera carrera = (Carrera) request.getSession().getAttribute("carrera");
+
+        if (carrera != null) {
+            try {
+                response.setContentType(CONTENIDO_PDF);
+
+                Document document = new Document(PageSize.LETTER, MARGEN_IZQUIERDO, MARGEN_DERECHO, MARGEN_SUPERIOR, MARGEN_INFERIOR);
+                PdfWriter.getInstance(document, response.getOutputStream());
+
+                document.open();
+
+                document.add(titulo(carrera));
+                document.add(contenido(carrera));
+
+                document.close();
+            } catch (IOException | DocumentException ex) {
+                Logger.getLogger(PlanEstudios.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
+    }
+
+    public PdfPTable titulo(Carrera carrera) throws BadElementException, IOException {
+        PdfPTable table = new PdfPTable(100);
+
+        //cabecera
+        String realPath = getServletContext().getRealPath("/resources/uploads/" + carrera.getInstituto().getLogo());
+        Image image = Image.getInstance(realPath);
+        image.scaleToFit(70, 70);
+        image.setAlignment(Image.ALIGN_CENTER);
+        PdfPCell cell = new PdfPCell();
+        cell.addElement(image);
+        cell.setRowspan(4);
+        cell.setColspan(20);
+        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        cell.setBorder(Rectangle.NO_BORDER);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase("PLAN DE ESTUDIOS,", SUBTITULO));
+        cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+        cell.setColspan(80);
+        cell.setBorder(Rectangle.NO_BORDER);
+        cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase(carrera.toString(), TITULO));
+        cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+        cell.setColspan(80);
+        cell.setBorder(Rectangle.NO_BORDER);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase(carrera.getInstituto().getNombre(), SUBTITULO));
+        cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+        cell.setColspan(80);
+        cell.setBorder(Rectangle.NO_BORDER);
+        table.addCell(cell);
+
+        return table;
+    }
+
+    public PdfPTable contenido(Carrera carrera) throws BadElementException, IOException {
+        PdfPTable table = new PdfPTable(100);
+
+        PdfPCell cell = new PdfPCell(new Phrase(" ", NEGRITA));
+        cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+        cell.setColspan(100);
+        cell.setBorder(Rectangle.NO_BORDER);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase("Nro", NEGRITA));
+        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        cell.setColspan(5);
+        cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+        cell.setFixedHeight(30);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase("Codigo", NEGRITA));
+        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        cell.setColspan(10);
+        cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+        cell.setFixedHeight(30);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase("Modulo", NEGRITA));
+        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        cell.setColspan(35);
+        cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+        cell.setFixedHeight(30);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase("Prerequisitos", NEGRITA));
+        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        cell.setColspan(10);
+        cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+        cell.setFixedHeight(30);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase("Horas", NEGRITA));
+        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        cell.setColspan(10);
+        cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+        cell.setFixedHeight(30);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase("Creditaje modulo", NEGRITA));
+        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        cell.setColspan(10);
+        cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+        cell.setFixedHeight(30);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase("Precio credito Bs.", NEGRITA));
+        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        cell.setColspan(10);
+        cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+        cell.setFixedHeight(30);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase("Subtotal Bs.", NEGRITA));
+        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        cell.setColspan(10);
+        cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+        cell.setFixedHeight(30);
+        table.addCell(cell);
+
+        Integer sumatoriaCreditajeModulo = 0;
+        Integer sumatoriaSubtotal = 0;
+
+        List<Modulo> listaModulos = moduloFacade.listaModulos(carrera);
+        for (int i = 0; i < listaModulos.size(); i++) {
+            Modulo modulo = listaModulos.get(i);
+
+            cell = new PdfPCell(new Phrase(String.valueOf(i + 1), NORMAL));
+            cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+            cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+            cell.setColspan(5);
+            cell.setFixedHeight(20);
+            table.addCell(cell);
+
+            cell = new PdfPCell(new Phrase(String.valueOf(modulo.getCodigo()), NORMAL));
+            cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+            cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+            cell.setColspan(10);
+            cell.setFixedHeight(20);
+            table.addCell(cell);
+
+            cell = new PdfPCell(new Phrase(modulo.getNombre(), NORMAL));
+            cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+            cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+            cell.setColspan(35);
+            cell.setFixedHeight(20);
+            table.addCell(cell);
+
+            cell = new PdfPCell(new Phrase(modulo.prerequisitosToString(), NORMAL));
+            cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+            cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+            cell.setColspan(10);
+            cell.setFixedHeight(20);
+            table.addCell(cell);
+
+            cell = new PdfPCell(new Phrase(modulo.getHoras().toString(), NORMAL));
+            cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+            cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+            cell.setColspan(10);
+            cell.setFixedHeight(20);
+            table.addCell(cell);
+
+            sumatoriaCreditajeModulo += modulo.getCreditajeModulo();
+            cell = new PdfPCell(new Phrase(modulo.getCreditajeModulo().toString(), NORMAL));
+            cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+            cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+            cell.setColspan(10);
+            cell.setFixedHeight(20);
+            table.addCell(cell);
+
+            cell = new PdfPCell(new Phrase(Redondeo.formatear_csm(carrera.getInstituto().getPrecioCredito()), NORMAL));
+            cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+            cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+            cell.setColspan(10);
+            cell.setFixedHeight(20);
+            table.addCell(cell);
+
+            Integer subtotal = modulo.getCreditajeModulo() * modulo.getCarrera().getInstituto().getPrecioCredito();
+            sumatoriaSubtotal += subtotal;
+            cell = new PdfPCell(new Phrase(Redondeo.formatear_csm(subtotal), NORMAL));
+            cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
+            cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+            cell.setColspan(10);
+            cell.setFixedHeight(20);
+            table.addCell(cell);
+        }
+
+        cell = new PdfPCell(new Phrase(" ", NORMAL));
+        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        cell.setColspan(60);
+        cell.setFixedHeight(20);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase("Totales", NEGRITA));
+        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        cell.setColspan(10);
+        cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+        cell.setFixedHeight(20);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase(sumatoriaCreditajeModulo.toString(), NORMAL));
+        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        cell.setColspan(10);
+        cell.setFixedHeight(20);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase(Redondeo.formatear_csm(carrera.getInstituto().getPrecioCredito()), NORMAL));
+        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        cell.setColspan(10);
+        cell.setFixedHeight(20);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase(Redondeo.formatear_csm(sumatoriaSubtotal), NORMAL));
+        cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
+        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        cell.setColspan(10);
+        cell.setFixedHeight(20);
+        table.addCell(cell);
+
+        return table;
+    }
+}

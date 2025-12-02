@@ -1,0 +1,221 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package org.malbino.orion.entities;
+
+import java.io.Serializable;
+import java.util.Objects;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import org.malbino.orion.enums.Caracter;
+
+/**
+ *
+ * @author malbino
+ */
+@Entity
+@Table(name = "instituto")
+public class Instituto implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id_instituto;
+
+    private String logo;
+    private String codigo;
+    private String nombre;
+    private String abreviatura;
+    private String email;
+    private Caracter caracter;
+    private Integer precioCredito;
+
+    @JoinColumn(name = "id_rector")
+    @ManyToOne
+    private Empleado rector;
+
+    @JoinColumn(name = "id_directoracademico")
+    @ManyToOne
+    private Empleado directorAcademico;
+
+    public Instituto() {
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 37 * hash + Objects.hashCode(this.id_instituto);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Instituto other = (Instituto) obj;
+        if (!Objects.equals(this.id_instituto, other.id_instituto)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return nombre;
+    }
+
+    /**
+     * @return the id_instituto
+     */
+    public Integer getId_instituto() {
+        return id_instituto;
+    }
+
+    /**
+     * @param id_instituto the id_instituto to set
+     */
+    public void setId_instituto(Integer id_instituto) {
+        this.id_instituto = id_instituto;
+    }
+
+    /**
+     * @return the logo
+     */
+    public String getLogo() {
+        return logo;
+    }
+
+    /**
+     * @param logo the logo to set
+     */
+    public void setLogo(String logo) {
+        this.logo = logo;
+    }
+
+    /**
+     * @return the codigo
+     */
+    public String getCodigo() {
+        return codigo;
+    }
+
+    /**
+     * @param codigo the codigo to set
+     */
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
+
+    /**
+     * @return the nombre
+     */
+    public String getNombre() {
+        return nombre;
+    }
+
+    /**
+     * @param nombre the nombre to set
+     */
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    /**
+     * @return the abreviatura
+     */
+    public String getAbreviatura() {
+        return abreviatura;
+    }
+
+    /**
+     * @param abreviatura the abreviatura to set
+     */
+    public void setAbreviatura(String abreviatura) {
+        this.abreviatura = abreviatura;
+    }
+
+    /**
+     * @return the email
+     */
+    public String getEmail() {
+        return email;
+    }
+
+    /**
+     * @param email the email to set
+     */
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    /**
+     * @return the caracter
+     */
+    public Caracter getCaracter() {
+        return caracter;
+    }
+
+    /**
+     * @param caracter the caracter to set
+     */
+    public void setCaracter(Caracter caracter) {
+        this.caracter = caracter;
+    }
+
+    /**
+     * @return the precioCredito
+     */
+    public Integer getPrecioCredito() {
+        return precioCredito;
+    }
+
+    /**
+     * @param precioCredito the precioCredito to set
+     */
+    public void setPrecioCredito(Integer precioCredito) {
+        this.precioCredito = precioCredito;
+    }
+
+    /**
+     * @return the rector
+     */
+    public Empleado getRector() {
+        return rector;
+    }
+
+    /**
+     * @param rector the rector to set
+     */
+    public void setRector(Empleado rector) {
+        this.rector = rector;
+    }
+
+    /**
+     * @return the directorAcademico
+     */
+    public Empleado getDirectorAcademico() {
+        return directorAcademico;
+    }
+
+    /**
+     * @param directorAcademico the directorAcademico to set
+     */
+    public void setDirectorAcademico(Empleado directorAcademico) {
+        this.directorAcademico = directorAcademico;
+    }
+
+   
+}

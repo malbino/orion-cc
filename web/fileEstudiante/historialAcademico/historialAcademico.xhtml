@@ -1,0 +1,310 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../../WEB-INF/systemTemplate.xhtml">
+
+            <ui:define name="content">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 ">
+                        <h:form id="form">
+                            <div class="x_panel">
+                                <div class="x_title">
+                                    <div class="ui-g ui-fluid">
+                                        <h2>Historial Academico <small>historial academico del estudiante</small></h2>
+                                    </div>   
+                                    <div class="clearfix"></div>
+                                </div>
+
+                                <div class="x_content">
+                                    <p:messages id="messages"/>
+
+                                    <div class="ui-g ui-fluid">
+                                        <div class="ui-g-12 ui-md-4">
+                                            <p:outputLabel for="estudiante" value="Estudiante:" style="font-size: small"/>
+                                            <p:autoComplete id="estudiante" value="#{HistorialAcademicoController.seleccionEstudiante}" completeMethod="#{HistorialAcademicoController.completarEstudiante}" minQueryLength="3" queryDelay="1000" scrollHeight="300"
+                                                            var="estudiante" itemLabel="#{estudiante.toString()}" itemValue="#{estudiante}" converter="#{EstudianteConverter}" forceSelection="true"
+                                                            required="true" requiredMessage="* Estudiante requerido.">
+
+                                                <p:ajax event="itemSelect" listener="#{HistorialAcademicoController.reinit()}" update="carrerasEstudiante toolbar panelHistorialAcademico"/>
+                                            </p:autoComplete>
+                                        </div>
+
+                                        <div class="ui-g-12 ui-md-4">
+                                            <p:outputLabel for="carrerasEstudiante" value="Carreras:" style="font-size: small"/>
+                                            <p:selectOneMenu id="carrerasEstudiante" value="#{HistorialAcademicoController.seleccionCarreraEstudiante}" converter="#{CarreraEstudianteConverter}" autoWidth="false" required="true" requiredMessage="* Carrera requerida.">
+                                                <f:selectItem itemLabel="" itemValue=""/>
+                                                <f:selectItems value="#{HistorialAcademicoController.listaCarrerasEstudiante()}" var="carreraEstudiante" itemLabel="#{carreraEstudiante.toString()}" itemValue="#{carreraEstudiante}"/>
+
+                                                <p:ajax listener="#{HistorialAcademicoController.reinit()}" update="toolbar panelHistorialAcademico"/>
+                                            </p:selectOneMenu>
+                                        </div>
+                                    </div>
+
+                                    <p:spacer/>
+
+                                    <p:toolbar id="toolbar">
+                                        <f:facet name="left">
+                                            <p:commandButton icon="fa fa-plus" value="Nuevo" actionListener="#{HistorialAcademicoController.toNuevaNota()}" update="form"/>
+
+                                            <p:spacer width="10"/>
+
+                                            <p:commandButton icon="fa fa-refresh" value="Actualizar" actionListener="#{HistorialAcademicoController.reinit()}" update="form"/>
+                                        </f:facet>
+
+                                        <f:facet name="right">
+                                            <p:menuButton icon="fa fa-gear" title="Opciones">
+                                                <p:menuitem value="Exportar" icon="fa fa-file-excel-o" ajax="false">
+                                                    <p:dataExporter type="xls" target="historialAcademico" fileName="historialAcademico" />
+                                                </p:menuitem>
+                                            </p:menuButton>
+                                        </f:facet>
+                                    </p:toolbar>
+
+                                    <p:spacer/>
+
+                                    <p:outputPanel id="panelHistorialAcademico">
+                                        <p:dataTable id="historialAcademico" var="nota" value="#{HistorialAcademicoController.historialAcademico}"
+                                                     emptyMessage="Ningún registro encontrado." tableStyle="width:auto; min-width:100%" sortBy="#{nota.gestionAcademica.gestionPeriodo()}"
+                                                     styleClass="hide-table-header">
+
+                                            <p:headerRow groupBy="#{nota.gestionAcademica.gestionPeriodo()}" expandable="true">
+                                                <p:column>
+                                                    <h:outputText value="Gestion" />
+                                                </p:column>
+
+                                                <p:column>
+                                                    <h:outputText value="" />
+                                                </p:column>
+
+                                                <p:column>
+                                                    <h:outputText value="Nº" />
+                                                </p:column>
+
+                                                <p:column>
+                                                    <h:outputText value="Codigo" />
+                                                </p:column>
+
+                                                <p:column>
+                                                    <h:outputText value="Modulo" />
+                                                </p:column>
+
+                                                <p:column>
+                                                    <h:outputText value="GR" />
+                                                </p:column>
+
+                                                <p:column>
+                                                    <h:outputText value="MO" />
+                                                </p:column>
+
+                                                <p:column>
+                                                    <h:outputText value="T1" />
+                                                </p:column>
+
+                                                <p:column>
+                                                    <h:outputText value="P1" />
+                                                </p:column>
+
+                                                <p:column>
+                                                    <h:outputText value="N1" />
+                                                </p:column>
+
+                                                <p:column>
+                                                    <h:outputText value="T2" />
+                                                </p:column>
+
+                                                <p:column>
+                                                    <h:outputText value="P2" />
+                                                </p:column>
+
+                                                <p:column>
+                                                    <h:outputText value="N2" />
+                                                </p:column>
+
+                                                <p:column rendered="#{nota.gestionAcademica.modalidadEvaluacion.cantidadParciales >= 3}">
+                                                    <h:outputText value="T3" />
+                                                </p:column>
+
+                                                <p:column rendered="#{nota.gestionAcademica.modalidadEvaluacion.cantidadParciales >= 3}">
+                                                    <h:outputText value="P3" />
+                                                </p:column>
+
+                                                <p:column rendered="#{nota.gestionAcademica.modalidadEvaluacion.cantidadParciales >= 3}">
+                                                    <h:outputText value="N3" />
+                                                </p:column>
+
+                                                <p:column rendered="#{nota.gestionAcademica.modalidadEvaluacion.cantidadParciales == 4}">
+                                                    <h:outputText value="T4" />
+                                                </p:column>
+
+                                                <p:column rendered="#{nota.gestionAcademica.modalidadEvaluacion.cantidadParciales == 4}">
+                                                    <h:outputText value="P4" />
+                                                </p:column>
+
+                                                <p:column rendered="#{nota.gestionAcademica.modalidadEvaluacion.cantidadParciales == 4}">
+                                                    <h:outputText value="N4" />
+                                                </p:column>
+
+                                                <p:column>
+                                                    <h:outputText value="NF" />
+                                                </p:column>
+
+                                                <p:column>
+                                                    <h:outputText value="RE" />
+                                                </p:column>
+
+                                                <p:column>
+                                                    <h:outputText value="CO" />
+                                                </p:column>
+
+                                                <p:column>
+                                                    <h:outputText value="" />
+                                                </p:column>
+                                            </p:headerRow>
+
+                                            <p:column groupRow="true">  
+                                                <h:outputText value="#{nota.gestionAcademica.toString()}"/>
+                                            </p:column>
+
+                                            <p:column exportable="false"> 
+                                                <h:panelGroup>
+                                                    <p:commandButton process="@this" icon="fa fa-history" title="Log nota">  
+                                                        <f:setPropertyActionListener value="#{nota}" target="#{HistorialAcademicoController.seleccionNota}" />
+
+                                                        <f:actionListener binding="#{HistorialAcademicoController.toLogNota()}"/>
+                                                    </p:commandButton>
+                                                </h:panelGroup>
+                                            </p:column>
+
+                                            <p:column>
+                                                <h:outputText value="#{nota.modulo.numero}"/>
+                                            </p:column>
+
+                                            <p:column>  
+                                                <h:outputText value="#{nota.modulo.codigo}"/>
+                                            </p:column>
+
+                                            <p:column>  
+                                                <h:outputText value="#{nota.modulo.nombre}"/>
+                                            </p:column>
+
+                                            <p:column>  
+                                                <h:outputText value="#{nota.grupo.codigo}"/>
+                                            </p:column>
+
+                                            <p:column>  
+                                                <h:outputText value="#{nota.modalidad.abreviatura}"/>
+                                            </p:column>
+
+                                            <p:column>  
+                                                <h:outputText value="#{nota.teoria1}" />
+                                            </p:column>
+
+                                            <p:column>  
+                                                <h:outputText value="#{nota.practica1}" />
+                                            </p:column>
+
+                                            <p:column>  
+                                                <h:outputText value="#{nota.nota1}"/>
+                                            </p:column>
+
+                                            <p:column>  
+                                                <h:outputText value="#{nota.teoria2}" />
+                                            </p:column>
+
+                                            <p:column>  
+                                                <h:outputText value="#{nota.practica2}" />
+                                            </p:column>
+
+                                            <p:column>  
+                                                <h:outputText value="#{nota.nota2}" />
+                                            </p:column>
+
+                                            <p:column rendered="#{nota.gestionAcademica.modalidadEvaluacion.cantidadParciales >= 3}">  
+                                                <h:outputText value="#{nota.teoria3}" />
+                                            </p:column>
+
+                                            <p:column rendered="#{nota.gestionAcademica.modalidadEvaluacion.cantidadParciales >= 3}">  
+                                                <h:outputText value="#{nota.practica3}" />
+                                            </p:column>
+
+                                            <p:column rendered="#{nota.gestionAcademica.modalidadEvaluacion.cantidadParciales >= 3}">  
+                                                <h:outputText value="#{nota.nota3}" />
+                                            </p:column>
+
+                                            <p:column rendered="#{nota.gestionAcademica.modalidadEvaluacion.cantidadParciales == 4}">  
+                                                <h:outputText value="#{nota.teoria4}" />
+                                            </p:column>
+
+                                            <p:column rendered="#{nota.gestionAcademica.modalidadEvaluacion.cantidadParciales == 4}">  
+                                                <h:outputText value="#{nota.practica4}" />
+                                            </p:column>
+
+                                            <p:column rendered="#{nota.gestionAcademica.modalidadEvaluacion.cantidadParciales == 4}">  
+                                                <h:outputText value="#{nota.nota4}" />
+                                            </p:column>
+
+                                            <p:column>  
+                                                <h:outputText id="nf" value="#{nota.notaFinal}"/>
+                                            </p:column>
+
+                                            <p:column>  
+                                                <h:outputText id="recuperatorio" value="#{nota.recuperatorio}" />
+                                            </p:column>
+
+                                            <p:column>  
+                                                <h:outputText id="condicion" value="#{nota.condicion.abreviatura}"/>
+                                            </p:column>
+
+                                            <p:column exportable="false"> 
+                                                <h:panelGroup id="group" >
+                                                    <p:commandButton id="editarParcial" process="@this" value="P" title="Editar parcial" rendered="#{nota.modalidad.regular}">  
+                                                        <f:setPropertyActionListener value="#{nota}" target="#{HistorialAcademicoController.seleccionNota}" />
+
+                                                        <f:actionListener binding="#{HistorialAcademicoController.toEditarParcial()}"/>
+                                                    </p:commandButton>
+
+                                                    <p:commandButton id="editarRecuperatorio" process="@this" value="RE" title="Editar recuperatorio" rendered="#{nota.modalidad.regular}">  
+                                                        <f:setPropertyActionListener value="#{nota}" target="#{HistorialAcademicoController.seleccionNota}" />
+
+                                                        <f:actionListener binding="#{HistorialAcademicoController.toEditarRecuperatorio()}"/>
+                                                    </p:commandButton>
+
+                                                    <p:commandButton id="editarNota" process="@this" icon="fa fa-edit" title="Editar nota" rendered="#{!nota.modalidad.regular}">  
+                                                        <f:setPropertyActionListener value="#{nota}" target="#{HistorialAcademicoController.seleccionNota}" />
+
+                                                        <f:actionListener binding="#{HistorialAcademicoController.toEditarNota()}"/>
+                                                    </p:commandButton>
+
+                                                    <p:commandButton id="eliminarNota" process="@this" icon="fa fa-remove" title="Eliminar nota" update=":form:messages" rendered="#{!nota.modalidad.regular}">  
+                                                        <f:setPropertyActionListener value="#{nota}" target="#{HistorialAcademicoController.seleccionNota}" />
+
+                                                        <f:actionListener binding="#{HistorialAcademicoController.eliminarNota()}"/>
+
+                                                        <p:confirm header="Confirmación" message="Esta seguro?" icon="fa fa-exclamation-triangle" />
+                                                    </p:commandButton>
+                                                </h:panelGroup>
+                                            </p:column>
+                                        </p:dataTable>
+
+                                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="fa fa-check" />
+                                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-times" />
+                                        </p:confirmDialog>
+                                    </p:outputPanel>
+                                </div>
+                            </div>
+                        </h:form>
+                    </div>
+                </div>
+            </ui:define>
+
+        </ui:composition>
+    </body>
+</html>

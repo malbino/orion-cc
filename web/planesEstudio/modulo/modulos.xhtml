@@ -1,0 +1,139 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../../WEB-INF/systemTemplate.xhtml">
+
+            <ui:define name="content">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 ">
+                        <h:form id="form">
+                            <p:messages/>
+
+                            <div class="x_panel">
+                                <div class="x_title">
+                                    <h2>Modulo <small>gestión de modulos</small></h2> 
+
+                                    <div class="clearfix"></div>
+                                </div>
+
+                                <div class="x_content">
+                                    <div class="ui-g ui-fluid">
+                                        <div class="ui-g-12 ui-md-4">
+                                            <p:outputLabel for="carrera" value="Carrera: " style="font-size: small"/>
+                                            <p:selectOneMenu id="carrera" value="#{ModuloController.seleccionCarrera}" converter="#{CarreraConverter}" autoWidth="false" required="true" requiredMessage="* Carrera requerida.">
+                                                <f:selectItem itemLabel="" itemValue=""/>
+                                                <f:selectItems value="#{ModuloController.listaCarreras()}" var="carrera" itemLabel="#{carrera.toString()}" itemValue="#{carrera}"/>
+
+                                                <p:ajax listener="#{ModuloController.reinit()}" update="modulos"/>
+                                            </p:selectOneMenu>
+                                        </div>
+                                    </div>
+
+                                    <p:toolbar>
+                                        <f:facet name="left">
+                                            <p:commandButton icon="fa fa-plus" value="Nuevo" actionListener="#{ModuloController.toNuevaModulo()}" update="form"/>
+
+                                            <p:spacer width="10"/>
+
+                                            <p:commandButton icon="fa fa-refresh" value="Actualizar" actionListener="#{ModuloController.reinit()}" update="form"/>
+                                        </f:facet>
+
+                                        <f:facet name="right">
+                                            <p:menuButton icon="fa fa-gear" title="Opciones">
+                                                <p:menuitem value="Exportar" icon="fa fa-file-excel-o" ajax="false">
+                                                    <p:dataExporter type="xls" target="modulos" fileName="modulos" />
+                                                </p:menuitem>
+                                            </p:menuButton>
+                                        </f:facet>
+                                    </p:toolbar>
+
+                                    <p:spacer/>
+
+                                    <div class="ui-g ui-fluid">
+                                        <div class="ui-g-12 ui-md-12">
+                                            <div class="ui-inputgroup">
+                                                <p:inputText value="#{ModuloController.keyword}" style="height: 100%"/>
+                                                <p:commandButton id="buscar" icon="fa fa-search" actionListener="#{ModuloController.buscar()}" update="modulos"/>           
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p:defaultCommand target="buscar"/>
+
+                                    <p:dataTable id="modulos" var="modulo" value="#{ModuloController.modulos}" reflow="true" emptyMessage="Ningún registro encontrado." tableStyle="width:auto; min-width:100%">
+                                        <p:column headerText="Nº" >  
+                                            <h:outputText value="#{modulo.numero}"/>
+                                        </p:column>
+
+                                        <p:column headerText="Codigo" >  
+                                            <h:outputText value="#{modulo.codigo}"/>
+                                        </p:column>
+
+                                        <p:column headerText="Nombre" >  
+                                            <h:outputText value="#{modulo.nombre}"/>
+                                        </p:column>
+
+                                        <p:column headerText="Horas" >  
+                                            <h:outputText value="#{modulo.horas}"/>
+                                        </p:column>
+
+                                        <p:column headerText="Creditaje modulo" >  
+                                            <h:outputText value="#{modulo.creditajeModulo}"/> 
+                                        </p:column>
+
+                                        <p:column headerText="Prerequisitos" >  
+                                            <h:outputText value="#{modulo.prerequisitosToString()}"/> 
+                                        </p:column>
+
+                                        <p:column exportable="false"> 
+                                            <h:panelGroup id="group" >
+                                                <p:commandButton id="editar" process="@this" icon="fa fa-edit" title="Editar">  
+                                                    <f:setPropertyActionListener value="#{modulo}" target="#{ModuloController.seleccionModulo}" />
+
+                                                    <f:actionListener binding="#{ModuloController.toEditarModulo()}"/>
+                                                </p:commandButton>
+
+                                                <p:commandButton id="eliminar" process="@this" icon="fa fa-remove" title="Eliminar" update="form">  
+                                                    <f:setPropertyActionListener value="#{modulo}" target="#{ModuloController.seleccionModulo}" />
+
+                                                    <f:actionListener binding="#{ModuloController.eliminarModulo()}"/>
+                                                    <p:confirm header="Confirmación" icon="fa fa-exclamation-triangle" />
+                                                </p:commandButton>
+                                            </h:panelGroup>
+                                        </p:column> 
+                                    </p:dataTable>
+
+                                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                        <f:facet name="message">
+                                            ¡ADVERTENCIA!
+                                            <br />
+                                            <br />
+                                            Al eliminar el modulo también se eliminaran todos los
+                                            <br />
+                                            grupos y notas asociadas a la misma. Recuerde que el proceso
+                                            <br />
+                                            de eliminación es IRREVERSIBLE.
+                                            <br />
+                                            <br />
+                                            Esta seguro?
+                                        </f:facet>
+
+                                        <p:commandButton value="Sí" type="button" styleClass="ui-confirmdialog-yes" icon="fa fa-check" />
+                                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-remove" />
+                                    </p:confirmDialog>
+                                </div>
+                            </div>
+                        </h:form>
+                    </div>
+                </div>
+            </ui:define>
+
+        </ui:composition>
+    </body>
+</html>

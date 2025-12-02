@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <f:facet name="first">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+            <meta name="theme-color" content="" />
+        </f:facet>
+
+        <title>Orion</title>
+        <link rel="shortcut icon" href="#{request.contextPath}/resources/images/favicon.png" />
+
+        <!-- Bootstrap -->
+        <link href="#{request.contextPath}/resources/css/bootstrap.min.css" rel="stylesheet"/>
+
+        <!-- Font Awesome -->
+        <link href="#{request.contextPath}/resources/css/font-awesome.min.css" rel="stylesheet"/>
+
+        <!-- Custom Theme Style -->
+        <link href="#{request.contextPath}/resources/css/custom.min.css" rel="stylesheet"/>
+
+    </h:head>
+
+    <h:body styleClass="nav-md">
+        <div class="container body">
+            <div class="main_container">
+                <h:form>
+                    <div class="col-md-3 left_col">
+                        <div class="left_col scroll-view">
+                            <div class="navbar nav_title" style="border: 0;">
+                                <a href="#{request.contextPath}/home.xhtml" class="site_title"><i class="fa fa-star"></i> <span>Orion</span></a>
+                            </div>
+
+                            <div class="clearfix"></div>
+
+                            <!-- menu profile quick info -->
+                            <div class="profile clearfix">
+                                <div class="profile_pic">
+                                    <img src="#{request.contextPath}/resources/images/user.png" alt="..." class="img-circle profile_img"/>
+                                </div>
+                                <div class="profile_info">
+                                    <span>Bienvenido,</span>
+                                    <h2>#{LoginController.usr.nombre}</h2>
+                                </div>
+                            </div>
+                            <!-- /menu profile quick info -->
+
+                            <br />
+
+                            <!-- sidebar menu -->
+
+                            <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+                                <div class="menu_section">
+                                    <h3>Contenido</h3>
+                                    <ul class="nav side-menu">
+                                        <li style="display: #{LoginController.displayMenu('/administrador/')}"><a><i class="fa fa-linux"></i> Administrador <span class="fa fa-chevron-down"></span></a>
+                                            <ul class="nav child_menu">
+                                                <li style="display: #{LoginController.display('/administrador/instituto.xhtml')}"><a href="#{request.contextPath}/administrador/instituto.xhtml">Instituto</a></li>
+                                                <li style="display: #{LoginController.display('/administrador/empleado/')}"><a href="#{request.contextPath}/administrador/empleado/empleados.xhtml">Empleados</a></li>
+                                                <li style="display: #{LoginController.display('/administrador/rol/')}"><a href="#{request.contextPath}/administrador/rol/roles.xhtml">Roles</a></li>
+                                                <li style="display: #{LoginController.display('/administrador/usuario/')}"><a href="#{request.contextPath}/administrador/usuario/usuarios.xhtml">Usuarios</a></li>
+                                                <li style="display: #{LoginController.display('/administrador/logs.xhtml')}"><a href="#{request.contextPath}/administrador/logs.xhtml">Logs</a></li>
+                                            </ul>
+                                        </li>
+
+                                        <li style="display: #{LoginController.displayMenu('/planesEstudio/')}"><a><i class="fa fa-share-alt"></i> Planes de Estudio <span class="fa fa-chevron-down"></span></a>
+                                            <ul class="nav child_menu">
+                                                <li style="display: #{LoginController.display('/planesEstudio/campus/')}"><a href="#{request.contextPath}/planesEstudio/campus/campus.xhtml">Campus</a></li>
+                                                <li style="display: #{LoginController.display('/planesEstudio/carrera/')}"><a href="#{request.contextPath}/planesEstudio/carrera/carreras.xhtml">Carreras</a></li>
+                                                <li style="display: #{LoginController.display('/planesEstudio/modulo/')}"><a href="#{request.contextPath}/planesEstudio/modulo/modulos.xhtml">Modulos</a></li>
+                                            </ul>
+                                        </li>
+
+                                        <li style="display: #{LoginController.displayMenu('/gestionesAcademicas/')}"><a><i class="fa fa-calendar"></i> Gestiónes Académicas <span class="fa fa-chevron-down"></span></a>
+                                            <ul class="nav child_menu">
+                                                <li style="display: #{LoginController.display('/gestionesAcademicas/calendarioAcademico/')}"><a href="#{request.contextPath}/gestionesAcademicas/calendarioAcademico/calendarioAcademico.xhtml">Calendario Académico</a></li>
+                                                <li style="display: #{LoginController.display('/gestionesAcademicas/gestionAcademica/')}"><a href="#{request.contextPath}/gestionesAcademicas/gestionAcademica/gestionesAcademicas.xhtml">Gestiones Académicas</a></li>
+                                                <li style="display: #{LoginController.display('/gestionesAcademicas/grupo/')}"><a href="#{request.contextPath}/gestionesAcademicas/grupo/grupos.xhtml">Grupos</a></li>
+                                            </ul>
+                                        </li>
+
+                                        <li style="display: #{LoginController.displayMenu('/horarios/')}"><a><i class="fa fa-clock-o"></i> Horarios <span class="fa fa-chevron-down"></span></a>
+                                            <ul class="nav child_menu">
+                                                <li style="display: #{LoginController.display('/horarios/asignacionDocente/')}"><a href="#{request.contextPath}/horarios/asignacionDocente/asignacionDocente.xhtml">Asignación Docente</a></li>
+                                                <li style="display: #{LoginController.display('/horarios/aula/')}"><a href="#{request.contextPath}/horarios/aula/aulas.xhtml">Aulas</a></li>
+                                                <li style="display: #{LoginController.display('/horarios/periodo/')}"><a href="#{request.contextPath}/horarios/periodo/periodos.xhtml">Periodos</a></li>
+                                                <li style="display: #{LoginController.display('/horarios/horarioParalelo.xhtml')}"><a href="#{request.contextPath}/horarios/horarioParalelo.xhtml">Horario Paaralelo</a></li>
+                                            </ul>
+                                        </li>
+
+                                        <li style="display: #{LoginController.displayMenu('/inscripciones/')}"><a><i class="fa fa-user-plus"></i> Inscripciones <span class="fa fa-chevron-down"></span></a>
+                                            <ul class="nav child_menu">
+                                                <li style="display: #{LoginController.display('/inscripciones/estudianteNuevo/')}"><a href="#{request.contextPath}/inscripciones/estudianteNuevo/estudianteNuevo.xhtml">Estudiante Nuevo</a></li>
+                                                <li style="display: #{LoginController.display('/inscripciones/estudianteRegular/')}"><a href="#{request.contextPath}/inscripciones/estudianteRegular/estudianteRegular.xhtml">Estudiante Regular</a></li>
+                                                <li style="display: #{LoginController.display('/inscripciones/cambioCarrera/')}"><a href="#{request.contextPath}/inscripciones/cambioCarrera/cambioCarrera.xhtml">Cambio de Carrera</a></li>
+                                                <li style="display: #{LoginController.display('/inscripciones/inscripcionManual/')}"><a href="#{request.contextPath}/inscripciones/inscripcionManual/estadoInscripcion.xhtml">Inscripción Manual</a></li>
+                                                <li style="display: #{LoginController.display('/inscripciones/inscritos.xhtml')}"><a href="#{request.contextPath}/inscripciones/inscritos.xhtml">Inscritos</a></li>
+                                            </ul>
+                                        </li>
+
+                                        <li style="display: #{LoginController.displayMenu('/cajas/')}"><a><i class="fa fa-money"></i> Cajas <span class="fa fa-chevron-down"></span></a>
+                                            <ul class="nav child_menu">
+                                                <li style="display: #{LoginController.display('/cajas/conceptoPago/')}"><a href="#{request.contextPath}/cajas/conceptoPago/conceptosPago.xhtml">Conceptos de Pago</a></li>
+                                                <li style="display: #{LoginController.display('/cajas/descuento/')}"><a href="#{request.contextPath}/cajas/descuento/descuentos.xhtml">Descuentos</a></li>
+                                                <li style="display: #{LoginController.display('/cajas/nuevoComprobante/nuevoComprobante')}"><a href="#{request.contextPath}/cajas/nuevoComprobante/nuevoComprobante.xhtml">Nuevo Comprobante</a></li>
+                                                <li style="display: #{LoginController.display('/cajas/comprobantes/comprobantes')}"><a href="#{request.contextPath}/cajas/comprobantes/comprobantes.xhtml">Comprobantes</a></li>
+                                            </ul>
+                                        </li>
+
+                                        <li style="display: #{LoginController.displayMenu('/registroNotas/')}"><a><i class="fa fa-edit"></i> Registro Notas <span class="fa fa-chevron-down"></span></a>
+                                            <ul class="nav child_menu">
+                                                <li style="display: #{LoginController.display('/registroNotas/')}"><a href="#{request.contextPath}/registroNotas/primerParcial.xhtml">Primer Parcial</a></li>
+                                                <li style="display: #{LoginController.display('/registroNotas/')}"><a href="#{request.contextPath}/registroNotas/segundoParcial.xhtml">Segundo Parcial</a></li>
+                                                <li style="display: #{LoginController.display('/registroNotas/')}"><a href="#{request.contextPath}/registroNotas/pruebaRecuperacion.xhtml">Prueba de Recuperación</a></li>
+                                            </ul>
+                                        </li>
+
+                                        <li style="display: #{LoginController.displayMenu('/registroDocente/')}"><a><i class="fa fa-folder"></i> Registro Docente <span class="fa fa-chevron-down"></span></a>
+                                            <ul class="nav child_menu">
+                                                <li style="display: #{LoginController.display('/registroDocente/')}"><a href="#{request.contextPath}/registroDocente/primerParcial.xhtml">Primer Parcial</a></li>
+                                                <li style="display: #{LoginController.display('/registroDocente/')}"><a href="#{request.contextPath}/registroDocente/segundoParcial.xhtml">Segundo Parcial</a></li>
+                                                <li style="display: #{LoginController.display('/registroDocente/')}"><a href="#{request.contextPath}/registroDocente/pruebaRecuperacion.xhtml">Prueba de Recuperacion</a></li>
+                                            </ul>
+                                        </li>
+
+                                        <li style="display: #{LoginController.displayMenu('/fileEstudiante/')}"><a><i class="fa fa-folder-o"></i> File Estudiante <span class="fa fa-chevron-down"></span></a>
+                                            <ul class="nav child_menu">
+                                                <li style="display: #{LoginController.display('/fileEstudiante/historialAcademico/')}"><a href="#{request.contextPath}/fileEstudiante/historialAcademico/historialAcademico.xhtml">Historial Academico</a></li>
+                                                <li style="display: #{LoginController.display('/fileEstudiante/historialEconomico/')}"><a href="#{request.contextPath}/fileEstudiante/historialEconomico/historialEconomico.xhtml">Historial Economico</a></li>
+                                                <li style="display: #{LoginController.display('/fileEstudiante/estudiante/')}"><a href="#{request.contextPath}/fileEstudiante/estudiante/estudiantes.xhtml">Estudiantes</a></li>
+                                            </ul>
+                                        </li>
+
+                                        <li style="display: #{LoginController.displayMenu('/estudiante/')}"><a><i class="fa fa-user"></i> Estudiante <span class="fa fa-chevron-down"></span></a>
+                                            <ul class="nav child_menu">
+                                                <li style="display: #{LoginController.display('/estudiante/')}"><a href="#{request.contextPath}/estudiante/estadoInscripcion.xhtml">Estado de Inscripción</a></li>
+                                                <li style="display: #{LoginController.display('/estudiante/')}"><a href="#{request.contextPath}/estudiante/inscripcionInternet/estadoInscripcion.xhtml">Inscripción por Internet</a></li>
+                                                <li style="display: #{LoginController.display('/estudiante/')}"><a href="#{request.contextPath}/estudiante/historialAcademico.xhtml">Historial Academico</a></li>
+                                                <li style="display: #{LoginController.display('/estudiante/')}"><a href="#{request.contextPath}/estudiante/historialEconomico.xhtml">Historial Economico</a></li>
+                                                <li style="display: #{LoginController.display('/estudiante/')}"><a href="#{request.contextPath}/estudiante/fileEstudiante.xhtml">File Estudiante</a></li>
+                                            </ul>
+                                        </li>
+
+                                        <li style="display: #{LoginController.displayMenu('/reportes/')}"><a><i class="fa fa-bar-chart"></i> Reportes <span class="fa fa-chevron-down"></span></a>
+                                            <ul class="nav child_menu">
+                                                <li style="display: #{LoginController.display('/reportes/dashboard.xhtml')}"><a href="#{request.contextPath}/reportes/dashboard.xhtml">Dashboard</a></li>
+                                                <li style="display: #{LoginController.display('/reportes/planEstudios/')}"><a href="#{request.contextPath}/reportes/planEstudios/reportePlanEstudios.xhtml">Plan de Estudios</a></li>
+
+                                                <li style="display: #{LoginController.displayMenu('/reportes/inscripciones/')}"><a>Inscripciones<span class="fa fa-chevron-down"></span></a>
+                                                    <ul class="nav child_menu">
+                                                        <li style="display: #{LoginController.display('/reportes/inscripciones/listaInscritosCarrera/')}"><a href="#{request.contextPath}/reportes/inscripciones/listaInscritosCarrera/reporteListaInscritosCarrera.xhtml">Lista Inscritos Carrera</a></li>
+                                                        <li style="display: #{LoginController.display('/reportes/inscripciones/listaInscritosParalelo/')}"><a href="#{request.contextPath}/reportes/inscripciones/listaInscritosParalelo/reporteListaInscritosParalelo.xhtml">Lista Inscritos Paralelo</a></li>
+                                                        <li style="display: #{LoginController.display('/reportes/inscripciones/listaInscritosGrupo/')}"><a href="#{request.contextPath}/reportes/inscripciones/listaInscritosGrupo/reporteListaInscritosGrupo.xhtml">Lista Inscritos Grupo</a></li>
+                                                        <li style="display: #{LoginController.display('/reportes/inscripciones/libroInscripciones/')}"><a href="#{request.contextPath}/reportes/inscripciones/libroInscripciones/reporteLibroInscripciones.xhtml">Libro de Inscripciones</a></li>
+                                                        <li style="display: #{LoginController.display('/reportes/inscripciones/libroInscripcionesCarrera/')}"><a href="#{request.contextPath}/reportes/inscripciones/libroInscripcionesCarrera/reporteLibroInscripcionesCarrera.xhtml">Libro de Inscripciones Carrera</a></li>
+                                                        <li style="display: #{LoginController.display('/reportes/inscripciones/listaInscritosMulticarrera/')}"><a href="#{request.contextPath}/reportes/inscripciones/listaInscritosMulticarrera/reporteListaInscritosMulticarrera.xhtml">Lista Inscritos Multicarrera</a></li>
+                                                    </ul>
+                                                </li>
+
+                                                <li style="display: #{LoginController.displayMenu('/reportes/horarios/')}"><a>Horarios<span class="fa fa-chevron-down"></span></a>
+                                                    <ul class="nav child_menu">
+                                                        <li style="display: #{LoginController.display('/reportes/horarios/horarioAula/')}"><a href="#{request.contextPath}/reportes/horarios/horarioAula/reporteHorarioAula.xhtml">Horario Aula</a></li>
+                                                        <li style="display: #{LoginController.display('/reportes/horarios/horarioParalelo/')}"><a href="#{request.contextPath}/reportes/horarios/horarioParalelo/reporteHorarioParalelo.xhtml">Horario Paralelo</a></li>
+                                                        <li style="display: #{LoginController.display('/reportes/horarios/horarioDocente/')}"><a href="#{request.contextPath}/reportes/horarios/horarioDocente/reporteHorarioDocente.xhtml">Horario Docente</a></li>
+                                                    </ul>
+                                                </li>
+
+                                                <li style="display: #{LoginController.displayMenu('/reportes/ingresos/')}"><a>Ingresos<span class="fa fa-chevron-down"></span></a>
+                                                    <ul class="nav child_menu">
+                                                        <li style="display: #{LoginController.display('/reportes/ingresos/conceptoPago/')}"><a href="#{request.contextPath}/reportes/ingresos/conceptoPago/reporteIngresosConceptoPago.xhtml">Concepto de Pago</a></li>
+                                                        <li style="display: #{LoginController.display('/reportes/ingresos/modulo/')}"><a href="#{request.contextPath}/reportes/ingresos/modulo/reporteIngresosModulo.xhtml">Modulo</a></li>
+                                                    </ul>
+                                                </li>
+
+                                                <li style="display: #{LoginController.displayMenu('/reportes/notas/')}"><a>Notas<span class="fa fa-chevron-down"></span></a>
+                                                    <ul class="nav child_menu">
+                                                        <li style="display: #{LoginController.display('/reportes/notas/boletinNotas/')}"><a href="#{request.contextPath}/reportes/notas/boletinNotas/reporteBoletinNotas.xhtml">Boletín Notas</a></li>
+                                                        <li style="display: #{LoginController.display('/reportes/notas/boletinNotasCarrera/')}"><a href="#{request.contextPath}/reportes/notas/boletinNotasCarrera/reporteBoletinNotasCarrera.xhtml">Boletín Notas Carrera</a></li>
+                                                        <li style="display: #{LoginController.display('/reportes/notas/planillaSeguimiento/')}"><a href="#{request.contextPath}/reportes/notas/planillaSeguimiento/reportePlanillaSeguimiento.xhtml">Planilla Seguimiento</a></li>
+                                                        <li style="display: #{LoginController.display('/reportes/notas/registroNotas/')}"><a href="#{request.contextPath}/reportes/notas/registroNotas/reporteRegistroNotas.xhtml">Registro Notas</a></li>
+                                                        <li style="display: #{LoginController.display('/reportes/notas/habilitadosRecuperatorio/')}"><a href="#{request.contextPath}/reportes/notas/habilitadosRecuperatorio/reporteHabilitadosRecuperatorio.xhtml">Habilitados Recuperatorio</a></li>
+                                                        <li style="display: #{LoginController.display('/reportes/notas/notasFaltantes/')}"><a href="#{request.contextPath}/reportes/notas/notasFaltantes/reporteNotasFaltantes.xhtml">Notas Faltantes</a></li>
+                                                    </ul>
+                                                </li>
+
+                                                <li style="display: #{LoginController.display('/reportes/historialAcademico/')}"><a href="#{request.contextPath}/reportes/historialAcademico/reporteHistorialAcademico.xhtml">Historial Academico</a></li>
+                                                <li style="display: #{LoginController.display('/reportes/historialEconomico/')}"><a href="#{request.contextPath}/reportes/historialEconomico/reporteHistorialEconomico.xhtml">Historial Economico</a></li>
+                                            </ul>
+                                        </li>
+
+                                    </ul>
+
+                                    <h3>Soporte</h3>
+                                    <ul class="nav side-menu">
+                                        <li><a><i class="fa fa-question-circle"></i> Ayuda <span class="fa fa-chevron-down"></span></a>
+                                            <ul class="nav child_menu">
+                                                <li><a href="#{request.contextPath}/acercaDe.xhtml">Acerca de</a></li>
+                                                <li><a href="https://proyectoorion.org/" target="_blank">Soporte técnico</a></li>
+                                                <li><a href="mailto:maacrazy@gmail.com?subject=Incidencia Orion">Reportar incidencia</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- /sidebar menu -->
+
+                            <!-- /menu footer buttons -->
+                            <div class="sidebar-footer hidden-small">
+                                <p:link id="home" outcome="/home">
+                                    <span class="fa fa-home" aria-hidden="true"></span>
+                                </p:link>
+                                <p:tooltip for="home" value="Inicio" position="top"/>
+
+                                <p:link id="soporteTecnico" href="https://proyectoorion.org/" target="_blank">
+                                    <span class="fa fa-support" aria-hidden="true"></span>
+                                </p:link>
+                                <p:tooltip for="soporteTecnico" value="Soporte tecnico" position="top"/>
+
+                                <p:link id="reportarIncidencia" href="mailto:maacrazy@gmail.com?subject=Incidencia Orion">
+                                    <span class="fa fa-send" aria-hidden="true"></span>
+                                </p:link>
+                                <p:tooltip for="reportarIncidencia" value="Reportar incidencia" position="top"/>
+
+                                <p:commandLink id="logout" action="#{LoginController.logout()}">
+                                    <span class="fa fa-power-off" aria-hidden="true"></span>
+                                </p:commandLink>
+                                <p:tooltip for="logout" value="Cerrar Sesión" position="top"/>
+                            </div>
+                            <!-- /menu footer buttons -->
+                        </div>
+                    </div>
+
+                    <!-- top navigation -->
+                    <div class="top_nav">
+                        <div class="nav_menu">
+                            <div class="nav toggle">
+                                <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+                            </div>
+                            <nav class="nav navbar-nav">
+                                <ul class=" navbar-right">
+                                    <li class="nav-item dropdown open" style="padding-left: 15px;">
+                                        <a href="javascript:;" class="user-profile dropdown-toggle" aria-haspopup="true" id="navbarDropdown" data-toggle="dropdown" aria-expanded="false">
+                                            <img src="#{request.contextPath}/resources/images/user.png" alt=""/>#{LoginController.usr.nombre}
+                                        </a>
+                                        <div class="dropdown-menu dropdown-usermenu pull-right" aria-labelledby="navbarDropdown">
+                                            <a class="dropdown-item" href="#{request.contextPath}/home.xhtml">Inicio</a>
+                                            <a class="dropdown-item" href="https://proyectoorion.org/" target="_blank">Soporte técnico</a>
+                                            <a class="dropdown-item" href="mailto:maacrazy@gmail.com?subject=Incidencia Orion">Reportar incidencia</a>
+                                            <a style="display: #{LoginController.display('/cambiarContrasena.xhtml')}" class="dropdown-item" href="#{request.contextPath}/cambiarContrasena.xhtml">Cambiar contraseña</a>
+                                            <p:commandLink action="#{LoginController.logout()}" value="Cerrar Sesión" styleClass="dropdown-item">
+                                                <i class="fa fa-sign-out pull-right"></i>
+                                            </p:commandLink>
+                                        </div>
+                                    </li>
+
+                                    <li role="presentation" class="nav-item dropdown open">
+                                        <a href="javascript:;" class="dropdown-toggle info-number" id="navbarDropdown1" data-toggle="dropdown" aria-expanded="false">
+                                            <i class="fa fa-calendar-o"></i>
+                                            <span class="badge bg-green">#{LoginController.listaActividadesProximas.size()}</span>
+                                        </a>
+
+
+                                        <ul class="dropdown-menu list-unstyled msg_list" role="menu" aria-labelledby="navbarDropdown1">
+                                            <ui:repeat var="actividad" value="#{LoginController.listaActividadesProximas}">
+                                                <li class="nav-item">
+                                                    <a class="dropdown-item">
+                                                        <span class="image"><img src="#{request.contextPath}/resources/images/activity.png" alt="Actividad proxima" /></span>
+                                                        <span>
+                                                            <span>#{actividad.gestionAcademica.toString()}</span>
+                                                            <span class="time">#{actividad.inicio_ddMMyyyy()} - #{actividad.fin_ddMMyyyy()}</span>
+                                                        </span>
+                                                        <span class="message">
+                                                            #{actividad.nombre}
+                                                        </span>
+                                                    </a>
+                                                </li>
+                                            </ui:repeat>
+
+                                            <li style="display: #{LoginController.display('/calendarioAcademico.xhtml')}" class="nav-item">
+                                                <div class="text-center">
+                                                    <a class="dropdown-item" href="#{request.contextPath}/calendarioAcademico.xhtml">
+                                                        <strong>Ver todas las alertas</strong>
+                                                        <i class="fa fa-angle-right"></i>
+                                                    </a>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                    <!-- /top navigation -->
+                </h:form>
+
+                <!-- page content -->
+                <div class="right_col" role="main">
+                    <div class="">
+                        <ui:insert name="content">
+
+                        </ui:insert>
+                    </div>
+                </div>
+
+                <!-- /page content -->
+
+                <!-- footer content -->
+                <footer>
+                    <div class="pull-right">
+                        Orion por <a href="https://github.com/malbino">malbino</a>
+                    </div>
+                    <div class="clearfix"></div>
+                </footer>
+                <!-- /footer content -->
+            </div>
+        </div>
+
+        <!-- Bootstrap -->
+        <script src="#{request.contextPath}/resources/js/bootstrap.bundle.min.js"></script>
+
+        <!-- Custom Theme Scripts -->
+        <script src="#{request.contextPath}/resources/js/custom.min.js"></script>
+
+        <!-- Calendar ES -->
+        <h:outputScript library="js" name="calendar_es.js" />
+    </h:body>
+
+</html>

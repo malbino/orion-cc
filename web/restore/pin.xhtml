@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <body>
+
+        <ui:composition template="./../WEB-INF/loginTemplate.xhtml">
+
+            <ui:define name="content">
+                <h:form>
+                    <h1>Restaurar</h1>
+
+                    <p>
+                        Introduce tu nombre de usuario. El sistema te mandara un numero PIN a tu email
+                        para restaurar la contraseña.
+                    </p>
+
+                    <div>
+                        <p:messages id="messages"/> 
+                    </div>
+
+                    <div>
+                        <p:inputText value="#{RestoreController.usuario}" placeholder="Nombre de usuario" required="true" requiredMessage="* Nombre de usuario requerido"/>
+                    </div>
+
+                    <div>
+                        <p:commandButton value="Enviar PIN" icon="fa fa-send" actionListener="#{RestoreController.pin()}" update="messages"/>
+                        <p:button value="Cancelar" icon="fa fa-remove" outcome="/login" styleClass="secondary"/>
+                    </div>
+
+                    <div class="clearfix"></div>
+
+                    <div class="separator">
+                        <div class="clearfix"></div>
+                        <br />
+
+                        <div>
+                            <h1><i class="fa fa-star"></i> Orion</h1>
+                            <p>Sistema de información del #{InstitutoController.instituto.nombreRegulador} ubicado en #{InstitutoController.instituto.ubicacion}.</p>
+                        </div>
+                    </div>
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>
