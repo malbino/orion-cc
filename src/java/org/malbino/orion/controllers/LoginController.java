@@ -6,6 +6,7 @@ package org.malbino.orion.controllers;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
@@ -75,15 +76,12 @@ public class LoginController extends AbstractController {
     public String displayMenu(String path) {
         String s = "none";
 
-        /*
         if (usr != null) {
             List<Recurso> l = listaRecursos.stream().filter(r -> r.getUrlPattern().startsWith(path)).collect(Collectors.toList());
             if (!l.isEmpty()) {
                 s = "anything";
             }
         }
-         */
-        s = "anything";
 
         return s;
     }
@@ -91,15 +89,12 @@ public class LoginController extends AbstractController {
     public String display(String path) {
         String s = "none";
 
-        /*
         if (usr != null) {
             List<Recurso> l = listaRecursos.stream().filter(r -> r.getUrlPattern().equals(path)).collect(Collectors.toList());
             if (!l.isEmpty()) {
                 s = "anything";
             }
         }
-         */
-        s = "anything";
 
         return s;
     }

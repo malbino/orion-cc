@@ -12,10 +12,14 @@ package org.malbino.orion.enums;
 public enum EntidadLog {
 
     ACTIVIDAD("Actividad"),
+    AULA("Aula"),
     CAMPUS("Campus"),
     CARRERA("Carrera"),
     CARRERA_ESTUDIANTE("Carrera Estudiante"),
+    CLASE("Clase"),
     COMPROBANTE("Comprobante"),
+    CONCEPTO_PAGO("Concepto de Pago"),
+    DESCUENTO("Descuento"),
     DETALLE("Detalle"),
     EMPLEADO("Empleado"),
     ESTUDIANTE("Estudiante"),
@@ -25,15 +29,10 @@ public enum EntidadLog {
     INSTITUTO("Instituto"),
     MODULO("Modulo"),
     NOTA("Nota"),
-    PAGO("Pago"),
+    PERIODO("Periodo"),
     RECURSO("Recurso"),
     ROL("Rol"),
-    USUARIO("Usuario"),
-    AULA("Aula"),
-    PERIODO("Periodo"),
-    CLASE("Clase"),
-    CONCEPTO_PAGO("Concepto de Pago"),
-    DESCUENTO("Descuento");
+    USUARIO("Usuario");
 
     private String nombre;
 

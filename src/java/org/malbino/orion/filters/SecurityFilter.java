@@ -57,7 +57,6 @@ public class SecurityFilter implements Filter {
 
         Usuario usr = loginController.getUsr();
         if (usr != null) {
-            /*
             String servletPath = req.getServletPath();
             List<Recurso> listaRecursos = recursoFacade.buscarPorPersonaServletPath(usr.getId_persona(), servletPath);
             if (!listaRecursos.isEmpty()) {
@@ -65,9 +64,6 @@ public class SecurityFilter implements Filter {
             } else {
                 res.sendRedirect(req.getContextPath() + "/page_403.xhtml");
             }
-            */
-            
-            chain.doFilter(request, response);
         } else {
             res.sendRedirect(req.getContextPath() + "/login.xhtml");
         }
