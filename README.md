@@ -1,2 +1,2 @@
-﻿# orion
-Sistema de información para institutos técnicos y tecnológicos de Bolivia
+# Orion CC
+Sistema académico para centros de capacitación
