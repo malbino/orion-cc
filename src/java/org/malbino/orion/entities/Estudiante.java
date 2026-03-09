@@ -41,6 +41,7 @@ public class Estudiante extends Usuario implements Serializable {
     private Boolean fotografias3X3;
     private Boolean certificadoFELCC;
     private Boolean certificadoFELCN;
+    private Boolean certificadoMedico;
 
     @OneToMany(mappedBy = "estudiante", orphanRemoval = true)
     private List<Nota> notas;
@@ -111,6 +112,16 @@ public class Estudiante extends Usuario implements Serializable {
     public String certificadoFELCN_siNo() {
         String s = "";
         if (certificadoFELCN) {
+            s = "Sí";
+        } else {
+            s = "No";
+        }
+        return s;
+    }
+
+    public String certificadoMedico_siNo() {
+        String s = "";
+        if (certificadoMedico) {
             s = "Sí";
         } else {
             s = "No";
@@ -270,6 +281,20 @@ public class Estudiante extends Usuario implements Serializable {
      */
     public void setFechaInscripcion(Date fechaInscripcion) {
         this.fechaInscripcion = fechaInscripcion;
+    }
+
+    /**
+     * @return the certificadoMedico
+     */
+    public Boolean getCertificadoMedico() {
+        return certificadoMedico;
+    }
+
+    /**
+     * @param certificadoMedico the certificadoMedico to set
+     */
+    public void setCertificadoMedico(Boolean certificadoMedico) {
+        this.certificadoMedico = certificadoMedico;
     }
 
 }
