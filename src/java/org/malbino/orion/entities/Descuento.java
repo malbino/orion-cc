@@ -29,7 +29,7 @@ public class Descuento implements Serializable {
     @Column(unique = true)
     private String codigo;
     private String descripcion;
-    private Integer porcentajeDescuento;
+    private Double porcentajeDescuento;
 
     public Descuento() {
     }
@@ -58,7 +58,7 @@ public class Descuento implements Serializable {
 
     @Override
     public String toString() {
-        return descripcion;
+        return descripcion + " - " + porcentajeDescuento + " %";
     }
     
     public Double proporcionDescuento() {
@@ -110,14 +110,14 @@ public class Descuento implements Serializable {
     /**
      * @return the porcentajeDescuento
      */
-    public Integer getPorcentajeDescuento() {
+    public Double getPorcentajeDescuento() {
         return porcentajeDescuento;
     }
 
     /**
      * @param porcentajeDescuento the porcentajeDescuento to set
      */
-    public void setPorcentajeDescuento(Integer porcentajeDescuento) {
+    public void setPorcentajeDescuento(Double porcentajeDescuento) {
         this.porcentajeDescuento = porcentajeDescuento;
     }
     

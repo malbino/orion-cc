@@ -124,12 +124,20 @@ public class ComprobantePago extends HttpServlet {
         cell.setBorder(PdfPCell.NO_BORDER);
         subtable.addCell(cell);
 
-        cell = new PdfPCell(new Phrase("Telefono: " + comprobante.getInscrito().getCampus().getTelefono(), NORMAL));
+        if (comprobante.getInscrito().getCampus().getTelefono() != null) {
+            cell = new PdfPCell(new Phrase("Telefono: " + comprobante.getInscrito().getCampus().getTelefono(), NORMAL));
+        } else {
+            cell = new PdfPCell(new Phrase("Telefono: ", NORMAL));
+        }
         cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
         cell.setBorder(PdfPCell.NO_BORDER);
         subtable.addCell(cell);
 
-        cell = new PdfPCell(new Phrase("Celular: " + comprobante.getInscrito().getCampus().getCelular(), NORMAL));
+        if (comprobante.getInscrito().getCampus().getCelular() != null) {
+            cell = new PdfPCell(new Phrase("Celular: " + comprobante.getInscrito().getCampus().getCelular(), NORMAL));
+        } else {
+            cell = new PdfPCell(new Phrase("Celular: ", NORMAL));
+        }
         cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
         cell.setBorder(PdfPCell.NO_BORDER);
         subtable.addCell(cell);
