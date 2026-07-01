@@ -26,14 +26,6 @@
 
                                     <div class="ui-g ui-fluid">
                                         <div class="ui-g-12 ui-md-4">
-                                            <p:outputLabel for="modulo" value="Modulo:" style="font-size: small"/>
-                                            <p:selectOneMenu id="modulo" value="#{GrupoController.seleccionModulo}" converter="#{ModuloConverter}" autoWidth="false" required="true" requiredMessage="* Modulo requerido."> 
-                                                <f:selectItem itemLabel="" itemValue="" />
-                                                <f:selectItems value="#{GrupoController.listaModulos()}" var="nivel" itemLabel="#{modulo.toString()}" itemValue="#{modulo}"/>  
-                                            </p:selectOneMenu> 
-                                        </div>
-
-                                        <div class="ui-g-12 ui-md-4">
                                             <p:outputLabel for="turno" value="Turno:" style="font-size: small"/>
                                             <p:selectOneMenu id="turno" value="#{GrupoController.seleccionTurno}" converter="#{TurnoConverter}" autoWidth="false" required="true" requiredMessage="* Turno requerido."> 
                                                 <f:selectItem itemLabel="" itemValue="" />

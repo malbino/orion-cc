@@ -50,7 +50,6 @@ public class GrupoController extends AbstractController implements Serializable 
     private GestionAcademica seleccionGestionAcademica;
     private Carrera seleccionCarrera;
     private Campus seleccionCampus;
-    private Modulo seleccionModulo;
     private Turno seleccionTurno;
     private Integer capacidad;
 
@@ -64,7 +63,6 @@ public class GrupoController extends AbstractController implements Serializable 
         seleccionGestionAcademica = null;
         seleccionCarrera = null;
         seleccionCampus = null;
-        seleccionModulo = null;
         seleccionTurno = null;
         capacidad = null;
 
@@ -77,7 +75,6 @@ public class GrupoController extends AbstractController implements Serializable 
         }
         seleccionGrupo = null;
 
-        seleccionModulo = null;
         seleccionTurno = null;
         capacidad = null;
 
@@ -103,7 +100,7 @@ public class GrupoController extends AbstractController implements Serializable 
     }
 
     public void programarGrupos() throws IOException {
-        List<Grupo> grupos = programacionGruposFacade.programarGrupos(seleccionGestionAcademica, seleccionCarrera, seleccionCampus, seleccionModulo, seleccionTurno, capacidad);
+        List<Grupo> grupos = programacionGruposFacade.programarGrupos(seleccionGestionAcademica, seleccionCarrera, seleccionCampus, seleccionTurno, capacidad);
         if (!grupos.isEmpty()) {
             //log
             for (Grupo grupo : grupos) {
@@ -247,20 +244,6 @@ public class GrupoController extends AbstractController implements Serializable 
      */
     public void setKeyword(String keyword) {
         this.keyword = keyword;
-    }
-
-    /**
-     * @return the seleccionModulo
-     */
-    public Modulo getSeleccionModulo() {
-        return seleccionModulo;
-    }
-
-    /**
-     * @param seleccionModulo the seleccionModulo to set
-     */
-    public void setSeleccionModulo(Modulo seleccionModulo) {
-        this.seleccionModulo = seleccionModulo;
     }
 
     /**
