@@ -34,7 +34,6 @@ public class Instituto implements Serializable {
     private String abreviatura;
     private String email;
     private Caracter caracter;
-    private Integer precioCredito;
 
     @JoinColumn(name = "id_rector")
     @ManyToOne
@@ -173,20 +172,6 @@ public class Instituto implements Serializable {
      */
     public void setCaracter(Caracter caracter) {
         this.caracter = caracter;
-    }
-
-    /**
-     * @return the precioCredito
-     */
-    public Integer getPrecioCredito() {
-        return precioCredito;
-    }
-
-    /**
-     * @param precioCredito the precioCredito to set
-     */
-    public void setPrecioCredito(Integer precioCredito) {
-        this.precioCredito = precioCredito;
     }
 
     /**

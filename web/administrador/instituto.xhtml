@@ -63,11 +63,6 @@
                                         </div>
 
                                         <div class="ui-g-12 ui-md-4">
-                                            <p:outputLabel for="precioCredito" value="Precio credito:" style="font-size: small"/>
-                                            <p:inputText id="precioCredito" value="#{InstitutoController.instituto.precioCredito}" required="true" requiredMessage="* Precio credito requerido."/>
-                                        </div>
-
-                                        <div class="ui-g-12 ui-md-4">
                                             <p:outputLabel for="rector" value="Rector:" style="font-size: small"/>
                                             <p:autoComplete id="rector" value="#{InstitutoController.instituto.rector}" completeMethod="#{InstitutoController.completarEmpleado}" minQueryLength="3" queryDelay="1000" scrollHeight="300"
                                                             var="rector" itemLabel="#{rector.toString()}" itemValue="#{rector}" converter="#{EmpleadoConverter}" forceSelection="true"

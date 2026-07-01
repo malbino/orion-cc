@@ -249,14 +249,14 @@ public class PlanEstudios extends HttpServlet {
             cell.setFixedHeight(20);
             table.addCell(cell);
 
-            cell = new PdfPCell(new Phrase(Redondeo.formatear_csm(carrera.getInstituto().getPrecioCredito()), NORMAL));
+            cell = new PdfPCell(new Phrase("QUITARRRRR", NORMAL));
             cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
             cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
             cell.setColspan(10);
             cell.setFixedHeight(20);
             table.addCell(cell);
 
-            Integer subtotal = modulo.getCreditajeModulo() * modulo.getCarrera().getInstituto().getPrecioCredito();
+            Integer subtotal = modulo.getCreditajeModulo();
             sumatoriaSubtotal += subtotal;
             cell = new PdfPCell(new Phrase(Redondeo.formatear_csm(subtotal), NORMAL));
             cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
@@ -288,7 +288,7 @@ public class PlanEstudios extends HttpServlet {
         cell.setFixedHeight(20);
         table.addCell(cell);
 
-        cell = new PdfPCell(new Phrase(Redondeo.formatear_csm(carrera.getInstituto().getPrecioCredito()), NORMAL));
+        cell = new PdfPCell(new Phrase("QUITARRRRR", NORMAL));
         cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
         cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
         cell.setColspan(10);
