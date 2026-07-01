@@ -46,11 +46,6 @@
                                         </div>
 
                                         <div class="ui-g-12 ui-md-4">
-                                            <p:outputLabel for="creditajeModulo" value="Creditaje modulo" style="font-size: small"/>
-                                            <p:inputText id="creditajeModulo" value="#{ModuloController.seleccionModulo.creditajeModulo}" required="true" requiredMessage="* Creditaje modulo requerido." />
-                                        </div>
-
-                                        <div class="ui-g-12 ui-md-4">
                                             <p:outputLabel for="prerequisitos" value="Prerequisitos:" style="font-size: small"/>
                                             <p:selectCheckboxMenu id="prerequisitos" value="#{ModuloController.seleccionModulo.prerequisitos}" converter="#{ModuloConverter}" label="Prerequisitos" filter="true" filterMatchMode="contains" style="height: 30px">  
                                                 <f:selectItems value="#{ModuloController.listaModulosEditar()}" var="modulo" itemLabel="#{modulo.toString()}" itemValue="#{modulo}"/>  

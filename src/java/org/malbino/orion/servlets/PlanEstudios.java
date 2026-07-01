@@ -19,7 +19,6 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,7 +31,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.malbino.orion.entities.Carrera;
 import org.malbino.orion.entities.Modulo;
 import org.malbino.orion.facades.ModuloFacade;
-import org.malbino.orion.util.Redondeo;
 
 /**
  *
@@ -155,7 +153,7 @@ public class PlanEstudios extends HttpServlet {
         cell = new PdfPCell(new Phrase("Modulo", NEGRITA));
         cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
         cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
-        cell.setColspan(35);
+        cell.setColspan(65);
         cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
         cell.setFixedHeight(30);
         table.addCell(cell);
@@ -175,33 +173,6 @@ public class PlanEstudios extends HttpServlet {
         cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
         cell.setFixedHeight(30);
         table.addCell(cell);
-
-        cell = new PdfPCell(new Phrase("Creditaje modulo", NEGRITA));
-        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
-        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
-        cell.setColspan(10);
-        cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
-        cell.setFixedHeight(30);
-        table.addCell(cell);
-
-        cell = new PdfPCell(new Phrase("Precio credito Bs.", NEGRITA));
-        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
-        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
-        cell.setColspan(10);
-        cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
-        cell.setFixedHeight(30);
-        table.addCell(cell);
-
-        cell = new PdfPCell(new Phrase("Subtotal Bs.", NEGRITA));
-        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
-        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
-        cell.setColspan(10);
-        cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
-        cell.setFixedHeight(30);
-        table.addCell(cell);
-
-        Integer sumatoriaCreditajeModulo = 0;
-        Integer sumatoriaSubtotal = 0;
 
         List<Modulo> listaModulos = moduloFacade.listaModulos(carrera);
         for (int i = 0; i < listaModulos.size(); i++) {
@@ -224,7 +195,7 @@ public class PlanEstudios extends HttpServlet {
             cell = new PdfPCell(new Phrase(modulo.getNombre(), NORMAL));
             cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
             cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
-            cell.setColspan(35);
+            cell.setColspan(65);
             cell.setFixedHeight(20);
             table.addCell(cell);
 
@@ -241,65 +212,20 @@ public class PlanEstudios extends HttpServlet {
             cell.setColspan(10);
             cell.setFixedHeight(20);
             table.addCell(cell);
-
-            sumatoriaCreditajeModulo += modulo.getCreditajeModulo();
-            cell = new PdfPCell(new Phrase(modulo.getCreditajeModulo().toString(), NORMAL));
-            cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
-            cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
-            cell.setColspan(10);
-            cell.setFixedHeight(20);
-            table.addCell(cell);
-
-            cell = new PdfPCell(new Phrase("QUITARRRRR", NORMAL));
-            cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
-            cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
-            cell.setColspan(10);
-            cell.setFixedHeight(20);
-            table.addCell(cell);
-
-            Integer subtotal = modulo.getCreditajeModulo();
-            sumatoriaSubtotal += subtotal;
-            cell = new PdfPCell(new Phrase(Redondeo.formatear_csm(BigDecimal.valueOf(subtotal)), NORMAL));
-            cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
-            cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
-            cell.setColspan(10);
-            cell.setFixedHeight(20);
-            table.addCell(cell);
         }
 
-        cell = new PdfPCell(new Phrase(" ", NORMAL));
-        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        cell = new PdfPCell(new Phrase("Precio (Bs.)", NEGRITA));
+        cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
         cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
-        cell.setColspan(60);
-        cell.setFixedHeight(20);
-        table.addCell(cell);
-
-        cell = new PdfPCell(new Phrase("Totales", NEGRITA));
-        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
-        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
-        cell.setColspan(10);
+        cell.setColspan(80);
         cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
         cell.setFixedHeight(20);
         table.addCell(cell);
 
-        cell = new PdfPCell(new Phrase(sumatoriaCreditajeModulo.toString(), NORMAL));
+        cell = new PdfPCell(new Phrase(carrera.precio(), NORMAL));
         cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
         cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
-        cell.setColspan(10);
-        cell.setFixedHeight(20);
-        table.addCell(cell);
-
-        cell = new PdfPCell(new Phrase("QUITARRRRR", NORMAL));
-        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
-        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
-        cell.setColspan(10);
-        cell.setFixedHeight(20);
-        table.addCell(cell);
-
-        cell = new PdfPCell(new Phrase(Redondeo.formatear_csm(BigDecimal.valueOf(sumatoriaSubtotal)), NORMAL));
-        cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
-        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
-        cell.setColspan(10);
+        cell.setColspan(20);
         cell.setFixedHeight(20);
         table.addCell(cell);
 

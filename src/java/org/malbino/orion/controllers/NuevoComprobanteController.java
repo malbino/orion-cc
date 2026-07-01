@@ -173,7 +173,7 @@ public class NuevoComprobanteController extends AbstractController implements Se
                 detalle.setDescripcion(modulo.getNombre());
                 detalle.setModulo(modulo);
 
-                Integer precioUnitario = modulo.getCreditajeModulo();
+                Integer precioUnitario = 999;
                 detalle.setPrecioUnitario(precioUnitario);
 
                 Integer subtotalSinDescuento = detalle.getCantidad() * detalle.getPrecioUnitario();
@@ -195,7 +195,7 @@ public class NuevoComprobanteController extends AbstractController implements Se
                 detalle.setDescripcion(modulo.getNombre());
                 detalle.setModulo(modulo);
 
-                Integer precioUnitario = modulo.getCreditajeModulo();
+                Integer precioUnitario = 999;
                 detalle.setPrecioUnitario(precioUnitario);
 
                 detalle.setDescuento(0);

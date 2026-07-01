@@ -204,7 +204,7 @@ public class InscripcionesFacade {
 
         List<Modulo> oferta = oferta(inscrito);
         for (Modulo modulo : oferta) {
-            l += modulo.getCreditajeModulo();
+            l += 999;
         }
 
         return l;

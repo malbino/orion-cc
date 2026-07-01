@@ -37,7 +37,6 @@ public class Modulo implements Serializable {
     private String codigo;
     private String nombre;
     private Integer horas;
-    private Integer creditajeModulo;
 
     @JoinTable(name = "prerequisito", joinColumns = {
         @JoinColumn(name = "id_modulo", referencedColumnName = "id_modulo")}, inverseJoinColumns = {
@@ -129,20 +128,6 @@ public class Modulo implements Serializable {
      */
     public void setHoras(Integer horas) {
         this.horas = horas;
-    }
-
-    /**
-     * @return the creditajeModulo
-     */
-    public Integer getCreditajeModulo() {
-        return creditajeModulo;
-    }
-
-    /**
-     * @param creditajeModulo the creditajeModulo to set
-     */
-    public void setCreditajeModulo(Integer creditajeModulo) {
-        this.creditajeModulo = creditajeModulo;
     }
 
     /**
