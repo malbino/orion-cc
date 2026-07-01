@@ -49,8 +49,8 @@
                                         </div>
 
                                         <div class="ui-g-12 ui-md-4">
-                                            <p:outputLabel for="creditajeMatricula" value="Creditaje matricula:" style="font-size: small"/>
-                                            <p:inputText id="creditajeMatricula" value="#{CarreraController.nuevaCarrera.creditajeMatricula}" required="true" requiredMessage="* Creditaje matricula requerido." />
+                                            <p:outputLabel for="precio" value="Precio (Bs.):" style="font-size: small"/>
+                                            <p:inputNumber id="precio" value="#{CarreraController.nuevaCarrera.precio}" minValue="0" decimalPlaces="2" required="true" requiredMessage="* Precio requerido."/>
                                         </div>
 
                                         <div class="ui-g-12 ui-md-4">

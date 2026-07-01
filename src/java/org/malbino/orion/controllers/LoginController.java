@@ -11,6 +11,7 @@ import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 import org.malbino.orion.entities.Actividad;
+import org.malbino.orion.entities.Cuota;
 import org.malbino.orion.entities.Log;
 import org.malbino.orion.entities.Recurso;
 import org.malbino.orion.entities.Usuario;
@@ -64,6 +65,9 @@ public class LoginController extends AbstractController {
 
             //log
             logFacade.create(new Log(Fecha.getDate(), EventoLog.READ, EntidadLog.USUARIO, usr.getId_persona(), "Login usuario", usr.toString()));
+            
+            Cuota cuota = new Cuota();
+            
 
             toHome();
         } else {

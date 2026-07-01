@@ -6,6 +6,7 @@ package org.malbino.orion.controllers;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -149,7 +150,7 @@ public class NuevoComprobanteController extends AbstractController implements Se
                 detalle.setDescripcion(conceptoPago.getDescripcion());
                 detalle.setPrecioUnitario(conceptoPago.getPrecioUnitario());
                 detalle.setConceptoPago(conceptoPago);
-                
+
                 detalle.setDescuento(0);
 
                 Integer subtotal = (detalle.getCantidad() * detalle.getPrecioUnitario()) - detalle.getDescuento();
@@ -247,7 +248,7 @@ public class NuevoComprobanteController extends AbstractController implements Se
         for (Detalle detalle : detalles) {
             totalDescuentos = totalDescuentos + detalle.getDescuento();
         }
-        s = Redondeo.formatear_csm(totalDescuentos);
+        s = Redondeo.formatear_csm(BigDecimal.valueOf(totalDescuentos));
 
         return s;
     }
@@ -259,7 +260,7 @@ public class NuevoComprobanteController extends AbstractController implements Se
         for (Detalle detalle : detalles) {
             totalComprobante = totalComprobante + detalle.getSubtotal();
         }
-        s = Redondeo.formatear_csm(totalComprobante);
+        s = Redondeo.formatear_csm(BigDecimal.valueOf(totalComprobante));
 
         return s;
     }

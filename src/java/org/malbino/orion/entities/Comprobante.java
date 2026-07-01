@@ -6,6 +6,7 @@
 package org.malbino.orion.entities;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -93,7 +94,7 @@ public class Comprobante implements Serializable {
         for (Detalle detalle : detalles) {
             subtotal += detalle.getCantidad() * detalle.getPrecioUnitario();
         }
-        return Redondeo.formatear_csm(subtotal);
+        return Redondeo.formatear_csm(BigDecimal.valueOf(subtotal));
     }
 
     public String descuento() {
@@ -101,7 +102,7 @@ public class Comprobante implements Serializable {
         for (Detalle detalle : detalles) {
             descuento += detalle.getDescuento();
         }
-        return Redondeo.formatear_csm(descuento);
+        return Redondeo.formatear_csm(BigDecimal.valueOf(descuento));
     }
 
     public String montoPagar() {
@@ -109,7 +110,7 @@ public class Comprobante implements Serializable {
         for (Detalle detalle : detalles) {
             subtotal += detalle.getSubtotal();
         }
-        return Redondeo.formatear_csm(subtotal);
+        return Redondeo.formatear_csm(BigDecimal.valueOf(subtotal));
     }
 
     public String montoPagarLiteral() {

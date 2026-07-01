@@ -60,20 +60,11 @@ public class Redondeo {
         return bigDecimal.setScale(2, RoundingMode.HALF_UP).toString();
     }
 
-    public static String formatear_csm(double numero) {
+    public static String formatear_csm(BigDecimal numero) {
         DecimalFormatSymbols dfs = new DecimalFormatSymbols();
         dfs.setDecimalSeparator('.');
         dfs.setGroupingSeparator(',');
         DecimalFormat df = new DecimalFormat("###,##0.00", dfs);
-
-        return df.format(numero);
-    }
-
-    public static String formatear_ssm(double numero) {
-        DecimalFormatSymbols dfs = new DecimalFormatSymbols();
-        dfs.setDecimalSeparator('.');
-        dfs.setGroupingSeparator(',');
-        DecimalFormat df = new DecimalFormat("0.00", dfs);
 
         return df.format(numero);
     }

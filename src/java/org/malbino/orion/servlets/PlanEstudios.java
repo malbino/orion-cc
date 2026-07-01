@@ -19,6 +19,7 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -258,7 +259,7 @@ public class PlanEstudios extends HttpServlet {
 
             Integer subtotal = modulo.getCreditajeModulo();
             sumatoriaSubtotal += subtotal;
-            cell = new PdfPCell(new Phrase(Redondeo.formatear_csm(subtotal), NORMAL));
+            cell = new PdfPCell(new Phrase(Redondeo.formatear_csm(BigDecimal.valueOf(subtotal)), NORMAL));
             cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
             cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
             cell.setColspan(10);
@@ -295,7 +296,7 @@ public class PlanEstudios extends HttpServlet {
         cell.setFixedHeight(20);
         table.addCell(cell);
 
-        cell = new PdfPCell(new Phrase(Redondeo.formatear_csm(sumatoriaSubtotal), NORMAL));
+        cell = new PdfPCell(new Phrase(Redondeo.formatear_csm(BigDecimal.valueOf(sumatoriaSubtotal)), NORMAL));
         cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
         cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
         cell.setColspan(10);

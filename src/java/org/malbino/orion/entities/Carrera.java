@@ -6,6 +6,7 @@
 package org.malbino.orion.entities;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,6 +17,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import org.malbino.orion.enums.NivelAcademico;
+import org.malbino.orion.util.Redondeo;
 
 /**
  *
@@ -34,7 +36,8 @@ public class Carrera implements Serializable {
     private String nombre;
     private NivelAcademico nivelAcademico;
     private Integer version;
-    private Integer creditajeMatricula;
+    @Column(precision = 34, scale = 9)
+    private BigDecimal precio;
 
     @JoinColumn(name = "id_instituto")
     @ManyToOne
@@ -61,6 +64,10 @@ public class Carrera implements Serializable {
 
     public String shortNameMoodle() {
         return codigo + " v" + version;
+    }
+
+    public String precio() {
+        return Redondeo.formatear_csm(precio);
     }
 
     /**
@@ -134,20 +141,6 @@ public class Carrera implements Serializable {
     }
 
     /**
-     * @return the creditajeMatricula
-     */
-    public Integer getCreditajeMatricula() {
-        return creditajeMatricula;
-    }
-
-    /**
-     * @param creditajeMatricula the creditajeMatricula to set
-     */
-    public void setCreditajeMatricula(Integer creditajeMatricula) {
-        this.creditajeMatricula = creditajeMatricula;
-    }
-
-    /**
      * @return the instituto
      */
     public Instituto getInstituto() {
@@ -203,5 +196,19 @@ public class Carrera implements Serializable {
     @Override
     public String toString() {
         return nombre;
+    }
+
+    /**
+     * @return the precio
+     */
+    public BigDecimal getPrecio() {
+        return precio;
+    }
+
+    /**
+     * @param precio the precio to set
+     */
+    public void setPrecio(BigDecimal precio) {
+        this.precio = precio;
     }
 }
