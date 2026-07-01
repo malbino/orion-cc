@@ -34,7 +34,6 @@ import org.malbino.orion.entities.Log;
 import org.malbino.orion.entities.Nota;
 import org.malbino.orion.enums.EntidadLog;
 import org.malbino.orion.enums.EventoLog;
-import org.malbino.orion.enums.Funcionalidad;
 import org.malbino.orion.enums.ModalidadEvaluacion;
 import org.malbino.orion.facades.ActividadFacade;
 import org.malbino.orion.facades.GrupoFacade;
@@ -120,21 +119,15 @@ public class PrimerParcialController extends AbstractController implements Seria
     }
 
     public void guardar() {
-        if (!actividadFacade.listaActividades(Fecha.getDate(), Funcionalidad.REGISTRO_NOTAS_PRIMER_PARCIAL, seleccionGestionAcademica.getId_gestionacademica()).isEmpty()) {
-            if (registroDocenteFacade.editarNotas(notas)) {
-                actualizarNotas();
-
-                //log
-                for (Nota nota : notas) {
-                    logFacade.create(new Log(Fecha.getDate(), EventoLog.UPDATE, EntidadLog.NOTA, nota.getId_nota(), "Actualización del primer parcial", loginController.getUsr().toString()));
-                }
-
-                this.mensajeDeInformacion("Guardado.");
-            }
-        } else {
+        if (registroDocenteFacade.editarNotas(notas)) {
             actualizarNotas();
 
-            this.mensajeDeError("Fuera de fecha.");
+            //log
+            for (Nota nota : notas) {
+                logFacade.create(new Log(Fecha.getDate(), EventoLog.UPDATE, EntidadLog.NOTA, nota.getId_nota(), "Actualización del primer parcial", loginController.getUsr().toString()));
+            }
+
+            this.mensajeDeInformacion("Guardado.");
         }
     }
 
@@ -248,66 +241,64 @@ public class PrimerParcialController extends AbstractController implements Seria
     }
 
     public void subirRegistro(FileUploadEvent event) throws IOException {
-        if (!actividadFacade.listaActividades(Fecha.getDate(), Funcionalidad.REGISTRO_NOTAS_PRIMER_PARCIAL, seleccionGestionAcademica.getId_gestionacademica()).isEmpty()) {
-            if (seleccionGrupo != null) {
-                XSSFWorkbook workbook = new XSSFWorkbook(event.getFile().getInputStream());
+        if (seleccionGrupo != null) {
+            XSSFWorkbook workbook = new XSSFWorkbook(event.getFile().getInputStream());
 
-                XSSFSheet sheet = workbook.getSheetAt(0);
-                if (sheet != null) {
-                    Iterator<Row> rowIterator = sheet.rowIterator();
+            XSSFSheet sheet = workbook.getSheetAt(0);
+            if (sheet != null) {
+                Iterator<Row> rowIterator = sheet.rowIterator();
 
-                    int codigoColumnIndex = 0;
-                    int teoriaColumnIndex = 0;
-                    int practicaColumnIndex = 0;
-                    while (rowIterator.hasNext()) {
-                        Row row = rowIterator.next();
+                int codigoColumnIndex = 0;
+                int teoriaColumnIndex = 0;
+                int practicaColumnIndex = 0;
+                while (rowIterator.hasNext()) {
+                    Row row = rowIterator.next();
 
-                        Iterator<Cell> cellIterator = row.cellIterator();
-                        while (cellIterator.hasNext()) {
-                            Cell cell = cellIterator.next();
+                    Iterator<Cell> cellIterator = row.cellIterator();
+                    while (cellIterator.hasNext()) {
+                        Cell cell = cellIterator.next();
 
-                            if (cell.getCellTypeEnum() == CellType.STRING) {
-                                if (cell.getStringCellValue().equals("CODIGO")) {
-                                    codigoColumnIndex = cell.getColumnIndex();
-                                } else if (cell.getStringCellValue().equals("TEORIA")) {
-                                    teoriaColumnIndex = cell.getColumnIndex();
-                                } else if (cell.getStringCellValue().equals("PRACTICA")) {
-                                    practicaColumnIndex = cell.getColumnIndex();
-                                }
+                        if (cell.getCellTypeEnum() == CellType.STRING) {
+                            if (cell.getStringCellValue().equals("CODIGO")) {
+                                codigoColumnIndex = cell.getColumnIndex();
+                            } else if (cell.getStringCellValue().equals("TEORIA")) {
+                                teoriaColumnIndex = cell.getColumnIndex();
+                            } else if (cell.getStringCellValue().equals("PRACTICA")) {
+                                practicaColumnIndex = cell.getColumnIndex();
                             }
                         }
                     }
+                }
 
-                    rowIterator = sheet.rowIterator();
-                    while (rowIterator.hasNext()) {
-                        Row row = rowIterator.next();
+                rowIterator = sheet.rowIterator();
+                while (rowIterator.hasNext()) {
+                    Row row = rowIterator.next();
 
-                        Cell codigoCell = row.getCell(codigoColumnIndex);
-                        if (codigoCell != null && codigoCell.getCellTypeEnum() == CellType.NUMERIC) {
-                            Double codigoCellValue = codigoCell.getNumericCellValue();
-                            if (codigoCellValue != null) {
-                                int id_nota = codigoCellValue.intValue();
-                                Nota nota = notaFacade.find(id_nota);
-                                if (nota != null) {
-                                    Cell teoriaCell = row.getCell(teoriaColumnIndex);
-                                    if (teoriaCell != null && (teoriaCell.getCellTypeEnum() == CellType.NUMERIC || teoriaCell.getCellTypeEnum() == CellType.FORMULA)) {
-                                        Double teoriaCellValue = teoriaCell.getNumericCellValue();
-                                        if (teoriaCellValue != null && teoriaCellValue >= 0 && teoriaCellValue <= 30) {
+                    Cell codigoCell = row.getCell(codigoColumnIndex);
+                    if (codigoCell != null && codigoCell.getCellTypeEnum() == CellType.NUMERIC) {
+                        Double codigoCellValue = codigoCell.getNumericCellValue();
+                        if (codigoCellValue != null) {
+                            int id_nota = codigoCellValue.intValue();
+                            Nota nota = notaFacade.find(id_nota);
+                            if (nota != null) {
+                                Cell teoriaCell = row.getCell(teoriaColumnIndex);
+                                if (teoriaCell != null && (teoriaCell.getCellTypeEnum() == CellType.NUMERIC || teoriaCell.getCellTypeEnum() == CellType.FORMULA)) {
+                                    Double teoriaCellValue = teoriaCell.getNumericCellValue();
+                                    if (teoriaCellValue != null && teoriaCellValue >= 0 && teoriaCellValue <= 30) {
 
-                                            Cell practicaCell = row.getCell(practicaColumnIndex);
-                                            if (practicaCell != null && (practicaCell.getCellTypeEnum() == CellType.NUMERIC || practicaCell.getCellTypeEnum() == CellType.FORMULA)) {
-                                                Double practicaCellValue = practicaCell.getNumericCellValue();
-                                                if (practicaCellValue != null && practicaCellValue >= 0 && practicaCellValue <= 70) {
+                                        Cell practicaCell = row.getCell(practicaColumnIndex);
+                                        if (practicaCell != null && (practicaCell.getCellTypeEnum() == CellType.NUMERIC || practicaCell.getCellTypeEnum() == CellType.FORMULA)) {
+                                            Double practicaCellValue = practicaCell.getNumericCellValue();
+                                            if (practicaCellValue != null && practicaCellValue >= 0 && practicaCellValue <= 70) {
 
-                                                    if (nota.getGrupo().equals(seleccionGrupo)) {
-                                                        nota.setTeoria1(teoriaCellValue.intValue());
-                                                        nota.setPractica1(practicaCellValue.intValue());
+                                                if (nota.getGrupo().equals(seleccionGrupo)) {
+                                                    nota.setTeoria1(teoriaCellValue.intValue());
+                                                    nota.setPractica1(practicaCellValue.intValue());
 
-                                                        fileEstudianteFacade.editarParcial(nota);
+                                                    fileEstudianteFacade.editarParcial(nota);
 
-                                                        //log
-                                                        logFacade.create(new Log(Fecha.getDate(), EventoLog.UPDATE, EntidadLog.NOTA, nota.getId_nota(), "Actualización del primer parcial", loginController.getUsr().toString()));
-                                                    }
+                                                    //log
+                                                    logFacade.create(new Log(Fecha.getDate(), EventoLog.UPDATE, EntidadLog.NOTA, nota.getId_nota(), "Actualización del primer parcial", loginController.getUsr().toString()));
                                                 }
                                             }
                                         }
@@ -317,15 +308,11 @@ public class PrimerParcialController extends AbstractController implements Seria
                         }
                     }
                 }
-
-                actualizarNotas();
-            } else {
-                this.mensajeDeError("* Ningun grupo seleccionado.");
             }
-        } else {
-            actualizarNotas();
 
-            this.mensajeDeError("Fuera de fecha.");
+            actualizarNotas();
+        } else {
+            this.mensajeDeError("* Ningun grupo seleccionado.");
         }
     }
 

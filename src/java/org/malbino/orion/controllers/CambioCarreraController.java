@@ -22,7 +22,6 @@ import org.malbino.orion.entities.Log;
 import org.malbino.orion.entities.Usuario;
 import org.malbino.orion.enums.EntidadLog;
 import org.malbino.orion.enums.EventoLog;
-import org.malbino.orion.enums.Funcionalidad;
 import org.malbino.orion.facades.ActividadFacade;
 import org.malbino.orion.facades.InscritoFacade;
 import org.malbino.orion.facades.negocio.InscripcionesFacade;
@@ -103,35 +102,31 @@ public class CambioCarreraController extends AbstractController implements Seria
     }
 
     public void registrarEstudiante() throws IOException {
-        if (!actividadFacade.listaActividades(Fecha.getDate(), Funcionalidad.INSCRIPCION, seleccionGestionAcademica.getId_gestionacademica()).isEmpty()) {
-            if (inscritoFacade.buscarInscrito(seleccionEstudiante.getId_persona(), seleccionCarreraEstudiante.getCarrera().getId_carrera(), seleccionGestionAcademica.getId_gestionacademica()) == null) {
-                if (seleccionEstudiante.getDiplomaBachiller()) {
-                    String contrasena = Generador.generarContrasena();
-                    seleccionEstudiante.setContrasena(Encriptador.encriptar(contrasena));
-                    seleccionEstudiante.setContrasenaSinEncriptar(contrasena);
-                    if (inscripcionesFacade.cambioCarrera(seleccionEstudiante, seleccionCarreraEstudiante, seleccionGestionAcademica, seleccionCampus)) {
-                        copiarUsuario(seleccionEstudiante);
+        if (inscritoFacade.buscarInscrito(seleccionEstudiante.getId_persona(), seleccionCarreraEstudiante.getCarrera().getId_carrera(), seleccionGestionAcademica.getId_gestionacademica()) == null) {
+            if (seleccionEstudiante.getDiplomaBachiller()) {
+                String contrasena = Generador.generarContrasena();
+                seleccionEstudiante.setContrasena(Encriptador.encriptar(contrasena));
+                seleccionEstudiante.setContrasenaSinEncriptar(contrasena);
+                if (inscripcionesFacade.cambioCarrera(seleccionEstudiante, seleccionCarreraEstudiante, seleccionGestionAcademica, seleccionCampus)) {
+                    copiarUsuario(seleccionEstudiante);
 
-                        //log
-                        logFacade.create(new Log(Fecha.getDate(), EventoLog.CREATE, EntidadLog.ESTUDIANTE, seleccionEstudiante.getId_persona(), "Inscripción estudiante cambio de carrera", loginController.getUsr().toString()));
+                    //log
+                    logFacade.create(new Log(Fecha.getDate(), EventoLog.CREATE, EntidadLog.ESTUDIANTE, seleccionEstudiante.getId_persona(), "Inscripción estudiante cambio de carrera", loginController.getUsr().toString()));
 
-                        this.insertarParametro("est", seleccionEstudiante);
-                        this.insertarParametro("car", seleccionCarreraEstudiante.getCarrera());
+                    this.insertarParametro("est", seleccionEstudiante);
+                    this.insertarParametro("car", seleccionCarreraEstudiante.getCarrera());
 
-                        reinit();
+                    reinit();
 
-                        this.toComprobantePago();
-                    } else {
-                        this.mensajeDeError("No se pudo registrar al estudiante.");
-                    }
+                    this.toComprobantePago();
                 } else {
-                    this.mensajeDeError("Estudiante sin titulo de bachiller.");
+                    this.mensajeDeError("No se pudo registrar al estudiante.");
                 }
             } else {
-                this.mensajeDeError("Estudiante repetido.");
+                this.mensajeDeError("Estudiante sin titulo de bachiller.");
             }
         } else {
-            this.mensajeDeError("Fuera de fecha.");
+            this.mensajeDeError("Estudiante repetido.");
         }
     }
 

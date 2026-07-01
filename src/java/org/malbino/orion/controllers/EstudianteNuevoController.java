@@ -22,7 +22,6 @@ import org.malbino.orion.entities.Log;
 import org.malbino.orion.entities.Usuario;
 import org.malbino.orion.enums.EntidadLog;
 import org.malbino.orion.enums.EventoLog;
-import org.malbino.orion.enums.Funcionalidad;
 import org.malbino.orion.facades.ActividadFacade;
 import org.malbino.orion.facades.negocio.InscripcionesFacade;
 import org.malbino.orion.util.Encriptador;
@@ -101,32 +100,28 @@ public class EstudianteNuevoController extends AbstractController implements Ser
     }
 
     public void registrarEstudiante() throws IOException {
-        if (!actividadFacade.listaActividades(Fecha.getDate(), Funcionalidad.INSCRIPCION, seleccionGestionAcademica.getId_gestionacademica()).isEmpty()) {
-            if (estudianteFacade.buscarPorDni(nuevoEstudiante.getDni()) == null) {
-                String contrasena = Generador.generarContrasena();
-                nuevoEstudiante.setContrasena(Encriptador.encriptar(contrasena));
-                nuevoEstudiante.setContrasenaSinEncriptar(contrasena);
+        if (estudianteFacade.buscarPorDni(nuevoEstudiante.getDni()) == null) {
+            String contrasena = Generador.generarContrasena();
+            nuevoEstudiante.setContrasena(Encriptador.encriptar(contrasena));
+            nuevoEstudiante.setContrasenaSinEncriptar(contrasena);
 
-                if (inscripcionesFacade.registrarEstudianteNuevo(nuevoEstudiante, seleccionCarreraEstudiante, seleccionGestionAcademica, seleccionCampus)) {
-                    copiarUsuario(nuevoEstudiante);
+            if (inscripcionesFacade.registrarEstudianteNuevo(nuevoEstudiante, seleccionCarreraEstudiante, seleccionGestionAcademica, seleccionCampus)) {
+                copiarUsuario(nuevoEstudiante);
 
-                    //logF
-                    logFacade.create(new Log(Fecha.getDate(), EventoLog.CREATE, EntidadLog.ESTUDIANTE, nuevoEstudiante.getId_persona(), "Inscripción estudiante nuevo", loginController.getUsr().toString()));
+                //logF
+                logFacade.create(new Log(Fecha.getDate(), EventoLog.CREATE, EntidadLog.ESTUDIANTE, nuevoEstudiante.getId_persona(), "Inscripción estudiante nuevo", loginController.getUsr().toString()));
 
-                    this.insertarParametro("est", nuevoEstudiante);
-                    this.insertarParametro("car", seleccionCarreraEstudiante.getCarrera());
+                this.insertarParametro("est", nuevoEstudiante);
+                this.insertarParametro("car", seleccionCarreraEstudiante.getCarrera());
 
-                    reinit();
+                reinit();
 
-                    this.toComprobantePago();
-                } else {
-                    this.mensajeDeError("No se pudo registrar al estudiante.");
-                }
+                this.toComprobantePago();
             } else {
-                this.mensajeDeError("Estudiante repetido.");
+                this.mensajeDeError("No se pudo registrar al estudiante.");
             }
         } else {
-            this.mensajeDeError("Fuera de fecha.");
+            this.mensajeDeError("Estudiante repetido.");
         }
     }
 

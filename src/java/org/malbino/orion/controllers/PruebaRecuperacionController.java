@@ -19,7 +19,6 @@ import org.malbino.orion.entities.Nota;
 import org.malbino.orion.enums.Condicion;
 import org.malbino.orion.enums.EntidadLog;
 import org.malbino.orion.enums.EventoLog;
-import org.malbino.orion.enums.Funcionalidad;
 import org.malbino.orion.facades.ActividadFacade;
 import org.malbino.orion.facades.negocio.RegistroDocenteFacade;
 import org.malbino.orion.util.Fecha;
@@ -78,21 +77,15 @@ public class PruebaRecuperacionController extends AbstractController implements 
     }
 
     public void guardar() {
-        if (!actividadFacade.listaActividades(Fecha.getDate(), Funcionalidad.REGISTRO_NOTAS_PRUEBA_RECUPERACION, seleccionGestionAcademica.getId_gestionacademica()).isEmpty()) {
-            if (registroDocenteFacade.editarNotas(notas)) {
-                actualizarNotas();
-
-                //log
-                for (Nota nota : notas) {
-                    logFacade.create(new Log(Fecha.getDate(), EventoLog.UPDATE, EntidadLog.NOTA, nota.getId_nota(), "Actualización prueba de recuperación", loginController.getUsr().toString()));
-                }
-
-                this.mensajeDeInformacion("Guardado.");
-            }
-        } else {
+        if (registroDocenteFacade.editarNotas(notas)) {
             actualizarNotas();
 
-            this.mensajeDeError("Fuera de fecha.");
+            //log
+            for (Nota nota : notas) {
+                logFacade.create(new Log(Fecha.getDate(), EventoLog.UPDATE, EntidadLog.NOTA, nota.getId_nota(), "Actualización prueba de recuperación", loginController.getUsr().toString()));
+            }
+
+            this.mensajeDeInformacion("Guardado.");
         }
     }
 
