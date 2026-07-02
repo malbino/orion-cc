@@ -61,6 +61,76 @@
                                         </div>
                                     </div>
 
+                                    <p:remoteCommand name="pp" update="planesPago"/>
+                                    <p:dataTable id="planesPago" var="planPago" rowKey="#{planPago.hashCode()}" rowIndexVar="rowIndex" value="#{CarreraController.seleccionCarrera.planesPago}"
+                                                 editable="true" editMode="cell" emptyMessage="Ningún registro encontrado." tableStyle="width:auto; min-width:100%">
+
+                                        <f:facet name="header">
+                                            Planes de Pago
+                                        </f:facet>
+
+                                        <p:column headerText="No" >
+                                            <h:outputText value="#{rowIndex + 1}"/>
+                                        </p:column>
+
+                                        <p:column headerText="Nombre" >
+                                            <p:cellEditor>
+                                                <f:facet name="output">
+                                                    <h:outputText value="#{planPago.nombre}"/>
+                                                </f:facet>
+                                                <f:facet name="input">
+                                                    <p:inputText value="#{planPago.nombre}" size="50"/>
+                                                </f:facet>
+                                            </p:cellEditor>
+                                        </p:column>
+
+                                        <p:column headerText="Numero de Cuotas" style="text-align: right">
+                                            <p:cellEditor>
+                                                <f:facet name="output">
+                                                    <h:outputText value="#{planPago.numeroCuotas}"/>
+                                                </f:facet>
+                                                <f:facet name="input">
+                                                    <p:inputNumber value="#{planPago.numeroCuotas}" minValue="0" decimalPlaces="0" emptyValue="zero" size="10">
+                                                        <p:ajax event="change" oncomplete="pp()"/>
+                                                    </p:inputNumber>
+                                                </f:facet>
+                                            </p:cellEditor>
+                                        </p:column>
+
+                                        <p:column headerText="Monto Cuota (Bs.)" style="text-align: right">
+                                            <p:cellEditor>
+                                                <f:facet name="output">
+                                                    <h:outputText value="#{planPago.montoCuota()}"/>
+                                                </f:facet>
+                                                <f:facet name="input">
+                                                    <p:inputNumber value="#{planPago.montoCuota}" minValue="0" decimalPlaces="2" emptyValue="zero" size="10">
+                                                        <p:ajax event="change" oncomplete="pp()"/>
+                                                    </p:inputNumber>
+                                                </f:facet>
+                                            </p:cellEditor>
+                                        </p:column>
+
+                                        <p:column headerText="Total (Bs)" style="text-align: right">
+                                            <h:outputText value="#{planPago.total()}"/>
+                                        </p:column>
+
+                                        <p:column> 
+                                            <h:panelGroup id="group" >
+                                                <p:commandButton title="Eliminar" icon="fa fa-close" process="@this" update=":form:planesPago">  
+                                                    <f:setPropertyActionListener value="#{planPago}" target="#{CarreraController.planPago}" />
+                                                    <f:actionListener binding="#{CarreraController.eliminarPlanPago_EditarCarrera()}"/>
+                                                </p:commandButton>
+                                            </h:panelGroup>
+                                        </p:column>
+
+                                        <f:facet name="footer">
+                                            <p:commandButton value="Añadir" icon="fa fa-plus" process="@this" actionListener="#{CarreraController.nuevoPlanPago_EditarCarrera()}" update=":form:planesPago"/>
+                                            <p:spacer width="5"/>
+                                            <p:commandButton value="Limpiar" icon="fa fa-trash" process="@this" actionListener="#{CarreraController.limpiarPlanesPago_EditarCarrera()}" update=":form:planesPago"/>
+                                        </f:facet>  
+
+                                    </p:dataTable>
+
                                     <div class="ui-g ui-fluid">
                                         <div class="ui-g-12 ui-md-2">
                                             <p:commandButton value="Guardar" icon="fa fa-save" actionListener="#{CarreraController.editarCarrera()}" update="form"/>

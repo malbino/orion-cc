@@ -16,7 +16,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import org.malbino.orion.entities.Comprobante;
 import org.malbino.orion.entities.ConceptoPago;
-import org.malbino.orion.entities.Descuento;
 import org.malbino.orion.entities.Detalle;
 import org.malbino.orion.entities.Estudiante;
 import org.malbino.orion.entities.Inscrito;
@@ -26,7 +25,6 @@ import org.malbino.orion.enums.EntidadLog;
 import org.malbino.orion.enums.EventoLog;
 import org.malbino.orion.enums.UnidadMedida;
 import org.malbino.orion.facades.ConceptoPagoFacade;
-import org.malbino.orion.facades.DescuentoFacade;
 import org.malbino.orion.facades.InscritoFacade;
 import org.malbino.orion.facades.ModuloFacade;
 import org.malbino.orion.facades.negocio.CajasFacade;
@@ -51,8 +49,6 @@ public class NuevoComprobanteController extends AbstractController implements Se
     @EJB
     InscritoFacade inscritoFacade;
     @EJB
-    DescuentoFacade descuentoFacade;
-    @EJB
     ConceptoPagoFacade conceptoPagoFacade;
     @EJB
     ModuloFacade moduloFacade;
@@ -61,7 +57,6 @@ public class NuevoComprobanteController extends AbstractController implements Se
 
     private Estudiante seleccionEstudiante;
     private Inscrito seleccionInscrito;
-    private Descuento seleccionDescuento;
     private List<ConceptoPago> seleccionConceptosPago;
     private List<Modulo> seleccionModulos;
 
@@ -73,7 +68,6 @@ public class NuevoComprobanteController extends AbstractController implements Se
     public void init() {
         seleccionEstudiante = null;
         seleccionInscrito = null;
-        seleccionDescuento = null;
         seleccionConceptosPago = new ArrayList<>();
         seleccionModulos = new ArrayList<>();
 
@@ -85,7 +79,6 @@ public class NuevoComprobanteController extends AbstractController implements Se
     public void reinit() {
         seleccionEstudiante = null;
         seleccionInscrito = null;
-        seleccionDescuento = null;
         seleccionConceptosPago = new ArrayList<>();
         seleccionModulos = new ArrayList<>();
 
@@ -100,10 +93,6 @@ public class NuevoComprobanteController extends AbstractController implements Se
             l = inscritoFacade.listaInscritosPersona(seleccionEstudiante.getId_persona());
         }
         return l;
-    }
-
-    public List<Descuento> listaDescuentos() {
-        return descuentoFacade.listaDescuentos();
     }
 
     public List<ConceptoPago> listaConceptosPago() {
@@ -122,42 +111,20 @@ public class NuevoComprobanteController extends AbstractController implements Se
 
     public void añadirDetalleConcepto() throws IOException {
         for (ConceptoPago conceptoPago : seleccionConceptosPago) {
-            if (seleccionDescuento != null) {
-                Detalle detalle = new Detalle();
-                detalle.setCodigo(conceptoPago.getCodigo());
-                detalle.setCantidad(1);
-                detalle.setUnidadMedida(conceptoPago.getUnidadMedida());
-                detalle.setDescripcion(conceptoPago.getDescripcion());
-                detalle.setPrecioUnitario(conceptoPago.getPrecioUnitario());
-                detalle.setConceptoPago(conceptoPago);
+            Detalle detalle = new Detalle();
+            detalle.setCodigo(conceptoPago.getCodigo());
+            detalle.setCantidad(1);
+            detalle.setUnidadMedida(conceptoPago.getUnidadMedida());
+            detalle.setDescripcion(conceptoPago.getDescripcion());
+            detalle.setPrecioUnitario(conceptoPago.getPrecioUnitario());
+            detalle.setConceptoPago(conceptoPago);
 
-                Integer subtotalSinDescuento = detalle.getCantidad() * detalle.getPrecioUnitario();
-                Double descuentoSinRedondear = subtotalSinDescuento.doubleValue() * seleccionDescuento.proporcionDescuento();
-                log.info("descuentoSinRedondear=" + descuentoSinRedondear);
-                Integer descuentoRedondeado = Redondeo.redondear_DOWN(descuentoSinRedondear, 0).intValue();
-                log.info("descuentoRedondeado=" + descuentoRedondeado);
-                detalle.setDescuento(descuentoRedondeado);
+            detalle.setDescuento(0);
 
-                Integer subtotalConDescuento = (detalle.getCantidad() * detalle.getPrecioUnitario()) - detalle.getDescuento();
-                detalle.setSubtotal(subtotalConDescuento);
+            Integer subtotal = (detalle.getCantidad() * detalle.getPrecioUnitario()) - detalle.getDescuento();
+            detalle.setSubtotal(subtotal);
 
-                detalles.add(detalle);
-            } else {
-                Detalle detalle = new Detalle();
-                detalle.setCodigo(conceptoPago.getCodigo());
-                detalle.setCantidad(1);
-                detalle.setUnidadMedida(conceptoPago.getUnidadMedida());
-                detalle.setDescripcion(conceptoPago.getDescripcion());
-                detalle.setPrecioUnitario(conceptoPago.getPrecioUnitario());
-                detalle.setConceptoPago(conceptoPago);
-
-                detalle.setDescuento(0);
-
-                Integer subtotal = (detalle.getCantidad() * detalle.getPrecioUnitario()) - detalle.getDescuento();
-                detalle.setSubtotal(subtotal);
-
-                detalles.add(detalle);
-            }
+            detalles.add(detalle);
         }
 
         toNuevoComprobante();
@@ -165,46 +132,22 @@ public class NuevoComprobanteController extends AbstractController implements Se
 
     public void añadirDetalleModulo() throws IOException {
         for (Modulo modulo : seleccionModulos) {
-            if (seleccionDescuento != null) {
-                Detalle detalle = new Detalle();
-                detalle.setCodigo(modulo.getCodigo());
-                detalle.setCantidad(1);
-                detalle.setUnidadMedida(UnidadMedida.UNIDAD_SERVICIOS.getNombre());
-                detalle.setDescripcion(modulo.getNombre());
-                detalle.setModulo(modulo);
+            Detalle detalle = new Detalle();
+            detalle.setCodigo(modulo.getCodigo());
+            detalle.setCantidad(1);
+            detalle.setUnidadMedida(UnidadMedida.UNIDAD_SERVICIOS.getNombre());
+            detalle.setDescripcion(modulo.getNombre());
+            detalle.setModulo(modulo);
 
-                Integer precioUnitario = 999;
-                detalle.setPrecioUnitario(precioUnitario);
+            Integer precioUnitario = 999;
+            detalle.setPrecioUnitario(precioUnitario);
 
-                Integer subtotalSinDescuento = detalle.getCantidad() * detalle.getPrecioUnitario();
-                Double descuentoSinRedondear = subtotalSinDescuento.doubleValue() * seleccionDescuento.proporcionDescuento();
-                log.info("descuentoSinRedondear=" + descuentoSinRedondear);
-                Integer descuentoRedondeado = Redondeo.redondear_DOWN(descuentoSinRedondear, 0).intValue();
-                log.info("descuentoRedondeado=" + descuentoRedondeado);
-                detalle.setDescuento(descuentoRedondeado);
+            detalle.setDescuento(0);
 
-                Integer subtotalConDescuento = (detalle.getCantidad() * detalle.getPrecioUnitario()) - detalle.getDescuento();
-                detalle.setSubtotal(subtotalConDescuento);
+            Integer subtotal = (detalle.getCantidad() * detalle.getPrecioUnitario()) - detalle.getDescuento();
+            detalle.setSubtotal(subtotal);
 
-                detalles.add(detalle);
-            } else {
-                Detalle detalle = new Detalle();
-                detalle.setCodigo(modulo.getCodigo());
-                detalle.setCantidad(1);
-                detalle.setUnidadMedida(UnidadMedida.UNIDAD_SERVICIOS.getNombre());
-                detalle.setDescripcion(modulo.getNombre());
-                detalle.setModulo(modulo);
-
-                Integer precioUnitario = 999;
-                detalle.setPrecioUnitario(precioUnitario);
-
-                detalle.setDescuento(0);
-
-                Integer subtotal = (detalle.getCantidad() * detalle.getPrecioUnitario()) - detalle.getDescuento();
-                detalle.setSubtotal(subtotal);
-
-                detalles.add(detalle);
-            }
+            detalles.add(detalle);
         }
 
         toNuevoComprobante();
@@ -223,22 +166,10 @@ public class NuevoComprobanteController extends AbstractController implements Se
     public void onRowEdit(RowEditEvent event) {
         Detalle detalle = (Detalle) event.getObject();
 
-        if (seleccionDescuento != null) {
-            Integer subtotalSinDescuento = detalle.getCantidad() * detalle.getPrecioUnitario();
-            Double descuentoSinRedondear = subtotalSinDescuento.doubleValue() * seleccionDescuento.proporcionDescuento();
-            log.info("descuentoSinRedondear=" + descuentoSinRedondear);
-            Integer descuentoRedondeado = Redondeo.redondear_DOWN(descuentoSinRedondear, 0).intValue();
-            log.info("descuentoRedondeado=" + descuentoRedondeado);
-            detalle.setDescuento(descuentoRedondeado);
+        detalle.setDescuento(0);
 
-            Integer subtotalConDescuento = (detalle.getCantidad() * detalle.getPrecioUnitario()) - detalle.getDescuento();
-            detalle.setSubtotal(subtotalConDescuento);
-        } else {
-            detalle.setDescuento(0);
-
-            Integer subtotalSinDescuento = detalle.getCantidad() * detalle.getPrecioUnitario();
-            detalle.setSubtotal(subtotalSinDescuento);
-        }
+        Integer subtotalSinDescuento = detalle.getCantidad() * detalle.getPrecioUnitario();
+        detalle.setSubtotal(subtotalSinDescuento);
     }
 
     public String totalDescuentos() {
@@ -263,29 +194,6 @@ public class NuevoComprobanteController extends AbstractController implements Se
         s = Redondeo.formatear_csm(BigDecimal.valueOf(totalComprobante));
 
         return s;
-    }
-
-    public void aplicarDescuento() {
-        if (seleccionDescuento != null) {
-            for (Detalle detalle : detalles) {
-                Integer subtotalSinDescuento = detalle.getCantidad() * detalle.getPrecioUnitario();
-                Double descuentoSinRedondear = subtotalSinDescuento.doubleValue() * seleccionDescuento.proporcionDescuento();
-                log.info("descuentoSinRedondear=" + descuentoSinRedondear);
-                Integer descuentoRedondeado = Redondeo.redondear_DOWN(descuentoSinRedondear, 0).intValue();
-                log.info("descuentoRedondeado=" + descuentoRedondeado);
-                detalle.setDescuento(descuentoRedondeado);
-
-                Integer subtotalConDescuento = (detalle.getCantidad() * detalle.getPrecioUnitario()) - detalle.getDescuento();
-                detalle.setSubtotal(subtotalConDescuento);
-            }
-        } else {
-            for (Detalle detalle : detalles) {
-                detalle.setDescuento(0);
-
-                Integer subtotalSinDescuento = detalle.getCantidad() * detalle.getPrecioUnitario();
-                detalle.setSubtotal(subtotalSinDescuento);
-            }
-        }
     }
 
     public void nuevoComprobante() throws IOException {
@@ -411,20 +319,6 @@ public class NuevoComprobanteController extends AbstractController implements Se
      */
     public void setSeleccionDetalle(Detalle seleccionDetalle) {
         this.seleccionDetalle = seleccionDetalle;
-    }
-
-    /**
-     * @return the seleccionDescuento
-     */
-    public Descuento getSeleccionDescuento() {
-        return seleccionDescuento;
-    }
-
-    /**
-     * @param seleccionDescuento the seleccionDescuento to set
-     */
-    public void setSeleccionDescuento(Descuento seleccionDescuento) {
-        this.seleccionDescuento = seleccionDescuento;
     }
 
     /**

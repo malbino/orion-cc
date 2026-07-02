@@ -29,7 +29,7 @@ import org.malbino.orion.facades.RecursoFacade;
  */
 @WebFilter(urlPatterns = {
     "/administrador/*",
-    "/caja/*",
+    "/cajas/*",
     "/estudiante/*",
     "/fileEstudiante/*",
     "/gestionesAcademicas/*",

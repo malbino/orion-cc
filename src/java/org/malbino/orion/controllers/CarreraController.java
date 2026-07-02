@@ -6,6 +6,7 @@ package org.malbino.orion.controllers;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -15,6 +16,7 @@ import javax.inject.Named;
 import org.malbino.orion.entities.Carrera;
 import org.malbino.orion.entities.Instituto;
 import org.malbino.orion.entities.Log;
+import org.malbino.orion.entities.PlanPago;
 import org.malbino.orion.enums.EntidadLog;
 import org.malbino.orion.enums.EventoLog;
 import org.malbino.orion.facades.InstitutoFacade;
@@ -38,6 +40,7 @@ public class CarreraController extends AbstractController implements Serializabl
     private Carrera nuevaCarrera;
     private Carrera seleccionCarrera;
     private Instituto instituto;
+    private PlanPago planPago;
 
     private String keyword;
 
@@ -61,6 +64,42 @@ public class CarreraController extends AbstractController implements Serializabl
 
     public void buscar() {
         carreras = carreraFacade.buscar(keyword);
+    }
+
+    // nueva carrera
+    public void nuevoPlanPago_NuevaCarrera() {
+        PlanPago planPago = new PlanPago();
+        planPago.setCarrera(nuevaCarrera);
+        planPago.setNumeroCuotas(0);
+        planPago.setMontoCuota(BigDecimal.ZERO);
+
+        nuevaCarrera.getPlanesPago().add(planPago);
+    }
+
+    public void eliminarPlanPago_NuevaCarrera() {
+        nuevaCarrera.getPlanesPago().remove(planPago);
+    }
+
+    public void limpiarPlanesPago_NuevaCarrera() {
+        nuevaCarrera.getPlanesPago().clear();
+    }
+
+    // editar carrera
+    public void nuevoPlanPago_EditarCarrera() {
+        PlanPago planPago = new PlanPago();
+        planPago.setCarrera(seleccionCarrera);
+        planPago.setNumeroCuotas(0);
+        planPago.setMontoCuota(BigDecimal.ZERO);
+
+        seleccionCarrera.getPlanesPago().add(planPago);
+    }
+
+    public void eliminarPlanPago_EditarCarrera() {
+        seleccionCarrera.getPlanesPago().remove(planPago);
+    }
+
+    public void limpiarPlanesPago_EditarCarrera() {
+        seleccionCarrera.getPlanesPago().clear();
     }
 
     public void crearCarrera() throws IOException {
@@ -158,5 +197,19 @@ public class CarreraController extends AbstractController implements Serializabl
      */
     public void setKeyword(String keyword) {
         this.keyword = keyword;
+    }
+
+    /**
+     * @return the planPago
+     */
+    public PlanPago getPlanPago() {
+        return planPago;
+    }
+
+    /**
+     * @param planPago the planPago to set
+     */
+    public void setPlanPago(PlanPago planPago) {
+        this.planPago = planPago;
     }
 }

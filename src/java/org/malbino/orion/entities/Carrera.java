@@ -7,7 +7,10 @@ package org.malbino.orion.entities;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,6 +18,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import org.malbino.orion.enums.NivelAcademico;
 import org.malbino.orion.util.Redondeo;
@@ -46,8 +51,13 @@ public class Carrera implements Serializable {
     @JoinColumn(name = "id_jefecarrera")
     @ManyToOne
     private Empleado jefeCarrera;
+    
+    @OneToMany(mappedBy = "carrera", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+    @OrderBy(value = "nombre")
+    private List<PlanPago> planesPago;
 
     public Carrera() {
+        planesPago  = new ArrayList<>();
     }
 
     public String idnumberMoodle() {
@@ -210,5 +220,19 @@ public class Carrera implements Serializable {
      */
     public void setPrecio(BigDecimal precio) {
         this.precio = precio;
+    }
+
+    /**
+     * @return the planesPago
+     */
+    public List<PlanPago> getPlanesPago() {
+        return planesPago;
+    }
+
+    /**
+     * @param planesPago the planesPago to set
+     */
+    public void setPlanesPago(List<PlanPago> planesPago) {
+        this.planesPago = planesPago;
     }
 }
