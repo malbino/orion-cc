@@ -91,20 +91,17 @@ public class PlanPago implements Serializable {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("PlanPago{");
-        sb.append("id_planpago=").append(id_planpago);
-        sb.append(", nombre=").append(nombre);
-        sb.append(", numeroCuotas=").append(numeroCuotas);
-        sb.append(", montoCuota=").append(montoCuota);
-        sb.append(", carrera=").append(carrera);
-        sb.append('}');
+        sb.append(nombre);
+        sb.append(" [");
+        sb.append(numeroCuotas + " CUOTAS");
+        sb.append("]");
         return sb.toString();
     }
 
     public String montoCuota() {
         return Redondeo.formatear_csm(montoCuota);
     }
-    
+
     public String total() {
         BigDecimal total = BigDecimal.valueOf(numeroCuotas).multiply(montoCuota);
         return Redondeo.formatear_csm(total);

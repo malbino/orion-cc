@@ -6,10 +6,13 @@
 package org.malbino.orion.entities;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,13 +20,16 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import org.malbino.orion.enums.Condicion;
 import org.malbino.orion.enums.Tipo;
 import org.malbino.orion.util.Fecha;
+import org.malbino.orion.util.Redondeo;
 
 /**
  *
@@ -55,26 +61,57 @@ public class Inscrito implements Serializable {
     @JoinColumn(name = "id_gestionacademica")
     @ManyToOne
     private GestionAcademica gestionAcademica;
-    
+
     @JoinColumn(name = "id_campus")
     @ManyToOne
     private Campus campus;
 
-    @OneToMany(mappedBy = "inscrito", orphanRemoval = true)
+    @OneToMany(mappedBy = "inscrito", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<Nota> notas;
 
+    @OneToMany(mappedBy = "inscrito", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+    @OrderBy(value = "numero")
+    private List<Cuota> cuotas;
+
+    @Transient
+    private PlanPago planPago;
+
     public Inscrito() {
+        notas = new ArrayList<>();
+        cuotas = new ArrayList<>();
     }
 
-    public Inscrito(Date fecha, Tipo tipo, Long codigo, Integer numero, Estudiante estudiante, Carrera carrera, GestionAcademica gestionAcademica, Campus campus) {
-        this.fecha = fecha;
-        this.tipo = tipo;
-        this.codigo = codigo;
-        this.numero = numero;
-        this.estudiante = estudiante;
-        this.carrera = carrera;
-        this.gestionAcademica = gestionAcademica;
-        this.campus = campus;
+    public String horasNotas() {
+        Integer horasNotas = 0;
+        for (Nota nota : notas) {
+            horasNotas = horasNotas + nota.getModulo().getHoras();
+        }
+        return horasNotas.toString();
+    }
+
+    public String montoCuotas() {
+        BigDecimal montoCuotas = BigDecimal.ZERO;
+        for (Cuota cuota : cuotas) {
+            montoCuotas = montoCuotas.add(cuota.getMonto());
+        }
+        return Redondeo.formatear_csm(montoCuotas);
+    }
+
+    public String pagadoCuotas() {
+        BigDecimal pagadoCuotas = BigDecimal.ZERO;
+        for (Cuota cuota : cuotas) {
+            pagadoCuotas = pagadoCuotas.add(cuota.getPagado());
+        }
+        return Redondeo.formatear_csm(pagadoCuotas);
+    }
+
+    public String adeudadoCuotas() {
+        BigDecimal adeudadoCuotas = BigDecimal.ZERO;
+        for (Cuota cuota : cuotas) {
+            BigDecimal adeudado = cuota.getMonto().subtract(cuota.getPagado());
+            adeudadoCuotas = adeudadoCuotas.add(adeudado);
+        }
+        return Redondeo.formatear_csm(adeudadoCuotas);
     }
 
     /**
@@ -285,5 +322,33 @@ public class Inscrito implements Serializable {
      */
     public void setCampus(Campus campus) {
         this.campus = campus;
+    }
+
+    /**
+     * @return the cuotas
+     */
+    public List<Cuota> getCuotas() {
+        return cuotas;
+    }
+
+    /**
+     * @param cuotas the cuotas to set
+     */
+    public void setCuotas(List<Cuota> cuotas) {
+        this.cuotas = cuotas;
+    }
+
+    /**
+     * @return the planPago
+     */
+    public PlanPago getPlanPago() {
+        return planPago;
+    }
+
+    /**
+     * @param planPago the planPago to set
+     */
+    public void setPlanPago(PlanPago planPago) {
+        this.planPago = planPago;
     }
 }

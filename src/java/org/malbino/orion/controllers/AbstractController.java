@@ -199,7 +199,7 @@ public abstract class AbstractController implements Serializable {
     public List<ConceptoPago> listaConceptosPago() {
         return conceptoPagoFacade.listaConceptoPago();
     }
-
+    
     public Turno[] listaTurnos() {
         return Turno.values();
     }

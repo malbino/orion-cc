@@ -6,6 +6,7 @@ package org.malbino.orion.controllers;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -13,17 +14,18 @@ import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-import org.malbino.orion.entities.Campus;
 import org.malbino.orion.entities.Carrera;
 import org.malbino.orion.entities.CarreraEstudiante;
-import org.malbino.orion.entities.Estudiante;
-import org.malbino.orion.entities.GestionAcademica;
+import org.malbino.orion.entities.Cuota;
+import org.malbino.orion.entities.Inscrito;
 import org.malbino.orion.entities.Log;
+import org.malbino.orion.entities.PlanPago;
 import org.malbino.orion.entities.Usuario;
 import org.malbino.orion.enums.EntidadLog;
 import org.malbino.orion.enums.EventoLog;
-import org.malbino.orion.facades.ActividadFacade;
+import org.malbino.orion.facades.CarreraEstudianteFacade;
 import org.malbino.orion.facades.InscritoFacade;
+import org.malbino.orion.facades.PlanPagoFacade;
 import org.malbino.orion.facades.negocio.InscripcionesFacade;
 import org.malbino.orion.util.Encriptador;
 import org.malbino.orion.util.Fecha;
@@ -44,45 +46,58 @@ public class CambioCarreraController extends AbstractController implements Seria
     @EJB
     InscripcionesFacade inscripcionesFacade;
     @EJB
-    ActividadFacade actividadFacade;
+    PlanPagoFacade planPagoFacade;
+    @EJB
+    CarreraEstudianteFacade carreraEstudianteFacade;
     @Inject
     LoginController loginController;
 
-    private Estudiante seleccionEstudiante;
-    private CarreraEstudiante seleccionCarreraEstudiante;
-    private GestionAcademica seleccionGestionAcademica;
-    private Campus seleccionCampus;
+    private Inscrito inscrito;
 
     @PostConstruct
     public void init() {
-        seleccionEstudiante = null;
-        seleccionCarreraEstudiante = null;
-        seleccionGestionAcademica = null;
-        seleccionCampus = null;
+        inscrito = new Inscrito();
     }
 
     public void reinit() {
-        seleccionEstudiante = null;
-        seleccionCarreraEstudiante = null;
-        seleccionGestionAcademica = null;
-        seleccionCampus = null;
+        inscrito = new Inscrito();
     }
 
-    public List<CarreraEstudiante> listaCarrerasEstudiante() {
-        List<CarreraEstudiante> l = new ArrayList<>();
+    @Override
+    public List<Carrera> listaCarreras() {
+        List<Carrera> l = new ArrayList<>();
 
-        List<Carrera> carreras = carreraFacade.listaCarreras();
-        for (Carrera carrera : carreras) {
-            CarreraEstudiante.CarreraEstudianteId carreraEstudianteId = new CarreraEstudiante.CarreraEstudianteId();
-            carreraEstudianteId.setId_carrera(carrera.getId_carrera());
-            carreraEstudianteId.setId_persona(0);
-            CarreraEstudiante carreraEstudiante = new CarreraEstudiante();
-            carreraEstudiante.setCarreraEstudianteId(carreraEstudianteId);
-            carreraEstudiante.setCarrera(carrera);
+        if (inscrito.getEstudiante() != null) {
+            l = carreraFacade.listaCarreras();
 
-            l.add(carreraEstudiante);
+            List<CarreraEstudiante> carrerasEstudiante = carreraEstudianteFacade.listaCarrerasEstudiante(inscrito.getEstudiante().getId_persona());
+            for (CarreraEstudiante carreraEstudiante : carrerasEstudiante) {
+                l.remove(carreraEstudiante.getCarrera());
+            }
         }
+
         return l;
+    }
+
+    public List<PlanPago> listaPlanesPago() {
+        List<PlanPago> l = new ArrayList<>();
+
+        if (inscrito.getCarrera() != null) {
+            l = planPagoFacade.listaPlanesPago(inscrito.getCarrera().getId_carrera());
+        }
+
+        return l;
+    }
+
+    public void cuotasInscrito() {
+        if (inscrito.getPlanPago() != null) {
+            inscrito.getCuotas().clear();
+
+            for (int i = 1; i <= inscrito.getPlanPago().getNumeroCuotas(); i++) {
+                Cuota cuota = new Cuota(i, "C" + i, "UNIDAD", "CUOTA " + i, inscrito.getPlanPago().getMontoCuota(), BigDecimal.ZERO, inscrito);
+                inscrito.getCuotas().add(cuota);
+            }
+        }
     }
 
     public void copiarUsuario(Usuario usuario) {
@@ -102,23 +117,22 @@ public class CambioCarreraController extends AbstractController implements Seria
     }
 
     public void registrarEstudiante() throws IOException {
-        if (inscritoFacade.buscarInscrito(seleccionEstudiante.getId_persona(), seleccionCarreraEstudiante.getCarrera().getId_carrera(), seleccionGestionAcademica.getId_gestionacademica()) == null) {
-            if (seleccionEstudiante.getDiplomaBachiller()) {
+        if (inscritoFacade.buscarInscrito(inscrito.getEstudiante().getId_persona(), inscrito.getCarrera().getId_carrera(), inscrito.getGestionAcademica().getId_gestionacademica()) == null) {
+            if (inscrito.getEstudiante().getDiplomaBachiller()) {
                 String contrasena = Generador.generarContrasena();
-                seleccionEstudiante.setContrasena(Encriptador.encriptar(contrasena));
-                seleccionEstudiante.setContrasenaSinEncriptar(contrasena);
-                if (inscripcionesFacade.cambioCarrera(seleccionEstudiante, seleccionCarreraEstudiante, seleccionGestionAcademica, seleccionCampus)) {
-                    copiarUsuario(seleccionEstudiante);
+                inscrito.getEstudiante().setContrasena(Encriptador.encriptar(contrasena));
+                inscrito.getEstudiante().setContrasenaSinEncriptar(contrasena);
+                if (inscripcionesFacade.cambioCarrera(inscrito)) {
+                    copiarUsuario(inscrito.getEstudiante());
 
                     //log
-                    logFacade.create(new Log(Fecha.getDate(), EventoLog.CREATE, EntidadLog.ESTUDIANTE, seleccionEstudiante.getId_persona(), "Inscripción estudiante cambio de carrera", loginController.getUsr().toString()));
+                    logFacade.create(new Log(Fecha.getDate(), EventoLog.CREATE, EntidadLog.ESTUDIANTE, inscrito.getEstudiante().getId_persona(), "Inscripción estudiante cambio de carrera", loginController.getUsr().toString()));
 
-                    this.insertarParametro("est", seleccionEstudiante);
-                    this.insertarParametro("car", seleccionCarreraEstudiante.getCarrera());
+                    this.insertarParametro("inscrito", inscrito);
 
                     reinit();
 
-                    this.toComprobantePago();
+                    this.toFichaInscripcion();
                 } else {
                     this.mensajeDeError("No se pudo registrar al estudiante.");
                 }
@@ -134,63 +148,22 @@ public class CambioCarreraController extends AbstractController implements Seria
         this.redireccionarViewId("/inscripciones/cambioCarrera/cambioCarrera");
     }
 
-    public void toComprobantePago() throws IOException {
-        this.redireccionarViewId("/inscripciones/cambioCarrera/comprobantePago");
+    public void toFichaInscripcion() throws IOException {
+        this.redireccionarViewId("/inscripciones/cambioCarrera/fichaInscripcion");
     }
 
     /**
-     * @return the seleccionEstudiante
+     * @return the inscrito
      */
-    public Estudiante getSeleccionEstudiante() {
-        return seleccionEstudiante;
+    public Inscrito getInscrito() {
+        return inscrito;
     }
 
     /**
-     * @param seleccionEstudiante the seleccionEstudiante to set
+     * @param inscrito the inscrito to set
      */
-    public void setSeleccionEstudiante(Estudiante seleccionEstudiante) {
-        this.seleccionEstudiante = seleccionEstudiante;
+    public void setInscrito(Inscrito inscrito) {
+        this.inscrito = inscrito;
     }
 
-    /**
-     * @return the seleccionCarreraEstudiante
-     */
-    public CarreraEstudiante getSeleccionCarreraEstudiante() {
-        return seleccionCarreraEstudiante;
-    }
-
-    /**
-     * @param seleccionCarreraEstudiante the seleccionCarreraEstudiante to set
-     */
-    public void setSeleccionCarreraEstudiante(CarreraEstudiante seleccionCarreraEstudiante) {
-        this.seleccionCarreraEstudiante = seleccionCarreraEstudiante;
-    }
-
-    /**
-     * @return the seleccionGestionAcademica
-     */
-    public GestionAcademica getSeleccionGestionAcademica() {
-        return seleccionGestionAcademica;
-    }
-
-    /**
-     * @param seleccionGestionAcademica the seleccionGestionAcademica to set
-     */
-    public void setSeleccionGestionAcademica(GestionAcademica seleccionGestionAcademica) {
-        this.seleccionGestionAcademica = seleccionGestionAcademica;
-    }
-
-    /**
-     * @return the seleccionCampus
-     */
-    public Campus getSeleccionCampus() {
-        return seleccionCampus;
-    }
-
-    /**
-     * @param seleccionCampus the seleccionCampus to set
-     */
-    public void setSeleccionCampus(Campus seleccionCampus) {
-        this.seleccionCampus = seleccionCampus;
-    }
 }

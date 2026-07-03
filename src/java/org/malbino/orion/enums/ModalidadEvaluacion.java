@@ -10,7 +10,7 @@ package org.malbino.orion.enums;
  * @author Martin
  */
 public enum ModalidadEvaluacion {
-    MODULAR_2P("MODULAR", 1, 2, 80, 40);
+    MODULAR_2P("MODULAR", 3, 2, 80, 60);
 
     private String nombre;
     private Integer cantidadMaximaReprobaciones;

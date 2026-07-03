@@ -24,6 +24,8 @@ import org.malbino.orion.entities.Inscrito;
 import org.malbino.orion.entities.Modulo;
 import org.malbino.orion.entities.Nota;
 import org.malbino.orion.entities.Rol;
+import org.malbino.orion.enums.Condicion;
+import org.malbino.orion.enums.Modalidad;
 
 import org.malbino.orion.enums.Tipo;
 import org.malbino.orion.facades.CarreraEstudianteFacade;
@@ -91,6 +93,7 @@ public class InscripcionesFacade {
         carreraEstudianteFacade.create(carreraEstudiante);
 
         // inscrito
+        /*
         log.info("gestionAcademica=" + gestionAcademica);
         Date fecha = estudiante.getFecha();
         Integer maximoNumero = inscritoFacade.maximoNumero(gestionAcademica.getId_gestionacademica(), carreraEstudiante.getCarrera().getId_carrera());
@@ -104,9 +107,9 @@ public class InscripcionesFacade {
             codigo = maximoCodigo + 1;
             numero = maximoNumero + 1;
         }
-        Inscrito inscrito = new Inscrito(fecha, Tipo.NUEVO, codigo, numero, estudiante, carreraEstudiante.getCarrera(), gestionAcademica, campus);
+        Inscrito inscrito = new Inscrito();
         em.persist(inscrito);
-
+         */
         return true;
     }
 
@@ -116,7 +119,7 @@ public class InscripcionesFacade {
         if (estudiante.getMatricula() == null && estudiante.getUsuario() == null) {
             Date fecha = notaFacade.fechaInicio(estudiante.getId_persona());
             if (fecha == null) {
-                estudiante.setFecha(estudiante.getFechaInscripcion()); //fecha de inscripcion
+                //estudiante.setFecha(estudiante.getFechaInscripcion()); //fecha de inscripcion
             } else {
                 estudiante.setFecha(fecha);
             }
@@ -134,7 +137,7 @@ public class InscripcionesFacade {
         em.merge(estudiante);
 
         // inscrito
-        Date fecha = estudiante.getFechaInscripcion(); //fecha de inscripcion
+        Date fecha = null; //fecha de inscripcion
         Integer maximoNumero = inscritoFacade.maximoNumero(gestionAcademica.getId_gestionacademica(), carrera.getId_carrera());
         Long maximoCodigo = inscritoFacade.maximoCodigo(gestionAcademica.getId_gestionacademica(), carrera.getId_carrera());
         Long codigo;
@@ -146,19 +149,20 @@ public class InscripcionesFacade {
             codigo = maximoCodigo + 1;
             numero = maximoNumero + 1;
         }
-        Inscrito inscrito = new Inscrito(fecha, Tipo.REGULAR, codigo, numero, estudiante, carrera, gestionAcademica, campus);
+        Inscrito inscrito = new Inscrito();
         em.persist(inscrito);
 
         return true;
     }
 
     @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public boolean cambioCarrera(Estudiante estudiante, CarreraEstudiante carreraEstudiante, GestionAcademica gestionAcademica, Campus campus) {
+    public boolean cambioCarrera(Inscrito inscrito) {
         // estudiante
+        Estudiante estudiante = inscrito.getEstudiante();
         if (estudiante.getMatricula() == null && estudiante.getUsuario() == null) {
             Date fecha = notaFacade.fechaInicio(estudiante.getId_persona());
             if (fecha == null) {
-                estudiante.setFecha(estudiante.getFechaInscripcion()); // fecha de inscripcion
+                estudiante.setFecha(inscrito.getFecha()); // fecha de inscripcion
             } else {
                 estudiante.setFecha(fecha);
             }
@@ -176,23 +180,34 @@ public class InscripcionesFacade {
         em.merge(estudiante);
 
         // carreraestudiante
-        carreraEstudiante.getCarreraEstudianteId().setId_persona(estudiante.getId_persona());
+        Carrera carrera = inscrito.getCarrera();
+        CarreraEstudiante.CarreraEstudianteId carreraEstudianteId = new CarreraEstudiante.CarreraEstudianteId(carrera.getId_carrera(), estudiante.getId_persona());
+        CarreraEstudiante carreraEstudiante = new CarreraEstudiante(carreraEstudianteId);
         carreraEstudianteFacade.create(carreraEstudiante);
 
         // inscrito
-        Date fecha = estudiante.getFechaInscripcion(); // fecha de inscripcion
-        Integer maximoNumero = inscritoFacade.maximoNumero(gestionAcademica.getId_gestionacademica(), carreraEstudiante.getCarrera().getId_carrera());
-        Long maximoCodigo = inscritoFacade.maximoCodigo(gestionAcademica.getId_gestionacademica(), carreraEstudiante.getCarrera().getId_carrera());
+        GestionAcademica gestionAcademica = inscrito.getGestionAcademica();
+        Integer maximoNumero = inscritoFacade.maximoNumero(gestionAcademica.getId_gestionacademica(), carrera.getId_carrera());
+        Long maximoCodigo = inscritoFacade.maximoCodigo(gestionAcademica.getId_gestionacademica(), carrera.getId_carrera());
         Long codigo;
         Integer numero;
         if (maximoNumero == null && maximoCodigo == null) {
-            codigo = (Long.parseLong(gestionAcademica.getGestion().toString() + gestionAcademica.getPeriodo().getPeriodoEntero().toString() + carreraEstudiante.getCarrera().getId_carrera().toString()) * 10000) + 1;
+            codigo = (Long.parseLong(gestionAcademica.getGestion().toString() + gestionAcademica.getPeriodo().getPeriodoEntero().toString() + carrera.getId_carrera().toString()) * 10000) + 1;
             numero = 1;
         } else {
             codigo = maximoCodigo + 1;
             numero = maximoNumero + 1;
         }
-        Inscrito inscrito = new Inscrito(fecha, Tipo.NUEVO, codigo, numero, estudiante, carreraEstudiante.getCarrera(), gestionAcademica, campus);
+        inscrito.setTipo(Tipo.NUEVO);
+        inscrito.setCodigo(codigo);
+        inscrito.setNumero(numero);
+
+        List<Modulo> modulos = moduloFacade.listaModulos(carrera);
+        for (Modulo modulo : modulos) {
+            Nota nota = new Nota(0, Modalidad.REGULAR, Condicion.ABANDONO, gestionAcademica, modulo, estudiante, inscrito, modulo.getGrupo());
+            inscrito.getNotas().add(nota);
+        }
+
         em.persist(inscrito);
 
         return true;
