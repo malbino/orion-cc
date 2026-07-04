@@ -69,9 +69,9 @@ public class InscripcionesFacade {
     CarreraEstudianteFacade carreraEstudianteFacade;
 
     @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public boolean registrarEstudianteNuevo(Estudiante estudiante, CarreraEstudiante carreraEstudiante, GestionAcademica gestionAcademica, Campus campus) {
+    public boolean registrarEstudianteNuevo(Inscrito inscrito) {
         // estudiante
-        log.info("estudiante=" + estudiante);
+        Estudiante estudiante = inscrito.getEstudiante();
         Integer maximaMatricula = estudianteFacade.maximaMatricula(estudiante.getFecha());
         Integer matricula;
         if (maximaMatricula == null) {
@@ -88,28 +88,38 @@ public class InscripcionesFacade {
         em.flush();
 
         // carreraestudiante
-        log.info("carreraEstudiante=" + carreraEstudiante);
-        carreraEstudiante.getCarreraEstudianteId().setId_persona(estudiante.getId_persona());
+        // carreraestudiante
+        Carrera carrera = inscrito.getCarrera();
+        CarreraEstudiante.CarreraEstudianteId carreraEstudianteId = new CarreraEstudiante.CarreraEstudianteId(carrera.getId_carrera(), estudiante.getId_persona());
+        CarreraEstudiante carreraEstudiante = new CarreraEstudiante(carreraEstudianteId);
         carreraEstudianteFacade.create(carreraEstudiante);
 
         // inscrito
-        /*
-        log.info("gestionAcademica=" + gestionAcademica);
+        GestionAcademica gestionAcademica = inscrito.getGestionAcademica();
         Date fecha = estudiante.getFecha();
-        Integer maximoNumero = inscritoFacade.maximoNumero(gestionAcademica.getId_gestionacademica(), carreraEstudiante.getCarrera().getId_carrera());
-        Long maximoCodigo = inscritoFacade.maximoCodigo(gestionAcademica.getId_gestionacademica(), carreraEstudiante.getCarrera().getId_carrera());
+        Integer maximoNumero = inscritoFacade.maximoNumero(gestionAcademica.getId_gestionacademica(), carrera.getId_carrera());
+        Long maximoCodigo = inscritoFacade.maximoCodigo(gestionAcademica.getId_gestionacademica(), carrera.getId_carrera());
         Long codigo;
         Integer numero;
         if (maximoNumero == null && maximoCodigo == null) {
-            codigo = (Long.parseLong(gestionAcademica.getGestion().toString() + gestionAcademica.getPeriodo().getPeriodoEntero().toString() + carreraEstudiante.getCarrera().getId_carrera().toString()) * 10000) + 1;
+            codigo = (Long.parseLong(gestionAcademica.getGestion().toString() + gestionAcademica.getPeriodo().getPeriodoEntero().toString() + carrera.getId_carrera().toString()) * 10000) + 1;
             numero = 1;
         } else {
             codigo = maximoCodigo + 1;
             numero = maximoNumero + 1;
         }
-        Inscrito inscrito = new Inscrito();
+        inscrito.setTipo(Tipo.NUEVO);
+        inscrito.setCodigo(codigo);
+        inscrito.setNumero(numero);
+
+        List<Modulo> modulos = moduloFacade.listaModulos(carrera);
+        for (Modulo modulo : modulos) {
+            Nota nota = new Nota(0, Modalidad.REGULAR, Condicion.ABANDONO, gestionAcademica, modulo, estudiante, inscrito, modulo.getGrupo());
+            inscrito.getNotas().add(nota);
+        }
+
         em.persist(inscrito);
-         */
+
         return true;
     }
 

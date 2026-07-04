@@ -81,6 +81,13 @@ public class Inscrito implements Serializable {
         cuotas = new ArrayList<>();
     }
 
+    public Inscrito(Estudiante estudiante) {
+        this.estudiante = estudiante;
+
+        notas = new ArrayList<>();
+        cuotas = new ArrayList<>();
+    }
+
     public String horasNotas() {
         Integer horasNotas = 0;
         for (Nota nota : notas) {

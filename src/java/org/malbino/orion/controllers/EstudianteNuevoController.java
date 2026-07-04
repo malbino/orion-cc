@@ -6,6 +6,7 @@ package org.malbino.orion.controllers;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -13,22 +14,24 @@ import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-import org.malbino.orion.entities.Campus;
 import org.malbino.orion.entities.Carrera;
-import org.malbino.orion.entities.CarreraEstudiante;
+import org.malbino.orion.entities.Cuota;
 import org.malbino.orion.entities.Estudiante;
-import org.malbino.orion.entities.GestionAcademica;
+import org.malbino.orion.entities.Inscrito;
 import org.malbino.orion.entities.Log;
+import org.malbino.orion.entities.PlanPago;
 import org.malbino.orion.entities.Usuario;
 import org.malbino.orion.enums.EntidadLog;
 import org.malbino.orion.enums.EventoLog;
-import org.malbino.orion.facades.ActividadFacade;
+import org.malbino.orion.facades.PlanPagoFacade;
 import org.malbino.orion.facades.negocio.InscripcionesFacade;
 import org.malbino.orion.util.Encriptador;
 import org.malbino.orion.util.Fecha;
 import org.malbino.orion.util.Generador;
 import org.malbino.orion.util.Propiedades;
 import org.malbino.pfsense.webservices.CopiarUsuario;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -38,49 +41,65 @@ import org.malbino.pfsense.webservices.CopiarUsuario;
 @SessionScoped
 public class EstudianteNuevoController extends AbstractController implements Serializable {
 
+    private static final Logger log = LoggerFactory.getLogger(InscripcionesFacade.class);
+
     @EJB
     InscripcionesFacade inscripcionesFacade;
     @EJB
-    ActividadFacade actividadFacade;
+    PlanPagoFacade planPagoFacade;
     @Inject
     LoginController loginController;
 
-    private Estudiante nuevoEstudiante;
-    private GestionAcademica seleccionGestionAcademica;
-    private CarreraEstudiante seleccionCarreraEstudiante;
-    private Campus seleccionCampus;
+    private Inscrito inscrito;
 
     @PostConstruct
     public void init() {
-        nuevoEstudiante = new Estudiante();
-        seleccionGestionAcademica = null;
-        seleccionCarreraEstudiante = null;
-        seleccionCampus = null;
+        Estudiante estudiante = new Estudiante();
+        inscrito = new Inscrito(estudiante);
     }
 
     public void reinit() {
-        nuevoEstudiante = new Estudiante();
-        seleccionGestionAcademica = null;
-        seleccionCarreraEstudiante = null;
-        seleccionCampus = null;
+        Estudiante estudiante = new Estudiante();
+        inscrito = new Inscrito(estudiante);
     }
 
-    public List<CarreraEstudiante> listaCarrerasEstudiante() {
-        List<CarreraEstudiante> l = new ArrayList<>();
-        if (seleccionGestionAcademica != null) {
-            List<Carrera> carreras = carreraFacade.listaCarreras();
-            for (Carrera carrera : carreras) {
-                CarreraEstudiante.CarreraEstudianteId carreraEstudianteId = new CarreraEstudiante.CarreraEstudianteId();
-                carreraEstudianteId.setId_carrera(carrera.getId_carrera());
-                carreraEstudianteId.setId_persona(0);
-                CarreraEstudiante carreraEstudiante = new CarreraEstudiante();
-                carreraEstudiante.setCarreraEstudianteId(carreraEstudianteId);
-                carreraEstudiante.setCarrera(carrera);
+    @Override
+    public List<Carrera> listaCarreras() {
+        List<Carrera> l = new ArrayList<>();
 
-                l.add(carreraEstudiante);
-            }
+        if (inscrito.getEstudiante() != null) {
+            l = carreraFacade.listaCarreras();
         }
+
         return l;
+    }
+
+    public List<PlanPago> listaPlanesPago() {
+        List<PlanPago> l = new ArrayList<>();
+
+        if (inscrito.getCarrera() != null) {
+            l = planPagoFacade.listaPlanesPago(inscrito.getCarrera().getId_carrera());
+        }
+
+        return l;
+    }
+
+    public void planPagoInscrito() {
+        inscrito.setPlanPago(null);
+        inscrito.getCuotas().clear();
+    }
+
+    public void cuotasInscrito() {
+        inscrito.getCuotas().clear();
+
+        if (inscrito.getPlanPago() != null) {
+            for (int i = 1; i <= inscrito.getPlanPago().getNumeroCuotas(); i++) {
+                Cuota cuota = new Cuota(i, "C" + i, "UNIDAD", "CUOTA " + i, inscrito.getPlanPago().getMontoCuota(), BigDecimal.ZERO, inscrito);
+                inscrito.getCuotas().add(cuota);
+            }
+        } else {
+            inscrito.getCuotas().clear();
+        }
     }
 
     public void copiarUsuario(Usuario usuario) {
@@ -100,23 +119,22 @@ public class EstudianteNuevoController extends AbstractController implements Ser
     }
 
     public void registrarEstudiante() throws IOException {
-        if (estudianteFacade.buscarPorDni(nuevoEstudiante.getDni()) == null) {
+        if (estudianteFacade.buscarPorDni(inscrito.getEstudiante().getDni()) == null) {
             String contrasena = Generador.generarContrasena();
-            nuevoEstudiante.setContrasena(Encriptador.encriptar(contrasena));
-            nuevoEstudiante.setContrasenaSinEncriptar(contrasena);
+            inscrito.getEstudiante().setContrasena(Encriptador.encriptar(contrasena));
+            inscrito.getEstudiante().setContrasenaSinEncriptar(contrasena);
 
-            if (inscripcionesFacade.registrarEstudianteNuevo(nuevoEstudiante, seleccionCarreraEstudiante, seleccionGestionAcademica, seleccionCampus)) {
-                copiarUsuario(nuevoEstudiante);
+            if (inscripcionesFacade.registrarEstudianteNuevo(inscrito)) {
+                copiarUsuario(inscrito.getEstudiante());
 
                 //logF
-                logFacade.create(new Log(Fecha.getDate(), EventoLog.CREATE, EntidadLog.ESTUDIANTE, nuevoEstudiante.getId_persona(), "Inscripción estudiante nuevo", loginController.getUsr().toString()));
+                logFacade.create(new Log(Fecha.getDate(), EventoLog.CREATE, EntidadLog.ESTUDIANTE, inscrito.getEstudiante().getId_persona(), "Inscripción estudiante nuevo", loginController.getUsr().toString()));
 
-                this.insertarParametro("est", nuevoEstudiante);
-                this.insertarParametro("car", seleccionCarreraEstudiante.getCarrera());
+                this.insertarParametro("inscrito", inscrito);
 
                 reinit();
 
-                this.toComprobantePago();
+                this.toFichaInscripcion();
             } else {
                 this.mensajeDeError("No se pudo registrar al estudiante.");
             }
@@ -129,63 +147,21 @@ public class EstudianteNuevoController extends AbstractController implements Ser
         this.redireccionarViewId("/inscripciones/estudianteNuevo/estudianteNuevo");
     }
 
-    public void toComprobantePago() throws IOException {
-        this.redireccionarViewId("/inscripciones/estudianteNuevo/comprobantePago");
+    public void toFichaInscripcion() throws IOException {
+        this.redireccionarViewId("/inscripciones/estudianteNuevo/fichaInscripcion");
     }
 
     /**
-     * @return the nuevoEstudiante
+     * @return the inscrito
      */
-    public Estudiante getNuevoEstudiante() {
-        return nuevoEstudiante;
+    public Inscrito getInscrito() {
+        return inscrito;
     }
 
     /**
-     * @param nuevoEstudiante the nuevoEstudiante to set
+     * @param inscrito the inscrito to set
      */
-    public void setNuevoEstudiante(Estudiante nuevoEstudiante) {
-        this.nuevoEstudiante = nuevoEstudiante;
-    }
-
-    /**
-     * @return the seleccionGestionAcademica
-     */
-    public GestionAcademica getSeleccionGestionAcademica() {
-        return seleccionGestionAcademica;
-    }
-
-    /**
-     * @param seleccionGestionAcademica the seleccionGestionAcademica to set
-     */
-    public void setSeleccionGestionAcademica(GestionAcademica seleccionGestionAcademica) {
-        this.seleccionGestionAcademica = seleccionGestionAcademica;
-    }
-
-    /**
-     * @return the seleccionCarreraEstudiante
-     */
-    public CarreraEstudiante getSeleccionCarreraEstudiante() {
-        return seleccionCarreraEstudiante;
-    }
-
-    /**
-     * @param seleccionCarreraEstudiante the seleccionCarreraEstudiante to set
-     */
-    public void setSeleccionCarreraEstudiante(CarreraEstudiante seleccionCarreraEstudiante) {
-        this.seleccionCarreraEstudiante = seleccionCarreraEstudiante;
-    }
-
-    /**
-     * @return the seleccionCampus
-     */
-    public Campus getSeleccionCampus() {
-        return seleccionCampus;
-    }
-
-    /**
-     * @param seleccionCampus the seleccionCampus to set
-     */
-    public void setSeleccionCampus(Campus seleccionCampus) {
-        this.seleccionCampus = seleccionCampus;
+    public void setInscrito(Inscrito inscrito) {
+        this.inscrito = inscrito;
     }
 }

@@ -88,6 +88,11 @@ public class CambioCarreraController extends AbstractController implements Seria
 
         return l;
     }
+    
+     public void planPagoInscrito() {
+        inscrito.setPlanPago(null);
+        inscrito.getCuotas().clear();
+    }
 
     public void cuotasInscrito() {
         if (inscrito.getPlanPago() != null) {

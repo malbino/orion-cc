@@ -41,26 +41,6 @@
                                         </div>
 
                                         <div class="ui-g-12 ui-md-4">
-                                            <p:outputLabel for="carrera" value="Carrera:" style="font-size: small"/>
-                                            <p:selectOneMenu id="carrera" value="#{CambioCarreraController.inscrito.carrera}" converter="#{CarreraConverter}" autoWidth="false" required="true" requiredMessage="* Carrera requerida.">
-                                                <f:selectItem itemLabel="" itemValue=""/>
-                                                <f:selectItems value="#{CambioCarreraController.listaCarreras()}" var="carrera" itemLabel="#{carrera.toString()}" itemValue="#{carrera}"/>
-
-                                                <p:ajax update="cuota"/>
-                                            </p:selectOneMenu>
-                                        </div>
-
-                                        <div class="ui-g-12 ui-md-4">
-                                            <p:outputLabel for="cuota" value="Plan de Pago: " style="font-size: small"/>
-                                            <p:selectOneMenu id="cuota" value="#{CambioCarreraController.inscrito.planPago}" converter="#{PlanPagoConverter}" autoWidth="false" required="true" requiredMessage="* Plan de Pago requerido.">
-                                                <f:selectItem itemLabel="" itemValue=""/>
-                                                <f:selectItems value="#{CambioCarreraController.listaPlanesPago()}" var="cuota" itemLabel="#{cuota.toString()}" itemValue="#{cuota}"/>
-
-                                                <p:ajax listener="#{CambioCarreraController.cuotasInscrito()}" update="cuotas"/>
-                                            </p:selectOneMenu>
-                                        </div>
-
-                                        <div class="ui-g-12 ui-md-4">
                                             <p:outputLabel for="gestionAcademica" value="Gestion academica:" style="font-size: small"/> 
                                             <p:selectOneMenu id="gestionAcademica" value="#{CambioCarreraController.inscrito.gestionAcademica}" converter="#{GestionAcademicaConverter}" autoWidth="false" required="true" requiredMessage="* Gestion academica requerida."> 
                                                 <f:selectItem itemLabel="" itemValue="" />
@@ -73,6 +53,26 @@
                                             <p:selectOneMenu id="campus" value="#{CambioCarreraController.inscrito.campus}" converter="#{CampusConverter}" autoWidth="false" required="true" requiredMessage="* Campus requerido.">
                                                 <f:selectItem itemLabel="" itemValue=""/>
                                                 <f:selectItems value="#{CambioCarreraController.listaCampus()}" var="campus" itemLabel="#{campus.toString()}" itemValue="#{campus}"/>
+                                            </p:selectOneMenu>
+                                        </div>
+
+                                        <div class="ui-g-12 ui-md-4">
+                                            <p:outputLabel for="carrera" value="Carrera:" style="font-size: small"/>
+                                            <p:selectOneMenu id="carrera" value="#{CambioCarreraController.inscrito.carrera}" converter="#{CarreraConverter}" autoWidth="false" required="true" requiredMessage="* Carrera requerida.">
+                                                <f:selectItem itemLabel="" itemValue=""/>
+                                                <f:selectItems value="#{CambioCarreraController.listaCarreras()}" var="carrera" itemLabel="#{carrera.toString()}" itemValue="#{carrera}"/>
+
+                                                <p:ajax listener="#{CambioCarreraController.planPagoInscrito()}" update="planPago cuotas"/>
+                                            </p:selectOneMenu>
+                                        </div>
+
+                                        <div class="ui-g-12 ui-md-4">
+                                            <p:outputLabel for="planPago" value="Plan de Pago: " style="font-size: small"/>
+                                            <p:selectOneMenu id="planPago" value="#{CambioCarreraController.inscrito.planPago}" converter="#{PlanPagoConverter}" autoWidth="false" required="true" requiredMessage="* Plan de Pago requerido.">
+                                                <f:selectItem itemLabel="" itemValue=""/>
+                                                <f:selectItems value="#{CambioCarreraController.listaPlanesPago()}" var="cuota" itemLabel="#{cuota.toString()}" itemValue="#{cuota}"/>
+
+                                                <p:ajax listener="#{CambioCarreraController.cuotasInscrito()}" update="cuotas"/>
                                             </p:selectOneMenu>
                                         </div>
                                     </div>
@@ -138,7 +138,7 @@
                                                 </f:facet>
                                             </p:cellEditor>
                                         </p:column>
-                                        
+
                                         <p:column headerText="Condicion" >
                                             <h:outputText value="#{cuota.condicion()}"/>
                                         </p:column>
