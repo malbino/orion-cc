@@ -52,14 +52,6 @@
                                                 <f:selectItems value="#{ReporteIngresosConceptoPagoController.listaCampus()}" var="campus" itemLabel="#{campus.toString()}" itemValue="#{campus}"/>
                                             </p:selectOneMenu>
                                         </div>
-
-                                        <div class="ui-g-12 ui-md-4">
-                                            <p:outputLabel for="conceptoPago" value="Concepto de Pago:" style="font-size: small"/>
-                                            <p:selectOneMenu id="conceptoPago" value="#{ReporteIngresosConceptoPagoController.seleccionConceptoPago}" converter="#{ConceptoPagoConverter}" autoWidth="false" required="true" requiredMessage="* Concepto de Pago requerido."> 
-                                                <f:selectItem itemLabel="" itemValue="" />
-                                                <f:selectItems value="#{ReporteIngresosConceptoPagoController.listaConceptosPago()}" var="conceptoPago" itemLabel="#{conceptoPago.toString()}" itemValue="#{conceptoPago}"/>  
-                                            </p:selectOneMenu>
-                                        </div>
                                     </div>
 
                                     <div class="ui-g ui-fluid">

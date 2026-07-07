@@ -19,6 +19,7 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,7 +31,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.malbino.orion.entities.Campus;
 import org.malbino.orion.entities.Carrera;
-import org.malbino.orion.entities.ConceptoPago;
 import org.malbino.orion.entities.Detalle;
 import org.malbino.orion.entities.GestionAcademica;
 import org.malbino.orion.facades.CampusFacade;
@@ -84,13 +84,11 @@ public class IngresosConceptoPago extends HttpServlet {
         Integer id_gestionacademica = (Integer) request.getSession().getAttribute("id_gestionacademica");
         Integer id_carrera = (Integer) request.getSession().getAttribute("id_carrera");
         Integer id_campus = (Integer) request.getSession().getAttribute("id_campus");
-        Integer id_conceptopago = (Integer) request.getSession().getAttribute("id_conceptopago");
 
-        if (id_gestionacademica != null && id_carrera != null && id_campus != null && id_conceptopago != null) {
+        if (id_gestionacademica != null && id_carrera != null && id_campus != null) {
             GestionAcademica gestionAcademica = gestionAcademicaFacade.find(id_gestionacademica);
             Carrera carrera = carreraFacade.find(id_carrera);
             Campus campus = campusFacade.find(id_carrera);
-            ConceptoPago conceptoPago = conceptoPagoFacade.find(id_conceptopago);
 
             try {
                 response.setContentType(CONTENIDO_PDF);
@@ -100,8 +98,8 @@ public class IngresosConceptoPago extends HttpServlet {
 
                 document.open();
 
-                document.add(titulo(gestionAcademica, carrera, campus, conceptoPago));
-                document.add(contenido(gestionAcademica, carrera, campus, conceptoPago));
+                document.add(titulo(gestionAcademica, carrera, campus));
+                document.add(contenido(gestionAcademica, carrera, campus));
 
                 document.close();
             } catch (IOException | DocumentException ex) {
@@ -111,7 +109,7 @@ public class IngresosConceptoPago extends HttpServlet {
         }
     }
 
-    public PdfPTable titulo(GestionAcademica gestionAcademica, Carrera carrera, Campus campus, ConceptoPago conceptoPago) throws BadElementException, IOException {
+    public PdfPTable titulo(GestionAcademica gestionAcademica, Carrera carrera, Campus campus) throws BadElementException, IOException {
         PdfPTable table = new PdfPTable(100);
 
         //cabecera
@@ -121,7 +119,7 @@ public class IngresosConceptoPago extends HttpServlet {
         image.setAlignment(Image.ALIGN_CENTER);
         PdfPCell cell = new PdfPCell();
         cell.addElement(image);
-        cell.setRowspan(5);
+        cell.setRowspan(4);
         cell.setColspan(10);
         cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
         cell.setBorder(Rectangle.NO_BORDER);
@@ -152,16 +150,10 @@ public class IngresosConceptoPago extends HttpServlet {
         cell.setBorder(Rectangle.NO_BORDER);
         table.addCell(cell);
 
-        cell = new PdfPCell(new Phrase(conceptoPago.toString(), SUBTITULO));
-        cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
-        cell.setColspan(90);
-        cell.setBorder(Rectangle.NO_BORDER);
-        table.addCell(cell);
-
         return table;
     }
 
-    public PdfPTable contenido(GestionAcademica gestionAcademica, Carrera carrera, Campus campus, ConceptoPago conceptoPago) throws BadElementException, IOException {
+    public PdfPTable contenido(GestionAcademica gestionAcademica, Carrera carrera, Campus campus) throws BadElementException, IOException {
         PdfPTable table = new PdfPTable(100);
 
         PdfPCell cell = new PdfPCell(new Phrase(" ", NEGRITA));
@@ -224,7 +216,8 @@ public class IngresosConceptoPago extends HttpServlet {
         cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
         table.addCell(cell);
 
-        List<Detalle> detalles = detalleFacade.ingresosConceptoPago(gestionAcademica.getId_gestionacademica(), carrera.getId_carrera(), campus.getId_campus(), conceptoPago.getId_conceptopago());
+        BigDecimal total = BigDecimal.ZERO;
+        List<Detalle> detalles = detalleFacade.ingresosConceptoPago(gestionAcademica.getId_gestionacademica(), carrera.getId_carrera(), campus.getId_campus());
         for (int i = 0; i < detalles.size(); i++) {
             Detalle detalle = detalles.get(i);
 
@@ -268,11 +261,23 @@ public class IngresosConceptoPago extends HttpServlet {
             cell.setColspan(25);
             table.addCell(cell);
 
+            total = total.add(detalle.getSubtotal());
             cell = new PdfPCell(new Phrase(Redondeo.formatear_csm(detalle.getSubtotal()), NORMAL));
             cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
             cell.setColspan(10);
             table.addCell(cell);
         }
+
+        cell = new PdfPCell(new Phrase("Total (Bs.):", NEGRITA));
+        cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
+        cell.setColspan(90);
+        cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase(Redondeo.formatear_csm(total), NORMAL));
+        cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
+        cell.setColspan(10);
+        table.addCell(cell);
 
         return table;
     }

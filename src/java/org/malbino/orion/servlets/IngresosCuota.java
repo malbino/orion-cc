@@ -119,7 +119,7 @@ public class IngresosCuota extends HttpServlet {
         image.setAlignment(Image.ALIGN_CENTER);
         PdfPCell cell = new PdfPCell();
         cell.addElement(image);
-        cell.setRowspan(5);
+        cell.setRowspan(4);
         cell.setColspan(10);
         cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
         cell.setBorder(Rectangle.NO_BORDER);

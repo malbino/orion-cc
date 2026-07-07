@@ -12,7 +12,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import org.malbino.orion.entities.Campus;
 import org.malbino.orion.entities.Carrera;
-import org.malbino.orion.entities.ConceptoPago;
 import org.malbino.orion.entities.GestionAcademica;
 import org.malbino.orion.entities.Log;
 import org.malbino.orion.enums.EventoLog;
@@ -32,29 +31,25 @@ public class ReporteIngresosConceptoPagoController extends AbstractController im
     private GestionAcademica seleccionGestionAcademica;
     private Carrera seleccionCarrera;
     private Campus seleccionCampus;
-    private ConceptoPago seleccionConceptoPago;
 
     @PostConstruct
     public void init() {
         seleccionGestionAcademica = null;
         seleccionCarrera = null;
         seleccionCampus = null;
-        seleccionConceptoPago = null;
     }
 
     public void reinit() {
         seleccionGestionAcademica = null;
         seleccionCarrera = null;
         seleccionCampus = null;
-        seleccionConceptoPago = null;
     }
 
     public void generarReporte() throws IOException {
-        if (seleccionGestionAcademica != null && seleccionCarrera != null && seleccionCampus != null && seleccionConceptoPago != null) {
+        if (seleccionGestionAcademica != null && seleccionCarrera != null && seleccionCampus != null) {
             this.insertarParametro("id_gestionacademica", seleccionGestionAcademica.getId_gestionacademica());
             this.insertarParametro("id_carrera", seleccionCarrera.getId_carrera());
             this.insertarParametro("id_campus", seleccionCampus.getId_campus());
-            this.insertarParametro("id_conceptopago", seleccionConceptoPago.getId_conceptopago());
 
             toIngresosConceptoPago();
 
@@ -113,19 +108,5 @@ public class ReporteIngresosConceptoPagoController extends AbstractController im
      */
     public void setSeleccionCampus(Campus seleccionCampus) {
         this.seleccionCampus = seleccionCampus;
-    }
-
-    /**
-     * @return the seleccionConceptoPago
-     */
-    public ConceptoPago getSeleccionConceptoPago() {
-        return seleccionConceptoPago;
-    }
-
-    /**
-     * @param seleccionConceptoPago the seleccionConceptoPago to set
-     */
-    public void setSeleccionConceptoPago(ConceptoPago seleccionConceptoPago) {
-        this.seleccionConceptoPago = seleccionConceptoPago;
     }
 }
