@@ -111,12 +111,6 @@ public class InscripcionesFacade {
         inscrito.setCodigo(codigo);
         inscrito.setNumero(numero);
 
-        List<Modulo> modulos = moduloFacade.listaModulos(carrera);
-        for (Modulo modulo : modulos) {
-            Nota nota = new Nota(0, Modalidad.REGULAR, Condicion.ABANDONO, gestionAcademica, modulo, estudiante, inscrito, modulo.getGrupo());
-            inscrito.getNotas().add(nota);
-        }
-
         em.persist(inscrito);
 
         return true;

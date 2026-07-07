@@ -105,11 +105,6 @@ public class CambioCarreraController extends AbstractController implements Seria
         return l;
     }
 
-    public void planPagoInscrito() {
-        inscrito.setPlanPago(null);
-        inscrito.getCuotas().clear();
-    }
-
     public void notasCuotasInscrito() {
         if (inscrito.getCarrera() != null) {
             inscrito.getNotas().clear();
@@ -148,12 +143,41 @@ public class CambioCarreraController extends AbstractController implements Seria
         if (event.getOldStep().compareTo("inscripcion") == 0) {
             notasCuotasInscrito();
 
-            newStep = event.getNewStep();
-        } else {
-            newStep = event.getNewStep();
+            return event.getNewStep();
         }
 
-        return newStep;
+        if (event.getOldStep().compareTo("modulos") == 0) {
+            Boolean b = Boolean.TRUE;
+            List<Nota> notas = inscrito.getNotas();
+            for (Nota nota : notas) {
+                if (nota.getGrupo() == null) {
+                    b = Boolean.FALSE;
+                    break;
+                }
+            }
+
+            if (b) {
+                return event.getNewStep();
+            } else {
+                this.mensajeDeError("Modulo(s) sin grupo.");
+
+                return event.getOldStep();
+            }
+        }
+
+        return event.getNewStep();
+    }
+
+    public Boolean revisarCuotas() {
+        Boolean b = Boolean.TRUE;
+        List<Cuota> cuotas = inscrito.getCuotas();
+        for (Cuota cuota : cuotas) {
+            if (cuota.getFechaVencimiento() == null) {
+                b = Boolean.FALSE;
+                break;
+            }
+        }
+        return b;
     }
 
     public void copiarUsuario(Usuario usuario) {
@@ -173,30 +197,34 @@ public class CambioCarreraController extends AbstractController implements Seria
     }
 
     public void registrarEstudiante() throws IOException {
-        if (inscritoFacade.buscarInscrito(inscrito.getEstudiante().getId_persona(), inscrito.getCarrera().getId_carrera(), inscrito.getGestionAcademica().getId_gestionacademica()) == null) {
-            if (inscrito.getEstudiante().getDiplomaBachiller()) {
-                String contrasena = Generador.generarContrasena();
-                inscrito.getEstudiante().setContrasena(Encriptador.encriptar(contrasena));
-                inscrito.getEstudiante().setContrasenaSinEncriptar(contrasena);
-                if (inscripcionesFacade.cambioCarrera(inscrito)) {
-                    copiarUsuario(inscrito.getEstudiante());
+        if (revisarCuotas()) {
+            if (inscritoFacade.buscarInscrito(inscrito.getEstudiante().getId_persona(), inscrito.getCarrera().getId_carrera(), inscrito.getGestionAcademica().getId_gestionacademica()) == null) {
+                if (inscrito.getEstudiante().getDiplomaBachiller()) {
+                    String contrasena = Generador.generarContrasena();
+                    inscrito.getEstudiante().setContrasena(Encriptador.encriptar(contrasena));
+                    inscrito.getEstudiante().setContrasenaSinEncriptar(contrasena);
+                    if (inscripcionesFacade.cambioCarrera(inscrito)) {
+                        copiarUsuario(inscrito.getEstudiante());
 
-                    //log
-                    logFacade.create(new Log(Fecha.getDate(), EventoLog.CREATE, EntidadLog.ESTUDIANTE, inscrito.getEstudiante().getId_persona(), "Inscripción estudiante cambio de carrera", loginController.getUsr().toString()));
+                        //log
+                        logFacade.create(new Log(Fecha.getDate(), EventoLog.CREATE, EntidadLog.ESTUDIANTE, inscrito.getEstudiante().getId_persona(), "Inscripción estudiante cambio de carrera", loginController.getUsr().toString()));
 
-                    this.insertarParametro("inscrito", inscrito);
+                        this.insertarParametro("inscrito", inscrito);
 
-                    reinit();
+                        reinit();
 
-                    this.toFichaInscripcion();
+                        this.toFichaInscripcion();
+                    } else {
+                        this.mensajeDeError("No se pudo registrar al estudiante.");
+                    }
                 } else {
-                    this.mensajeDeError("No se pudo registrar al estudiante.");
+                    this.mensajeDeError("Estudiante sin titulo de bachiller.");
                 }
             } else {
-                this.mensajeDeError("Estudiante sin titulo de bachiller.");
+                this.mensajeDeError("Estudiante repetido.");
             }
         } else {
-            this.mensajeDeError("Estudiante repetido.");
+            this.mensajeDeError("Cuota(s) sin fecha de vencimiento.");
         }
     }
 

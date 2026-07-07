@@ -219,57 +219,6 @@ public class FichaInscripcion extends HttpServlet {
         return table;
     }
 
-    public PdfPTable cuenta(Inscrito inscrito, HttpServletRequest request) throws BadElementException, IOException {
-        PdfPTable table = new PdfPTable(100);
-
-        PdfPCell cell = new PdfPCell(new Phrase("CUENTA", NEGRITA));
-        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
-        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
-        cell.setBorder(Rectangle.NO_BORDER);
-        cell.setColspan(100);
-        cell.setPaddingTop(8);
-        table.addCell(cell);
-
-        cell = new PdfPCell(new Phrase("INSTRUCCIONES DE USO", NEGRITA));
-        cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
-        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
-        cell.setBorder(Rectangle.NO_BORDER);
-        cell.setColspan(100);
-        cell.setBackgroundColor(BaseColor.GRAY);
-        table.addCell(cell);
-
-        Phrase phrase = new Phrase();
-        phrase.add(new Chunk("Para ingresar al sistema:\n", NORMAL));
-        phrase.add(new Chunk("1) Abre un navegador web y dirigete a la siguiente dirección ", NORMAL));
-
-        String requestURL = request.getRequestURL().toString().replaceAll(request.getRequestURI(), "");
-        phrase.add(new Chunk(requestURL + "\n", NEGRITA));
-
-        phrase.add(new Chunk("2) Ingresa tu ", NORMAL));
-        phrase.add(new Chunk("Usuario: ", NEGRITA));
-        phrase.add(new Chunk(inscrito.getEstudiante().getUsuario() + " ", NORMAL));
-        phrase.add(new Chunk("y ", NORMAL));
-        phrase.add(new Chunk("Contraseña: ", NEGRITA));
-        phrase.add(new Chunk(inscrito.getEstudiante().getContrasenaSinEncriptar() + "\n", NORMAL));
-        phrase.add(new Chunk("3) Utiliza el menu para acceder a las opciones del sistema", NORMAL));
-        cell = new PdfPCell(phrase);
-        cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
-        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
-        cell.setColspan(100);
-        cell.setBorder(Rectangle.NO_BORDER);
-        table.addCell(cell);
-
-        cell = new PdfPCell(new Phrase(" ", NEGRITA));
-        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
-        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
-        cell.setBorder(Rectangle.NO_BORDER);
-        cell.setColspan(100);
-        cell.setBackgroundColor(BaseColor.GRAY);
-        table.addCell(cell);
-
-        return table;
-    }
-
     public PdfPTable modulos(Inscrito inscrito) throws BadElementException, IOException {
         PdfPTable table = new PdfPTable(100);
 
@@ -285,7 +234,7 @@ public class FichaInscripcion extends HttpServlet {
         cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
         cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
         cell.setBorder(Rectangle.NO_BORDER);
-        cell.setColspan(20);
+        cell.setColspan(10);
         cell.setBackgroundColor(BaseColor.GRAY);
         table.addCell(cell);
 
@@ -293,7 +242,7 @@ public class FichaInscripcion extends HttpServlet {
         cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
         cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
         cell.setBorder(Rectangle.NO_BORDER);
-        cell.setColspan(50);
+        cell.setColspan(40);
         cell.setBackgroundColor(BaseColor.GRAY);
         table.addCell(cell);
 
@@ -305,7 +254,23 @@ public class FichaInscripcion extends HttpServlet {
         cell.setBackgroundColor(BaseColor.GRAY);
         table.addCell(cell);
 
-        cell = new PdfPCell(new Phrase("Prerequisitos", NEGRITA));
+        cell = new PdfPCell(new Phrase("Grupo", NEGRITA));
+        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        cell.setBorder(Rectangle.NO_BORDER);
+        cell.setColspan(10);
+        cell.setBackgroundColor(BaseColor.GRAY);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase("Turno", NEGRITA));
+        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        cell.setBorder(Rectangle.NO_BORDER);
+        cell.setColspan(10);
+        cell.setBackgroundColor(BaseColor.GRAY);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase("Modalidad", NEGRITA));
         cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
         cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
         cell.setBorder(Rectangle.NO_BORDER);
@@ -322,14 +287,14 @@ public class FichaInscripcion extends HttpServlet {
                 cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
                 cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
                 cell.setBorder(Rectangle.NO_BORDER);
-                cell.setColspan(20);
+                cell.setColspan(10);
                 table.addCell(cell);
 
                 cell = new PdfPCell(new Phrase(nota.getModulo().getNombre(), NORMAL));
                 cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
                 cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
                 cell.setBorder(Rectangle.NO_BORDER);
-                cell.setColspan(50);
+                cell.setColspan(40);
                 table.addCell(cell);
 
                 cell = new PdfPCell(new Phrase(nota.getModulo().getHoras().toString(), NORMAL));
@@ -339,7 +304,21 @@ public class FichaInscripcion extends HttpServlet {
                 cell.setColspan(10);
                 table.addCell(cell);
 
-                cell = new PdfPCell(new Phrase(nota.getModulo().prerequisitosToString(), NORMAL));
+                cell = new PdfPCell(new Phrase(nota.getGrupo().getCodigo(), NORMAL));
+                cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+                cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+                cell.setBorder(Rectangle.NO_BORDER);
+                cell.setColspan(10);
+                table.addCell(cell);
+
+                cell = new PdfPCell(new Phrase(nota.getGrupo().getTurno().getNombre(), NORMAL));
+                cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+                cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+                cell.setBorder(Rectangle.NO_BORDER);
+                cell.setColspan(10);
+                table.addCell(cell);
+
+                cell = new PdfPCell(new Phrase(nota.getModalidad().getNombre(), NORMAL));
                 cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
                 cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
                 cell.setBorder(Rectangle.NO_BORDER);
@@ -350,7 +329,7 @@ public class FichaInscripcion extends HttpServlet {
                 cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
                 cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
                 cell.setBorder(Rectangle.NO_BORDER);
-                cell.setColspan(20);
+                cell.setColspan(10);
                 cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
                 table.addCell(cell);
 
@@ -358,7 +337,7 @@ public class FichaInscripcion extends HttpServlet {
                 cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
                 cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
                 cell.setBorder(Rectangle.NO_BORDER);
-                cell.setColspan(50);
+                cell.setColspan(40);
                 cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
                 table.addCell(cell);
 
@@ -370,14 +349,29 @@ public class FichaInscripcion extends HttpServlet {
                 cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
                 table.addCell(cell);
 
-                cell = new PdfPCell(new Phrase(nota.getModulo().prerequisitosToString(), NORMAL));
+                cell = new PdfPCell(new Phrase(nota.getGrupo().getCodigo(), NORMAL));
+                cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+                cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+                cell.setBorder(Rectangle.NO_BORDER);
+                cell.setColspan(10);
+                cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+                table.addCell(cell);
+
+                cell = new PdfPCell(new Phrase(nota.getGrupo().getTurno().getNombre(), NORMAL));
+                cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+                cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+                cell.setBorder(Rectangle.NO_BORDER);
+                cell.setColspan(10);
+                cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+                table.addCell(cell);
+
+                cell = new PdfPCell(new Phrase(nota.getModalidad().getNombre(), NORMAL));
                 cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
                 cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
                 cell.setBorder(Rectangle.NO_BORDER);
                 cell.setColspan(20);
                 cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
                 table.addCell(cell);
-
             }
         }
 
@@ -385,7 +379,7 @@ public class FichaInscripcion extends HttpServlet {
         cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
         cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
         cell.setBorder(Rectangle.NO_BORDER);
-        cell.setColspan(70);
+        cell.setColspan(50);
         cell.setBackgroundColor(BaseColor.GRAY);
         table.addCell(cell);
 
@@ -401,7 +395,7 @@ public class FichaInscripcion extends HttpServlet {
         cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
         cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
         cell.setBorder(Rectangle.NO_BORDER);
-        cell.setColspan(20);
+        cell.setColspan(40);
         cell.setBackgroundColor(BaseColor.GRAY);
         table.addCell(cell);
 
@@ -647,6 +641,57 @@ public class FichaInscripcion extends HttpServlet {
         cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
         cell.setBorder(Rectangle.NO_BORDER);
         cell.setColspan(25);
+        cell.setBackgroundColor(BaseColor.GRAY);
+        table.addCell(cell);
+
+        return table;
+    }
+
+    public PdfPTable cuenta(Inscrito inscrito, HttpServletRequest request) throws BadElementException, IOException {
+        PdfPTable table = new PdfPTable(100);
+
+        PdfPCell cell = new PdfPCell(new Phrase("CUENTA", NEGRITA));
+        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        cell.setBorder(Rectangle.NO_BORDER);
+        cell.setColspan(100);
+        cell.setPaddingTop(8);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase("INSTRUCCIONES DE USO", NEGRITA));
+        cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        cell.setBorder(Rectangle.NO_BORDER);
+        cell.setColspan(100);
+        cell.setBackgroundColor(BaseColor.GRAY);
+        table.addCell(cell);
+
+        Phrase phrase = new Phrase();
+        phrase.add(new Chunk("Para ingresar al sistema:\n", NORMAL));
+        phrase.add(new Chunk("1) Abre un navegador web y dirigete a la siguiente dirección ", NORMAL));
+
+        String requestURL = request.getRequestURL().toString().replaceAll(request.getRequestURI(), "");
+        phrase.add(new Chunk(requestURL + "\n", NEGRITA));
+
+        phrase.add(new Chunk("2) Ingresa tu ", NORMAL));
+        phrase.add(new Chunk("Usuario: ", NEGRITA));
+        phrase.add(new Chunk(inscrito.getEstudiante().getUsuario() + " ", NORMAL));
+        phrase.add(new Chunk("y ", NORMAL));
+        phrase.add(new Chunk("Contraseña: ", NEGRITA));
+        phrase.add(new Chunk(inscrito.getEstudiante().getContrasenaSinEncriptar() + "\n", NORMAL));
+        phrase.add(new Chunk("3) Utiliza el menu para acceder a las opciones del sistema", NORMAL));
+        cell = new PdfPCell(phrase);
+        cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        cell.setColspan(100);
+        cell.setBorder(Rectangle.NO_BORDER);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase(" ", NEGRITA));
+        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        cell.setBorder(Rectangle.NO_BORDER);
+        cell.setColspan(100);
         cell.setBackgroundColor(BaseColor.GRAY);
         table.addCell(cell);
 

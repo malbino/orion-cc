@@ -17,12 +17,19 @@ import javax.inject.Named;
 import org.malbino.orion.entities.Carrera;
 import org.malbino.orion.entities.Cuota;
 import org.malbino.orion.entities.Estudiante;
+import org.malbino.orion.entities.Grupo;
 import org.malbino.orion.entities.Inscrito;
 import org.malbino.orion.entities.Log;
+import org.malbino.orion.entities.Modulo;
+import org.malbino.orion.entities.Nota;
 import org.malbino.orion.entities.PlanPago;
 import org.malbino.orion.entities.Usuario;
+import org.malbino.orion.enums.Condicion;
 import org.malbino.orion.enums.EntidadLog;
 import org.malbino.orion.enums.EventoLog;
+import org.malbino.orion.enums.Modalidad;
+import org.malbino.orion.facades.GrupoFacade;
+import org.malbino.orion.facades.ModuloFacade;
 import org.malbino.orion.facades.PlanPagoFacade;
 import org.malbino.orion.facades.negocio.InscripcionesFacade;
 import org.malbino.orion.util.Encriptador;
@@ -30,6 +37,7 @@ import org.malbino.orion.util.Fecha;
 import org.malbino.orion.util.Generador;
 import org.malbino.orion.util.Propiedades;
 import org.malbino.pfsense.webservices.CopiarUsuario;
+import org.primefaces.event.FlowEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,6 +55,10 @@ public class EstudianteNuevoController extends AbstractController implements Ser
     InscripcionesFacade inscripcionesFacade;
     @EJB
     PlanPagoFacade planPagoFacade;
+    @EJB
+    ModuloFacade moduloFacade;
+    @EJB
+    GrupoFacade grupoFacade;
     @Inject
     LoginController loginController;
 
@@ -84,22 +96,79 @@ public class EstudianteNuevoController extends AbstractController implements Ser
         return l;
     }
 
-    public void planPagoInscrito() {
-        inscrito.setPlanPago(null);
-        inscrito.getCuotas().clear();
-    }
-
-    public void cuotasInscrito() {
-        inscrito.getCuotas().clear();
+    public void notasCuotasInscrito() {
+        if (inscrito.getCarrera() != null) {
+            inscrito.getNotas().clear();
+            List<Modulo> modulos = moduloFacade.listaModulos(inscrito.getCarrera());
+            for (Modulo modulo : modulos) {
+                Nota nota = new Nota(0, Modalidad.REGULAR, Condicion.ABANDONO, inscrito.getGestionAcademica(), modulo, inscrito.getEstudiante(), inscrito, modulo.getGrupo());
+                inscrito.getNotas().add(nota);
+            }
+        }
 
         if (inscrito.getPlanPago() != null) {
+            inscrito.getCuotas().clear();
             for (int i = 1; i <= inscrito.getPlanPago().getNumeroCuotas(); i++) {
                 Cuota cuota = new Cuota(i, "C" + i, "UNIDAD", "CUOTA " + i, inscrito.getPlanPago().getMontoCuota(), BigDecimal.ZERO, inscrito);
                 inscrito.getCuotas().add(cuota);
             }
-        } else {
-            inscrito.getCuotas().clear();
         }
+    }
+
+    public List<Grupo> listaGruposAbiertos(Modulo modulo) {
+        List<Grupo> l = new ArrayList();
+
+        log.info("gestionAcademica=" + inscrito.getGestionAcademica());
+        log.info("carrera=" + inscrito.getCarrera());
+        log.info("campus=" + inscrito.getCampus());
+
+        if (inscrito.getGestionAcademica() != null && inscrito.getCarrera() != null && inscrito.getCampus() != null) {
+            l = grupoFacade.listaGruposAbiertos(inscrito.getGestionAcademica().getId_gestionacademica(), inscrito.getCarrera().getId_carrera(), inscrito.getCampus().getId_campus(), modulo.getId_modulo());
+        }
+        return l;
+    }
+
+    public String onFlowProcess(FlowEvent event) {
+        String newStep;
+
+        if (event.getOldStep().compareTo("inscripcion") == 0) {
+            notasCuotasInscrito();
+
+            return event.getNewStep();
+        }
+
+        if (event.getOldStep().compareTo("modulos") == 0) {
+            Boolean b = Boolean.TRUE;
+            List<Nota> notas = inscrito.getNotas();
+            for (Nota nota : notas) {
+                if (nota.getGrupo() == null) {
+                    b = Boolean.FALSE;
+                    break;
+                }
+            }
+
+            if (b) {
+                return event.getNewStep();
+            } else {
+                this.mensajeDeError("Modulo(s) sin grupo.");
+
+                return event.getOldStep();
+            }
+        }
+
+        return event.getNewStep();
+    }
+
+    public Boolean revisarCuotas() {
+        Boolean b = Boolean.TRUE;
+        List<Cuota> cuotas = inscrito.getCuotas();
+        for (Cuota cuota : cuotas) {
+            if (cuota.getFechaVencimiento() == null) {
+                b = Boolean.FALSE;
+                break;
+            }
+        }
+        return b;
     }
 
     public void copiarUsuario(Usuario usuario) {
@@ -119,28 +188,38 @@ public class EstudianteNuevoController extends AbstractController implements Ser
     }
 
     public void registrarEstudiante() throws IOException {
-        if (estudianteFacade.buscarPorDni(inscrito.getEstudiante().getDni()) == null) {
-            String contrasena = Generador.generarContrasena();
-            inscrito.getEstudiante().setContrasena(Encriptador.encriptar(contrasena));
-            inscrito.getEstudiante().setContrasenaSinEncriptar(contrasena);
+        if (revisarCuotas()) {
+            if (estudianteFacade.buscarPorDni(inscrito.getEstudiante().getDni()) == null) {
+                String contrasena = Generador.generarContrasena();
+                inscrito.getEstudiante().setContrasena(Encriptador.encriptar(contrasena));
+                inscrito.getEstudiante().setContrasenaSinEncriptar(contrasena);
 
-            if (inscripcionesFacade.registrarEstudianteNuevo(inscrito)) {
-                copiarUsuario(inscrito.getEstudiante());
+                if (inscripcionesFacade.registrarEstudianteNuevo(inscrito)) {
+                    copiarUsuario(inscrito.getEstudiante());
 
-                //logF
-                logFacade.create(new Log(Fecha.getDate(), EventoLog.CREATE, EntidadLog.ESTUDIANTE, inscrito.getEstudiante().getId_persona(), "Inscripción estudiante nuevo", loginController.getUsr().toString()));
+                    //logF
+                    logFacade.create(new Log(Fecha.getDate(), EventoLog.CREATE, EntidadLog.ESTUDIANTE, inscrito.getEstudiante().getId_persona(), "Inscripción estudiante nuevo", loginController.getUsr().toString()));
 
-                this.insertarParametro("inscrito", inscrito);
+                    this.insertarParametro("inscrito", inscrito);
 
-                reinit();
+                    reinit();
 
-                this.toFichaInscripcion();
+                    this.toFichaInscripcion();
+                } else {
+                    this.mensajeDeError("No se pudo registrar al estudiante.");
+                }
             } else {
-                this.mensajeDeError("No se pudo registrar al estudiante.");
+                this.mensajeDeError("Estudiante repetido.");
             }
         } else {
-            this.mensajeDeError("Estudiante repetido.");
+            this.mensajeDeError("Cuota(s) sin fecha de vencimiento.");
         }
+    }
+
+    public void cancelar() throws IOException {
+        reinit();
+
+        toEstudianteNuevo();
     }
 
     public void toEstudianteNuevo() throws IOException {
