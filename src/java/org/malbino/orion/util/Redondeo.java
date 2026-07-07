@@ -16,6 +16,9 @@ import java.text.DecimalFormatSymbols;
  */
 public class Redondeo {
 
+    public static final int SCALE = 2;
+    public static final int FULL_SCALE = 9;
+
     public static Double redondear_HALFEVEN(double numero, int numero_decimales) {
         BigDecimal bigDecimal = new BigDecimal(numero);
         BigDecimal bigDecimalRedondeado = bigDecimal.setScale(numero_decimales, RoundingMode.HALF_EVEN);
@@ -67,5 +70,21 @@ public class Redondeo {
         DecimalFormat df = new DecimalFormat("###,##0.00", dfs);
 
         return df.format(numero);
+    }
+
+    public static BigDecimal redondear_HALFEVEN(BigDecimal numero, int numero_decimales) {
+        return numero.setScale(numero_decimales, RoundingMode.HALF_EVEN);
+    }
+
+    public static BigDecimal redondear_HALFUP(BigDecimal numero, int numero_decimales) {
+        return numero.setScale(numero_decimales, RoundingMode.HALF_UP);
+    }
+
+    public static BigDecimal redondear_DOWN(BigDecimal numero, int numero_decimales) {
+        return numero.setScale(numero_decimales, RoundingMode.DOWN);
+    }
+
+    public static BigDecimal redondear_UP(BigDecimal numero, int numero_decimales) {
+        return numero.setScale(numero_decimales, RoundingMode.UP);
     }
 }

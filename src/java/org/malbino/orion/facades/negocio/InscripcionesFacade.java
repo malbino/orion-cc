@@ -23,8 +23,6 @@ import org.malbino.orion.entities.Inscrito;
 import org.malbino.orion.entities.Modulo;
 import org.malbino.orion.entities.Nota;
 import org.malbino.orion.entities.Rol;
-import org.malbino.orion.enums.Condicion;
-import org.malbino.orion.enums.Modalidad;
 
 import org.malbino.orion.enums.Tipo;
 import org.malbino.orion.facades.CarreraEstudianteFacade;
@@ -71,6 +69,8 @@ public class InscripcionesFacade {
     public boolean registrarEstudianteNuevo(Inscrito inscrito) {
         // estudiante
         Estudiante estudiante = inscrito.getEstudiante();
+        estudiante.setFecha(inscrito.getFecha());
+
         Integer maximaMatricula = estudianteFacade.maximaMatricula(estudiante.getFecha());
         Integer matricula;
         if (maximaMatricula == null) {
@@ -216,24 +216,31 @@ public class InscripcionesFacade {
     }
 
     @Transactional(Transactional.TxType.REQUIRED)
-    public Long creditajeOferta(Inscrito inscrito) {
-        Long l = 0L;
-
-        List<Modulo> oferta = oferta(inscrito);
-        for (Modulo modulo : oferta) {
-            l += 999;
-        }
-
-        return l;
-    }
-
-    @Transactional(Transactional.TxType.REQUIRED)
     public List<Modulo> oferta(Inscrito inscrito) {
         List<Modulo> oferta = new ArrayList();
 
         List<Modulo> listaModuloAprobadas = moduloFacade.listaModuloAprobadas(inscrito.getEstudiante().getId_persona(), inscrito.getCarrera().getId_carrera());
 
         List<Modulo> listaModulos = moduloFacade.listaModulos(inscrito.getCarrera());
+        listaModulos.removeAll(listaModuloAprobadas);
+
+        for (Modulo modulo : listaModulos) {
+            List<Modulo> prerequisitos = modulo.getPrerequisitos();
+            if (listaModuloAprobadas.containsAll(prerequisitos)) {
+                oferta.add(modulo);
+            }
+        }
+
+        return oferta;
+    }
+
+    @Transactional(Transactional.TxType.REQUIRED)
+    public List<Modulo> oferta(Estudiante estudiante, Carrera carrera) {
+        List<Modulo> oferta = new ArrayList();
+
+        List<Modulo> listaModuloAprobadas = moduloFacade.listaModuloAprobadas(estudiante.getId_persona(), carrera.getId_carrera());
+
+        List<Modulo> listaModulos = moduloFacade.listaModulos(carrera);
         listaModulos.removeAll(listaModuloAprobadas);
 
         for (Modulo modulo : listaModulos) {

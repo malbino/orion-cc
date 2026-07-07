@@ -7,6 +7,7 @@ package org.malbino.orion.entities;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -51,13 +52,16 @@ public class Carrera implements Serializable {
     @JoinColumn(name = "id_jefecarrera")
     @ManyToOne
     private Empleado jefeCarrera;
-    
+
     @OneToMany(mappedBy = "carrera", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     @OrderBy(value = "nombre")
     private List<PlanPago> planesPago;
 
+    @OneToMany(mappedBy = "carrera")
+    private List<Modulo> modulos;
+
     public Carrera() {
-        planesPago  = new ArrayList<>();
+        planesPago = new ArrayList<>();
     }
 
     public String idnumberMoodle() {
@@ -78,6 +82,17 @@ public class Carrera implements Serializable {
 
     public String precio() {
         return Redondeo.formatear_csm(precio);
+    }
+
+    public BigDecimal precioHora() {
+        Integer horasModulos = 0;
+        for (Modulo modulo : modulos) {
+            horasModulos = horasModulos + modulo.getHoras();
+        }
+
+        BigDecimal precioHoraSinRedondear = precio.divide(BigDecimal.valueOf(horasModulos), Redondeo.FULL_SCALE, RoundingMode.HALF_UP);
+
+        return Redondeo.redondear_HALFUP(precioHoraSinRedondear, 0);
     }
 
     /**
@@ -234,5 +249,19 @@ public class Carrera implements Serializable {
      */
     public void setPlanesPago(List<PlanPago> planesPago) {
         this.planesPago = planesPago;
+    }
+
+    /**
+     * @return the modulos
+     */
+    public List<Modulo> getModulos() {
+        return modulos;
+    }
+
+    /**
+     * @param modulos the modulos to set
+     */
+    public void setModulos(List<Modulo> modulos) {
+        this.modulos = modulos;
     }
 }
