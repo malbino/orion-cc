@@ -50,6 +50,8 @@ public class GrupoController extends AbstractController implements Serializable 
     private GestionAcademica seleccionGestionAcademica;
     private Carrera seleccionCarrera;
     private Campus seleccionCampus;
+
+    private String codigo;
     private Turno seleccionTurno;
     private Integer capacidad;
 
@@ -63,6 +65,8 @@ public class GrupoController extends AbstractController implements Serializable 
         seleccionGestionAcademica = null;
         seleccionCarrera = null;
         seleccionCampus = null;
+
+        codigo = null;
         seleccionTurno = null;
         capacidad = null;
 
@@ -75,6 +79,7 @@ public class GrupoController extends AbstractController implements Serializable 
         }
         seleccionGrupo = null;
 
+        codigo = null;
         seleccionTurno = null;
         capacidad = null;
 
@@ -100,7 +105,7 @@ public class GrupoController extends AbstractController implements Serializable 
     }
 
     public void programarGrupos() throws IOException {
-        List<Grupo> grupos = programacionGruposFacade.programarGrupos(seleccionGestionAcademica, seleccionCarrera, seleccionCampus, seleccionTurno, capacidad);
+        List<Grupo> grupos = programacionGruposFacade.programarGrupos(seleccionGestionAcademica, seleccionCarrera, seleccionCampus, codigo, seleccionTurno, capacidad);
         if (!grupos.isEmpty()) {
             //log
             for (Grupo grupo : grupos) {
@@ -258,5 +263,19 @@ public class GrupoController extends AbstractController implements Serializable 
      */
     public void setSeleccionCampus(Campus seleccionCampus) {
         this.seleccionCampus = seleccionCampus;
+    }
+
+    /**
+     * @return the codigo
+     */
+    public String getCodigo() {
+        return codigo;
+    }
+
+    /**
+     * @param codigo the codigo to set
+     */
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
     }
 }

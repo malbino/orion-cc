@@ -20,7 +20,6 @@ import org.malbino.orion.entities.Modulo;
 import org.malbino.orion.enums.Turno;
 import org.malbino.orion.facades.GrupoFacade;
 import org.malbino.orion.facades.ModuloFacade;
-import org.malbino.orion.util.Constantes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +42,7 @@ public class ProgramacionGruposFacade {
     GrupoFacade grupoFacade;
 
     @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public List<Grupo> programarGrupos(GestionAcademica gestionAcademica, Carrera carrera, Campus campus, Turno turno, Integer capacidad) {
+    public List<Grupo> programarGrupos(GestionAcademica gestionAcademica, Carrera carrera, Campus campus, String codigo, Turno turno, Integer capacidad) {
         List<Grupo> grupos = new ArrayList<>();
 
         log.info("gestionAcademica=" + gestionAcademica);
@@ -54,7 +53,6 @@ public class ProgramacionGruposFacade {
         List<Modulo> modulos = moduloFacade.listaModulos(carrera);
         for (Modulo modulo : modulos) {
             Integer c1 = grupoFacade.cantidadGrupos(gestionAcademica.getId_gestionacademica(), modulo.getId_modulo(), campus.getId_campus(), turno).intValue();
-            String codigo = Constantes.ABECEDARIO[c1];
 
             Grupo grupo = new Grupo(codigo, capacidad, turno, true, gestionAcademica, modulo, campus);
             em.persist(grupo);
