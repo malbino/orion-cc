@@ -7,6 +7,7 @@ package org.malbino.orion.servlets;
 
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Font;
@@ -49,10 +50,10 @@ public class FichaInscripcion extends HttpServlet {
 
     private static final String CONTENIDO_PDF = "application/pdf";
 
-    private static final Font TITULO = FontFactory.getFont(FontFactory.HELVETICA, 16, Font.NORMAL, BaseColor.BLACK);
-    private static final Font NEGRITA = FontFactory.getFont(FontFactory.HELVETICA, 8, Font.BOLD, BaseColor.BLACK);
-    private static final Font NORMAL = FontFactory.getFont(FontFactory.HELVETICA, 8, Font.NORMAL, BaseColor.BLACK);
-    private static final Font NORMAL_ITALICA = FontFactory.getFont(FontFactory.HELVETICA, 8, Font.ITALIC, BaseColor.BLACK);
+    private static final Font TITULO = FontFactory.getFont(FontFactory.HELVETICA, 14, Font.NORMAL, BaseColor.BLACK);
+    private static final Font NEGRITA = FontFactory.getFont(FontFactory.HELVETICA, 7, Font.BOLD, BaseColor.BLACK);
+    private static final Font NORMAL = FontFactory.getFont(FontFactory.HELVETICA, 7, Font.NORMAL, BaseColor.BLACK);
+    private static final Font NORMAL_NORMALA = FontFactory.getFont(FontFactory.HELVETICA, 7, Font.NORMAL, BaseColor.BLACK);
 
     private static final int MARGEN_IZQUIERDO = -40;
     private static final int MARGEN_DERECHO = -40;
@@ -89,6 +90,7 @@ public class FichaInscripcion extends HttpServlet {
                     document.add(modulos(inscrito));
                 }
                 document.add(cuotas(inscrito));
+                document.add(cuenta(inscrito, request));
                 document.add(pie(inscrito));
 
                 document.close();
@@ -217,10 +219,60 @@ public class FichaInscripcion extends HttpServlet {
         return table;
     }
 
+    public PdfPTable cuenta(Inscrito inscrito, HttpServletRequest request) throws BadElementException, IOException {
+        PdfPTable table = new PdfPTable(100);
+
+        PdfPCell cell = new PdfPCell(new Phrase("CUENTA", NEGRITA));
+        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        cell.setBorder(Rectangle.NO_BORDER);
+        cell.setColspan(100);
+        cell.setPaddingTop(8);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase("INSTRUCCIONES DE USO", NEGRITA));
+        cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        cell.setBorder(Rectangle.NO_BORDER);
+        cell.setColspan(100);
+        cell.setBackgroundColor(BaseColor.GRAY);
+        table.addCell(cell);
+
+        Phrase phrase = new Phrase();
+        phrase.add(new Chunk("Para ingresar al sistema:\n", NORMAL));
+        phrase.add(new Chunk("1) Abre un navegador web y dirigete a la siguiente dirección ", NORMAL));
+
+        String requestURL = request.getRequestURL().toString().replaceAll(request.getRequestURI(), "");
+        phrase.add(new Chunk(requestURL + "\n", NEGRITA));
+
+        phrase.add(new Chunk("2) Ingresa tu ", NORMAL));
+        phrase.add(new Chunk("Usuario: ", NEGRITA));
+        phrase.add(new Chunk(inscrito.getEstudiante().getUsuario() + " ", NORMAL));
+        phrase.add(new Chunk("y ", NORMAL));
+        phrase.add(new Chunk("Contraseña: ", NEGRITA));
+        phrase.add(new Chunk(inscrito.getEstudiante().getContrasenaSinEncriptar() + "\n", NORMAL));
+        phrase.add(new Chunk("3) Utiliza el menu para acceder a las opciones del sistema", NORMAL));
+        cell = new PdfPCell(phrase);
+        cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        cell.setColspan(100);
+        cell.setBorder(Rectangle.NO_BORDER);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase(" ", NEGRITA));
+        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        cell.setBorder(Rectangle.NO_BORDER);
+        cell.setColspan(100);
+        cell.setBackgroundColor(BaseColor.GRAY);
+        table.addCell(cell);
+
+        return table;
+    }
+
     public PdfPTable modulos(Inscrito inscrito) throws BadElementException, IOException {
         PdfPTable table = new PdfPTable(100);
 
-        //notas
         PdfPCell cell = new PdfPCell(new Phrase("MODULOS", NEGRITA));
         cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
         cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
@@ -359,7 +411,6 @@ public class FichaInscripcion extends HttpServlet {
     public PdfPTable cuotas(Inscrito inscrito) throws BadElementException, IOException {
         PdfPTable table = new PdfPTable(100);
 
-        //notas
         PdfPCell cell = new PdfPCell(new Phrase("CUOTAS", NEGRITA));
         cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
         cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
@@ -605,7 +656,7 @@ public class FichaInscripcion extends HttpServlet {
     public PdfPTable pie(Inscrito inscrito) throws BadElementException, IOException {
         PdfPTable table = new PdfPTable(100);
 
-        PdfPCell cell = new PdfPCell(new Phrase(Fecha.getFecha_ddMMMMyyyy(), NORMAL_ITALICA));
+        PdfPCell cell = new PdfPCell(new Phrase(Fecha.getFecha_ddMMMMyyyy(), NORMAL_NORMALA));
         cell.setColspan(100);
         cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
         cell.setBorder(Rectangle.NO_BORDER);
@@ -620,7 +671,7 @@ public class FichaInscripcion extends HttpServlet {
         cell.setBackgroundColor(BaseColor.GRAY);
         table.addCell(cell);
 
-        cell = new PdfPCell(new Phrase("Cualquier raspadura o enmienda invalida el presente documento", NORMAL_ITALICA));
+        cell = new PdfPCell(new Phrase("Cualquier raspadura o enmienda invalida el presente documento", NORMAL_NORMALA));
         cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
         cell.setBorder(Rectangle.NO_BORDER);
         cell.setColspan(100);

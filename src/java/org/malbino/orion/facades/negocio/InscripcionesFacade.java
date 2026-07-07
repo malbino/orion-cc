@@ -14,7 +14,6 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
-import org.malbino.orion.entities.Campus;
 import org.malbino.orion.entities.Carrera;
 import org.malbino.orion.entities.CarreraEstudiante;
 import org.malbino.orion.entities.Estudiante;
@@ -124,12 +123,13 @@ public class InscripcionesFacade {
     }
 
     @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public boolean registrarEstudianteRegular(Estudiante estudiante, Carrera carrera, GestionAcademica gestionAcademica, Campus campus) {
+    public boolean registrarEstudianteRegular(Inscrito inscrito) {
         // estudiante
+        Estudiante estudiante = inscrito.getEstudiante();
         if (estudiante.getMatricula() == null && estudiante.getUsuario() == null) {
             Date fecha = notaFacade.fechaInicio(estudiante.getId_persona());
             if (fecha == null) {
-                //estudiante.setFecha(estudiante.getFechaInscripcion()); //fecha de inscripcion
+                estudiante.setFecha(inscrito.getFecha()); //fecha de inscripcion
             } else {
                 estudiante.setFecha(fecha);
             }
@@ -147,7 +147,8 @@ public class InscripcionesFacade {
         em.merge(estudiante);
 
         // inscrito
-        Date fecha = null; //fecha de inscripcion
+        GestionAcademica gestionAcademica = inscrito.getGestionAcademica();
+        Carrera carrera = inscrito.getCarrera();
         Integer maximoNumero = inscritoFacade.maximoNumero(gestionAcademica.getId_gestionacademica(), carrera.getId_carrera());
         Long maximoCodigo = inscritoFacade.maximoCodigo(gestionAcademica.getId_gestionacademica(), carrera.getId_carrera());
         Long codigo;
@@ -159,7 +160,10 @@ public class InscripcionesFacade {
             codigo = maximoCodigo + 1;
             numero = maximoNumero + 1;
         }
-        Inscrito inscrito = new Inscrito();
+        inscrito.setTipo(Tipo.REGULAR);
+        inscrito.setCodigo(codigo);
+        inscrito.setNumero(numero);
+
         em.persist(inscrito);
 
         return true;
@@ -211,12 +215,6 @@ public class InscripcionesFacade {
         inscrito.setTipo(Tipo.NUEVO);
         inscrito.setCodigo(codigo);
         inscrito.setNumero(numero);
-
-        List<Modulo> modulos = moduloFacade.listaModulos(carrera);
-        for (Modulo modulo : modulos) {
-            Nota nota = new Nota(0, Modalidad.REGULAR, Condicion.ABANDONO, gestionAcademica, modulo, estudiante, inscrito, modulo.getGrupo());
-            inscrito.getNotas().add(nota);
-        }
 
         em.persist(inscrito);
 

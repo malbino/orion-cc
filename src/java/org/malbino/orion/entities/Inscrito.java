@@ -274,9 +274,17 @@ public class Inscrito implements Serializable {
 
     @Override
     public String toString() {
-        String s = carrera.toString() + " - " + campus.toString() + " - " + gestionAcademica.toString();
-
-        return s;
+        StringBuilder sb = new StringBuilder();
+        if (carrera != null) {
+            sb.append(carrera.toString());
+        }
+        if (campus != null) {
+            sb.append(campus.toString());
+        }
+        if (gestionAcademica != null) {
+            gestionAcademica.toString();
+        }
+        return sb.toString();
     }
 
     public String fecha_ddMMyyyy() {

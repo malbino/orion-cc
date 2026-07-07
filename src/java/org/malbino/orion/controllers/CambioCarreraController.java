@@ -17,14 +17,21 @@ import javax.inject.Named;
 import org.malbino.orion.entities.Carrera;
 import org.malbino.orion.entities.CarreraEstudiante;
 import org.malbino.orion.entities.Cuota;
+import org.malbino.orion.entities.Grupo;
 import org.malbino.orion.entities.Inscrito;
 import org.malbino.orion.entities.Log;
+import org.malbino.orion.entities.Modulo;
+import org.malbino.orion.entities.Nota;
 import org.malbino.orion.entities.PlanPago;
 import org.malbino.orion.entities.Usuario;
+import org.malbino.orion.enums.Condicion;
 import org.malbino.orion.enums.EntidadLog;
 import org.malbino.orion.enums.EventoLog;
+import org.malbino.orion.enums.Modalidad;
 import org.malbino.orion.facades.CarreraEstudianteFacade;
+import org.malbino.orion.facades.GrupoFacade;
 import org.malbino.orion.facades.InscritoFacade;
+import org.malbino.orion.facades.ModuloFacade;
 import org.malbino.orion.facades.PlanPagoFacade;
 import org.malbino.orion.facades.negocio.InscripcionesFacade;
 import org.malbino.orion.util.Encriptador;
@@ -32,6 +39,9 @@ import org.malbino.orion.util.Fecha;
 import org.malbino.orion.util.Generador;
 import org.malbino.orion.util.Propiedades;
 import org.malbino.pfsense.webservices.CopiarUsuario;
+import org.primefaces.event.FlowEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -41,6 +51,8 @@ import org.malbino.pfsense.webservices.CopiarUsuario;
 @SessionScoped
 public class CambioCarreraController extends AbstractController implements Serializable {
 
+    private static final Logger log = LoggerFactory.getLogger(CambioCarreraController.class);
+
     @EJB
     InscritoFacade inscritoFacade;
     @EJB
@@ -49,6 +61,10 @@ public class CambioCarreraController extends AbstractController implements Seria
     PlanPagoFacade planPagoFacade;
     @EJB
     CarreraEstudianteFacade carreraEstudianteFacade;
+    @EJB
+    ModuloFacade moduloFacade;
+    @EJB
+    GrupoFacade grupoFacade;
     @Inject
     LoginController loginController;
 
@@ -88,21 +104,56 @@ public class CambioCarreraController extends AbstractController implements Seria
 
         return l;
     }
-    
-     public void planPagoInscrito() {
+
+    public void planPagoInscrito() {
         inscrito.setPlanPago(null);
         inscrito.getCuotas().clear();
     }
 
-    public void cuotasInscrito() {
+    public void notasCuotasInscrito() {
+        if (inscrito.getCarrera() != null) {
+            inscrito.getNotas().clear();
+            List<Modulo> modulos = moduloFacade.listaModulos(inscrito.getCarrera());
+            for (Modulo modulo : modulos) {
+                Nota nota = new Nota(0, Modalidad.REGULAR, Condicion.ABANDONO, inscrito.getGestionAcademica(), modulo, inscrito.getEstudiante(), inscrito, modulo.getGrupo());
+                inscrito.getNotas().add(nota);
+            }
+        }
+
         if (inscrito.getPlanPago() != null) {
             inscrito.getCuotas().clear();
-
             for (int i = 1; i <= inscrito.getPlanPago().getNumeroCuotas(); i++) {
                 Cuota cuota = new Cuota(i, "C" + i, "UNIDAD", "CUOTA " + i, inscrito.getPlanPago().getMontoCuota(), BigDecimal.ZERO, inscrito);
                 inscrito.getCuotas().add(cuota);
             }
         }
+    }
+
+    public List<Grupo> listaGruposAbiertos(Modulo modulo) {
+        List<Grupo> l = new ArrayList();
+
+        log.info("gestionAcademica=" + inscrito.getGestionAcademica());
+        log.info("carrera=" + inscrito.getCarrera());
+        log.info("campus=" + inscrito.getCampus());
+
+        if (inscrito.getGestionAcademica() != null && inscrito.getCarrera() != null && inscrito.getCampus() != null) {
+            l = grupoFacade.listaGruposAbiertos(inscrito.getGestionAcademica().getId_gestionacademica(), inscrito.getCarrera().getId_carrera(), inscrito.getCampus().getId_campus(), modulo.getId_modulo());
+        }
+        return l;
+    }
+
+    public String onFlowProcess(FlowEvent event) {
+        String newStep;
+
+        if (event.getOldStep().compareTo("inscripcion") == 0) {
+            notasCuotasInscrito();
+
+            newStep = event.getNewStep();
+        } else {
+            newStep = event.getNewStep();
+        }
+
+        return newStep;
     }
 
     public void copiarUsuario(Usuario usuario) {
@@ -147,6 +198,12 @@ public class CambioCarreraController extends AbstractController implements Seria
         } else {
             this.mensajeDeError("Estudiante repetido.");
         }
+    }
+
+    public void cancelar() throws IOException {
+        reinit();
+
+        toCambioCarrera();
     }
 
     public void toCambioCarrera() throws IOException {
