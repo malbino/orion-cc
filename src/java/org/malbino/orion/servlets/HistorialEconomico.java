@@ -19,6 +19,7 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -205,6 +206,7 @@ public class HistorialEconomico extends HttpServlet {
         cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
         table.addCell(cell);
 
+        BigDecimal total = BigDecimal.ZERO;
         List<Detalle> kardexEconomico = detalleFacade.kardexEconomico(estudiante.getId_persona(), carrera.getId_carrera());
         for (int i = 0; i < kardexEconomico.size(); i++) {
             Detalle detalle = kardexEconomico.get(i);
@@ -249,11 +251,23 @@ public class HistorialEconomico extends HttpServlet {
             cell.setColspan(25);
             table.addCell(cell);
 
+            total = total.add(detalle.getSubtotal());
             cell = new PdfPCell(new Phrase(Redondeo.formatear_csm(detalle.getSubtotal()), NORMAL));
             cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
             cell.setColspan(10);
             table.addCell(cell);
         }
+        
+        cell = new PdfPCell(new Phrase("Total (Bs.):", NEGRITA));
+        cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
+        cell.setColspan(90);
+        cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase(Redondeo.formatear_csm(total), NORMAL));
+        cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
+        cell.setColspan(10);
+        table.addCell(cell);
 
         return table;
     }
