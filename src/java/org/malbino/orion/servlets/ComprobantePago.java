@@ -21,7 +21,6 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -369,7 +368,7 @@ public class ComprobantePago extends HttpServlet {
             cell.setColspan(10);
             subtable.addCell(cell);
 
-            cell = new PdfPCell(new Phrase(Redondeo.formatear_csm(BigDecimal.valueOf(detalle.getCantidad())), NORMAL));
+            cell = new PdfPCell(new Phrase(Redondeo.formatear_csm(detalle.getCantidad()), NORMAL));
             cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
             cell.setColspan(10);
             subtable.addCell(cell);
@@ -384,17 +383,17 @@ public class ComprobantePago extends HttpServlet {
             cell.setColspan(34);
             subtable.addCell(cell);
 
-            cell = new PdfPCell(new Phrase(Redondeo.formatear_csm(BigDecimal.valueOf(detalle.getPrecioUnitario())), NORMAL));
+            cell = new PdfPCell(new Phrase(Redondeo.formatear_csm(detalle.getPrecioUnitario()), NORMAL));
             cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
             cell.setColspan(12);
             subtable.addCell(cell);
 
-            cell = new PdfPCell(new Phrase(Redondeo.formatear_csm(BigDecimal.valueOf(detalle.getDescuento())), NORMAL));
+            cell = new PdfPCell(new Phrase(Redondeo.formatear_csm(detalle.getDescuento()), NORMAL));
             cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
             cell.setColspan(12);
             subtable.addCell(cell);
 
-            cell = new PdfPCell(new Phrase(Redondeo.formatear_csm(BigDecimal.valueOf(detalle.getSubtotal())), NORMAL));
+            cell = new PdfPCell(new Phrase(Redondeo.formatear_csm(detalle.getSubtotal()), NORMAL));
             cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
             cell.setColspan(12);
             subtable.addCell(cell);

@@ -19,7 +19,6 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -254,7 +253,7 @@ public class IngresosModulo extends HttpServlet {
             cell.setColspan(10);
             table.addCell(cell);
 
-            cell = new PdfPCell(new Phrase(Redondeo.formatear_csm(BigDecimal.valueOf(detalle.getCantidad())), NORMAL));
+            cell = new PdfPCell(new Phrase(Redondeo.formatear_csm(detalle.getCantidad()), NORMAL));
             cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
             cell.setColspan(10);
             table.addCell(cell);
@@ -269,7 +268,7 @@ public class IngresosModulo extends HttpServlet {
             cell.setColspan(25);
             table.addCell(cell);
 
-            cell = new PdfPCell(new Phrase(Redondeo.formatear_csm(BigDecimal.valueOf(detalle.getSubtotal())), NORMAL));
+            cell = new PdfPCell(new Phrase(Redondeo.formatear_csm(detalle.getSubtotal()), NORMAL));
             cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
             cell.setColspan(10);
             table.addCell(cell);

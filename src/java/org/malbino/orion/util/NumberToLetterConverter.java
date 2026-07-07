@@ -5,6 +5,7 @@
  */
 package org.malbino.orion.util;
 
+import java.math.BigDecimal;
 import java.util.regex.Pattern;
 
 /**
@@ -60,6 +61,38 @@ public abstract class NumberToLetterConverter {
             parte_decimal = Num[1] + "/100 BOLIVIANOS";
             if (Integer.parseInt(Num[0]) == 0) {
                 literal = "CERO ";
+            } else if (Integer.parseInt(Num[0]) > 999999) {
+                literal = getMillones(Num[0]);
+            } else if (Integer.parseInt(Num[0]) > 999) {
+                literal = getMiles(Num[0]);
+            } else if (Integer.parseInt(Num[0]) > 99) {
+                literal = getCentenas(Num[0]);
+            } else if (Integer.parseInt(Num[0]) > 9) {
+                literal = getDecenas(Num[0]);
+            } else {
+                literal = getUnidades(Num[0]);
+            }
+
+            return (literal + parte_decimal);
+        } else {
+            return null;
+        }
+    }
+    
+    public static String convertNumberToLetterComprobante(BigDecimal numero) {
+        String literal;
+        String parte_decimal;
+
+        String snumero = Redondeo.formatear_ssm(numero);
+        snumero = snumero.replace(".", ",");
+        if (!snumero.contains(",")) {
+            snumero = snumero + ",00";
+        }
+        if (Pattern.matches("\\d{1,34},\\d{1,2}", snumero)) {
+            String Num[] = snumero.split(",");
+            parte_decimal = Num[1] + "/100 BOLIVIANOS";
+            if (Integer.parseInt(Num[0]) == 0) {
+                literal = "Cero ";
             } else if (Integer.parseInt(Num[0]) > 999999) {
                 literal = getMillones(Num[0]);
             } else if (Integer.parseInt(Num[0]) > 999) {

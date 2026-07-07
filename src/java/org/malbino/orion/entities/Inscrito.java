@@ -278,11 +278,9 @@ public class Inscrito implements Serializable {
         if (carrera != null) {
             sb.append(carrera.toString());
         }
-        if (campus != null) {
-            sb.append(campus.toString());
-        }
         if (gestionAcademica != null) {
-            gestionAcademica.toString();
+            sb.append(" - ");
+            sb.append(gestionAcademica.toString());
         }
         return sb.toString();
     }

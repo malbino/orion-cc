@@ -6,6 +6,7 @@
 package org.malbino.orion.entities;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -29,21 +30,21 @@ public class Detalle implements Serializable {
     private Integer id_detalle;
 
     private String codigo;
-    private Integer cantidad;
+    private BigDecimal cantidad;
     private String unidadMedida;
     private String descripcion;
-    private Integer precioUnitario;
-    private Integer descuento;
-    private Integer subtotal;
+    private BigDecimal precioUnitario;
+    private BigDecimal descuento;
+    private BigDecimal subtotal;
 
     @JoinColumn(name = "id_comprobante")
     @ManyToOne(cascade = {CascadeType.REMOVE})
     private Comprobante comprobante;
-    
+
     @JoinColumn(name = "id_conceptopago")
     @ManyToOne(cascade = {CascadeType.REMOVE})
     private ConceptoPago conceptoPago;
-    
+
     @JoinColumn(name = "id_modulo")
     @ManyToOne(cascade = {CascadeType.REMOVE})
     private Modulo modulo;
@@ -82,14 +83,14 @@ public class Detalle implements Serializable {
     /**
      * @return the cantidad
      */
-    public Integer getCantidad() {
+    public BigDecimal getCantidad() {
         return cantidad;
     }
 
     /**
      * @param cantidad the cantidad to set
      */
-    public void setCantidad(Integer cantidad) {
+    public void setCantidad(BigDecimal cantidad) {
         this.cantidad = cantidad;
     }
 
@@ -124,28 +125,28 @@ public class Detalle implements Serializable {
     /**
      * @return the precioUnitario
      */
-    public Integer getPrecioUnitario() {
+    public BigDecimal getPrecioUnitario() {
         return precioUnitario;
     }
 
     /**
      * @param precioUnitario the precioUnitario to set
      */
-    public void setPrecioUnitario(Integer precioUnitario) {
+    public void setPrecioUnitario(BigDecimal precioUnitario) {
         this.precioUnitario = precioUnitario;
     }
 
     /**
      * @return the subtotal
      */
-    public Integer getSubtotal() {
+    public BigDecimal getSubtotal() {
         return subtotal;
     }
 
     /**
      * @param subtotal the subtotal to set
      */
-    public void setSubtotal(Integer subtotal) {
+    public void setSubtotal(BigDecimal subtotal) {
         this.subtotal = subtotal;
     }
 
@@ -166,14 +167,14 @@ public class Detalle implements Serializable {
     /**
      * @return the descuento
      */
-    public Integer getDescuento() {
+    public BigDecimal getDescuento() {
         return descuento;
     }
 
     /**
      * @param descuento the descuento to set
      */
-    public void setDescuento(Integer descuento) {
+    public void setDescuento(BigDecimal descuento) {
         this.descuento = descuento;
     }
 

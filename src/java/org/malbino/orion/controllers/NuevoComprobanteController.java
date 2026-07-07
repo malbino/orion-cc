@@ -113,15 +113,15 @@ public class NuevoComprobanteController extends AbstractController implements Se
         for (ConceptoPago conceptoPago : seleccionConceptosPago) {
             Detalle detalle = new Detalle();
             detalle.setCodigo(conceptoPago.getCodigo());
-            detalle.setCantidad(1);
+            detalle.setCantidad(BigDecimal.ONE);
             detalle.setUnidadMedida(conceptoPago.getUnidadMedida());
             detalle.setDescripcion(conceptoPago.getDescripcion());
             detalle.setPrecioUnitario(conceptoPago.getPrecioUnitario());
             detalle.setConceptoPago(conceptoPago);
 
-            detalle.setDescuento(0);
+            detalle.setDescuento(BigDecimal.ZERO);
 
-            Integer subtotal = (detalle.getCantidad() * detalle.getPrecioUnitario()) - detalle.getDescuento();
+            BigDecimal subtotal = (detalle.getCantidad().multiply(detalle.getPrecioUnitario())).subtract(detalle.getDescuento());
             detalle.setSubtotal(subtotal);
 
             detalles.add(detalle);
@@ -134,17 +134,17 @@ public class NuevoComprobanteController extends AbstractController implements Se
         for (Modulo modulo : seleccionModulos) {
             Detalle detalle = new Detalle();
             detalle.setCodigo(modulo.getCodigo());
-            detalle.setCantidad(1);
+            detalle.setCantidad(BigDecimal.ONE);
             detalle.setUnidadMedida(UnidadMedida.UNIDAD_SERVICIOS.getNombre());
             detalle.setDescripcion(modulo.getNombre());
             detalle.setModulo(modulo);
 
-            Integer precioUnitario = 999;
+            BigDecimal precioUnitario = BigDecimal.ZERO;
             detalle.setPrecioUnitario(precioUnitario);
 
-            detalle.setDescuento(0);
+            detalle.setDescuento(BigDecimal.ZERO);
 
-            Integer subtotal = (detalle.getCantidad() * detalle.getPrecioUnitario()) - detalle.getDescuento();
+            BigDecimal subtotal = (detalle.getCantidad().multiply(detalle.getPrecioUnitario())).subtract(detalle.getDescuento());
             detalle.setSubtotal(subtotal);
 
             detalles.add(detalle);
@@ -166,20 +166,20 @@ public class NuevoComprobanteController extends AbstractController implements Se
     public void onRowEdit(RowEditEvent event) {
         Detalle detalle = (Detalle) event.getObject();
 
-        detalle.setDescuento(0);
+        detalle.setDescuento(BigDecimal.ZERO);
 
-        Integer subtotalSinDescuento = detalle.getCantidad() * detalle.getPrecioUnitario();
+        BigDecimal subtotalSinDescuento = detalle.getCantidad().multiply(detalle.getPrecioUnitario());
         detalle.setSubtotal(subtotalSinDescuento);
     }
 
     public String totalDescuentos() {
         String s;
 
-        Integer totalDescuentos = 0;
+        BigDecimal totalDescuentos = BigDecimal.ZERO;
         for (Detalle detalle : detalles) {
-            totalDescuentos = totalDescuentos + detalle.getDescuento();
+            totalDescuentos = totalDescuentos.add(detalle.getDescuento());
         }
-        s = Redondeo.formatear_csm(BigDecimal.valueOf(totalDescuentos));
+        s = Redondeo.formatear_csm(totalDescuentos);
 
         return s;
     }
@@ -187,11 +187,11 @@ public class NuevoComprobanteController extends AbstractController implements Se
     public String totalComprobante() {
         String s;
 
-        Integer totalComprobante = 0;
+        BigDecimal totalComprobante = BigDecimal.ZERO;
         for (Detalle detalle : detalles) {
-            totalComprobante = totalComprobante + detalle.getSubtotal();
+            totalComprobante = totalComprobante.add(detalle.getSubtotal());
         }
-        s = Redondeo.formatear_csm(BigDecimal.valueOf(totalComprobante));
+        s = Redondeo.formatear_csm(totalComprobante);
 
         return s;
     }

@@ -40,8 +40,8 @@
                                         </div>
 
                                         <div class="ui-g-12 ui-md-4">
-                                            <p:outputLabel for="precioUnitario" value="Precio Unitario (Bs.):"/> 
-                                            <p:inputMask id="precioUnitario" value="#{ConceptoPagoController.seleccionConceptoPago.precioUnitario}" required="true" requiredMessage="* Precio Unitario requerido."/>
+                                            <p:outputLabel for="precioUnitario" value="Precio Unitario (Bs.):"/>
+                                            <p:inputNumber id="precioUnitario" value="#{ConceptoPagoController.seleccionConceptoPago.precioUnitario}" minValue="1" decimalPlaces="2" required="true" requiredMessage="* Precio Unitario requerido." />
                                         </div>
                                     </div>
 

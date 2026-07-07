@@ -6,6 +6,7 @@
 package org.malbino.orion.entities;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,6 +14,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.malbino.orion.util.Redondeo;
 
 /**
  *
@@ -30,7 +32,7 @@ public class ConceptoPago implements Serializable {
     private String codigo;
     private String unidadMedida;
     private String descripcion;
-    private Integer precioUnitario;
+    private BigDecimal precioUnitario;
 
     public ConceptoPago() {
     }
@@ -60,6 +62,10 @@ public class ConceptoPago implements Serializable {
     @Override
     public String toString() {
         return descripcion;
+    }
+    
+    public String precioUnitario() {
+        return Redondeo.formatear_csm(precioUnitario);
     }
 
     /**
@@ -121,14 +127,14 @@ public class ConceptoPago implements Serializable {
     /**
      * @return the precioUnitario
      */
-    public Integer getPrecioUnitario() {
+    public BigDecimal getPrecioUnitario() {
         return precioUnitario;
     }
 
     /**
      * @param precioUnitario the precioUnitario to set
      */
-    public void setPrecioUnitario(Integer precioUnitario) {
+    public void setPrecioUnitario(BigDecimal precioUnitario) {
         this.precioUnitario = precioUnitario;
     }
 

@@ -71,6 +71,15 @@ public class Redondeo {
 
         return df.format(numero);
     }
+    
+    public static String formatear_ssm(BigDecimal numero) {
+        DecimalFormatSymbols dfs = new DecimalFormatSymbols();
+        dfs.setDecimalSeparator('.');
+        DecimalFormat df = new DecimalFormat("0.00", dfs);
+        df.setGroupingUsed(false);
+
+        return df.format(numero);
+    }
 
     public static BigDecimal redondear_HALFEVEN(BigDecimal numero, int numero_decimales) {
         return numero.setScale(numero_decimales, RoundingMode.HALF_EVEN);

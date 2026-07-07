@@ -90,33 +90,33 @@ public class Comprobante implements Serializable {
     }
 
     public String subtotal() {
-        Integer subtotal = 0;
+        BigDecimal subtotal = BigDecimal.ZERO;
         for (Detalle detalle : detalles) {
-            subtotal += detalle.getCantidad() * detalle.getPrecioUnitario();
+            subtotal = subtotal.add(detalle.getCantidad().multiply(detalle.getPrecioUnitario()));
         }
-        return Redondeo.formatear_csm(BigDecimal.valueOf(subtotal));
+        return Redondeo.formatear_csm(subtotal);
     }
 
     public String descuento() {
-        Integer descuento = 0;
+        BigDecimal descuento = BigDecimal.ZERO;
         for (Detalle detalle : detalles) {
-            descuento += detalle.getDescuento();
+            descuento = descuento.add(detalle.getDescuento());
         }
-        return Redondeo.formatear_csm(BigDecimal.valueOf(descuento));
+        return Redondeo.formatear_csm(descuento);
     }
 
     public String montoPagar() {
-        Integer subtotal = 0;
+        BigDecimal subtotal = BigDecimal.ZERO;
         for (Detalle detalle : detalles) {
-            subtotal += detalle.getSubtotal();
+            subtotal = subtotal.add(detalle.getSubtotal());
         }
-        return Redondeo.formatear_csm(BigDecimal.valueOf(subtotal));
+        return Redondeo.formatear_csm(subtotal);
     }
 
     public String montoPagarLiteral() {
-        Integer subtotal = 0;
+        BigDecimal subtotal = BigDecimal.ZERO;
         for (Detalle detalle : detalles) {
-            subtotal += detalle.getSubtotal();
+            subtotal = subtotal.add(detalle.getSubtotal());
         }
         return NumberToLetterConverter.convertNumberToLetterComprobante(subtotal);
     }
