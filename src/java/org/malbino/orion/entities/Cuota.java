@@ -8,6 +8,7 @@ package org.malbino.orion.entities;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,6 +17,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -52,6 +54,9 @@ public class Cuota implements Serializable {
     @JoinColumn(name = "id_inscrito")
     @ManyToOne
     private Inscrito inscrito;
+
+    @OneToMany(mappedBy = "cuota")
+    private List<Detalle> detalles;
 
     public Cuota() {
     }
@@ -164,6 +169,18 @@ public class Cuota implements Serializable {
             return CondicionCuota.PAGADA;
         }
         return CondicionCuota.ADEUDADA;
+    }
+
+    public String comprobantes() {
+        StringBuilder sb = new StringBuilder();
+        for (Detalle detalle : detalles) {
+            if (sb.length() == 0) {
+                sb.append(detalle.getComprobante().getNumero());
+            } else {
+                sb.append("\n" + detalle.getComprobante().getNumero());
+            }
+        }
+        return sb.toString();
     }
 
     /**
@@ -290,6 +307,20 @@ public class Cuota implements Serializable {
      */
     public void setFechaVencimiento(Date fechaVencimiento) {
         this.fechaVencimiento = fechaVencimiento;
+    }
+
+    /**
+     * @return the detalles
+     */
+    public List<Detalle> getDetalles() {
+        return detalles;
+    }
+
+    /**
+     * @param detalles the detalles to set
+     */
+    public void setDetalles(List<Detalle> detalles) {
+        this.detalles = detalles;
     }
 
 }

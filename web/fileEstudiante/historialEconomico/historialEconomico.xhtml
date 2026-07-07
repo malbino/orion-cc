@@ -89,7 +89,7 @@
                                         </p:column>
 
                                         <p:column headerText="Cantidad" >
-                                            <h:outputText value="#{detalle.cantidad}" style="float: right"/>
+                                            <h:outputText value="#{detalle.cantidad()}" style="float: right"/>
                                         </p:column>
 
                                         <p:column headerText="Unidad de Medida" >
@@ -101,7 +101,7 @@
                                         </p:column>
 
                                         <p:column headerText="Monto Pagado (Bs.)" >
-                                            <h:outputText value="#{detalle.subtotal}" style="float: right"/>
+                                            <h:outputText value="#{detalle.subtotal()}" style="float: right"/>
                                         </p:column>
                                         
                                         <p:column exportable="false"> 

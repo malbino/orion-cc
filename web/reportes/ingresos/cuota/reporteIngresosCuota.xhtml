@@ -31,42 +31,32 @@
                                     <div class="ui-g ui-fluid">
                                         <div class="ui-g-12 ui-md-4">
                                             <p:outputLabel for="gestionAcademica" value="Gestion academica: " style="font-size: small"/>
-                                            <p:selectOneMenu id="gestionAcademica" value="#{ReporteIngresosModuloController.seleccionGestionAcademica}" converter="#{GestionAcademicaConverter}" autoWidth="false" required="true" requiredMessage="* Gestion academica requerida."> 
+                                            <p:selectOneMenu id="gestionAcademica" value="#{ReporteIngresosCuotaController.seleccionGestionAcademica}" converter="#{GestionAcademicaConverter}" autoWidth="false" required="true" requiredMessage="* Gestion academica requerida."> 
                                                 <f:selectItem itemLabel="" itemValue="" />
-                                                <f:selectItems value="#{ReporteIngresosModuloController.listaGestionesAcademicas()}" var="gestionAcademica" itemLabel="#{gestionAcademica.toString()}" itemValue="#{gestionAcademica}"/>  
+                                                <f:selectItems value="#{ReporteIngresosCuotaController.listaGestionesAcademicas()}" var="gestionAcademica" itemLabel="#{gestionAcademica.toString()}" itemValue="#{gestionAcademica}"/>  
                                             </p:selectOneMenu>
                                         </div>
 
                                         <div class="ui-g-12 ui-md-4">
                                             <p:outputLabel for="carrera" value="Carrera: " style="font-size: small"/>
-                                            <p:selectOneMenu id="carrera" value="#{ReporteIngresosModuloController.seleccionCarrera}" converter="#{CarreraConverter}" autoWidth="false" required="true" requiredMessage="* Carrera requerida."> 
+                                            <p:selectOneMenu id="carrera" value="#{ReporteIngresosCuotaController.seleccionCarrera}" converter="#{CarreraConverter}" autoWidth="false" required="true" requiredMessage="* Carrera requerida."> 
                                                 <f:selectItem itemLabel="" itemValue="" />
-                                                <f:selectItems value="#{ReporteIngresosModuloController.listaCarreras()}" var="carrera" itemLabel="#{carrera.toString()}" itemValue="#{carrera}"/>
-
-                                                <p:ajax update="modulo"/>
+                                                <f:selectItems value="#{ReporteIngresosCuotaController.listaCarreras()}" var="carrera" itemLabel="#{carrera.toString()}" itemValue="#{carrera}"/>
                                             </p:selectOneMenu>
                                         </div>
 
                                         <div class="ui-g-12 ui-md-4">
                                             <p:outputLabel for="campus" value="Campus: " style="font-size: small"/>
-                                            <p:selectOneMenu id="campus" value="#{ReporteIngresosModuloController.seleccionCampus}" converter="#{CampusConverter}" autoWidth="false" required="true" requiredMessage="* Campus requerido.">
+                                            <p:selectOneMenu id="campus" value="#{ReporteIngresosCuotaController.seleccionCampus}" converter="#{CampusConverter}" autoWidth="false" required="true" requiredMessage="* Campus requerido.">
                                                 <f:selectItem itemLabel="" itemValue=""/>
-                                                <f:selectItems value="#{ReporteIngresosModuloController.listaCampus()}" var="campus" itemLabel="#{campus.toString()}" itemValue="#{campus}"/>
+                                                <f:selectItems value="#{ReporteIngresosCuotaController.listaCampus()}" var="campus" itemLabel="#{campus.toString()}" itemValue="#{campus}"/>
                                             </p:selectOneMenu>
-                                        </div>
-
-                                        <div class="ui-g-12 ui-md-4">
-                                            <p:outputLabel for="modulo" value="Modulo:" style="font-size: small"/>
-                                            <p:selectOneMenu id="modulo" value="#{ReporteIngresosModuloController.seleccionModulo}" converter="#{ModuloConverter}" autoWidth="false" required="true" requiredMessage="* Modulo requerido."> 
-                                                <f:selectItem itemLabel="" itemValue="" />
-                                                <f:selectItems value="#{ReporteIngresosModuloController.listaModulos()}" var="nivel" itemLabel="#{modulo.toString()}" itemValue="#{modulo}"/>  
-                                            </p:selectOneMenu> 
                                         </div>
                                     </div>
 
                                     <div class="ui-g ui-fluid">
                                         <div class="ui-g-12 ui-md-2">
-                                            <p:commandButton value="Generar" icon="fa fa-gear" actionListener="#{ReporteIngresosModuloController.generarReporte()}" update="messages"/>
+                                            <p:commandButton value="Generar" icon="fa fa-gear" actionListener="#{ReporteIngresosCuotaController.generarReporte()}" update="messages"/>
                                         </div>
                                     </div>
                                 </div>

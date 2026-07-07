@@ -32,11 +32,11 @@ import org.malbino.orion.util.Redondeo;
 @Entity
 @Table(name = "carrera")
 public class Carrera implements Serializable {
-
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id_carrera;
-
+    
     @Column(unique = true)
     private String codigo;
     private String nombre;
@@ -44,57 +44,57 @@ public class Carrera implements Serializable {
     private Integer version;
     @Column(precision = 34, scale = 9)
     private BigDecimal precio;
-
+    
     @JoinColumn(name = "id_instituto")
     @ManyToOne
     private Instituto instituto;
-
+    
     @JoinColumn(name = "id_jefecarrera")
     @ManyToOne
     private Empleado jefeCarrera;
-
+    
     @OneToMany(mappedBy = "carrera", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     @OrderBy(value = "nombre")
     private List<PlanPago> planesPago;
-
+    
     @OneToMany(mappedBy = "carrera")
     private List<Modulo> modulos;
-
+    
     public Carrera() {
         planesPago = new ArrayList<>();
     }
-
+    
     public String idnumberMoodle() {
         return "c" + this.id_carrera;
     }
-
+    
     public String nameMoodle() {
         return nombre + " v" + version;
     }
-
+    
     public String fullNameMoodle() {
         return nameMoodle();
     }
-
+    
     public String shortNameMoodle() {
         return codigo + " v" + version;
     }
-
+    
     public String precio() {
         return Redondeo.formatear_csm(precio);
     }
-
+    
     public BigDecimal precioHora() {
         Integer horasModulos = 0;
         for (Modulo modulo : modulos) {
             horasModulos = horasModulos + modulo.getHoras();
         }
-
+        
         BigDecimal precioHoraSinRedondear = precio.divide(BigDecimal.valueOf(horasModulos), Redondeo.FULL_SCALE, RoundingMode.HALF_UP);
-
+        
         return Redondeo.redondear_HALFUP(precioHoraSinRedondear, 0);
     }
-
+    
     /**
      * @return the id_carrera
      */
@@ -192,14 +192,14 @@ public class Carrera implements Serializable {
     public void setJefeCarrera(Empleado jefeCarrera) {
         this.jefeCarrera = jefeCarrera;
     }
-
+    
     @Override
     public int hashCode() {
         int hash = 7;
         hash = 29 * hash + Objects.hashCode(this.id_carrera);
         return hash;
     }
-
+    
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -217,7 +217,7 @@ public class Carrera implements Serializable {
         }
         return true;
     }
-
+    
     @Override
     public String toString() {
         return nombre;

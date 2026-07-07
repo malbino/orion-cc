@@ -21,3 +21,4 @@ ALTER TABLE orion.detalle DROP FOREIGN KEY FK_detalle_id_modulo;
 ALTER TABLE orion.detalle DROP COLUMN id_modulo;
 ALTER TABLE orion.detalle ADD id_cuota int(11) NULL;
 ALTER TABLE orion.detalle ADD CONSTRAINT FK_detalle_id_cuota FOREIGN KEY (id_cuota) REFERENCES orion.cuota(ID_CUOTA) ON DELETE RESTRICT ON UPDATE RESTRICT;
+UPDATE orion.recurso SET NOMBRE='Reportes > Ingresos > Cuota', URLPATTERN='/reportes/ingresos/cuota/' WHERE NOMBRE='Reportes > Ingresos > Modulo';

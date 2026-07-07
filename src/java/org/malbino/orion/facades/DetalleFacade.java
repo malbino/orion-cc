@@ -90,15 +90,14 @@ public class DetalleFacade extends AbstractFacade<Detalle> {
         return l;
     }
 
-    public List<Detalle> ingresosModulo(int id_gestionacademica, int id_carrera, int id_campus, int id_modulo) {
+    public List<Detalle> ingresosCuota(int id_gestionacademica, int id_carrera, int id_campus) {
         List<Detalle> l = new ArrayList();
 
         try {
-            Query q = em.createQuery("SELECT d FROM Detalle d JOIN d.comprobante c JOIN c.inscrito i JOIN i.gestionAcademica ga JOIN i.carrera a JOIN i.campus m JOIN d.modulo o WHERE ga.id_gestionacademica=:id_gestionacademica AND a.id_carrera=:id_carrera AND m.id_campus=:id_campus AND o.id_modulo=:id_modulo AND c.valido=:valido ORDER BY ga.gestion, ga.periodo, c.fecha, d.codigo");
+            Query q = em.createQuery("SELECT d FROM Detalle d JOIN d.comprobante c JOIN c.inscrito i JOIN i.gestionAcademica ga JOIN i.carrera a JOIN i.campus m JOIN d.cuota u WHERE ga.id_gestionacademica=:id_gestionacademica AND a.id_carrera=:id_carrera AND m.id_campus=:id_campus AND c.valido=:valido ORDER BY ga.gestion, ga.periodo, c.fecha, d.codigo");
             q.setParameter("id_gestionacademica", id_gestionacademica);
             q.setParameter("id_carrera", id_carrera);
             q.setParameter("id_campus", id_campus);
-            q.setParameter("id_modulo", id_modulo);
             q.setParameter("valido", Boolean.TRUE);
 
             l = q.getResultList();

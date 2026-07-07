@@ -425,7 +425,7 @@ public class FichaInscripcion extends HttpServlet {
         cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
         cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
         cell.setBorder(Rectangle.NO_BORDER);
-        cell.setColspan(15);
+        cell.setColspan(10);
         cell.setBackgroundColor(BaseColor.GRAY);
         table.addCell(cell);
 
@@ -433,7 +433,7 @@ public class FichaInscripcion extends HttpServlet {
         cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
         cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
         cell.setBorder(Rectangle.NO_BORDER);
-        cell.setColspan(20);
+        cell.setColspan(15);
         cell.setBackgroundColor(BaseColor.GRAY);
         table.addCell(cell);
 
@@ -454,6 +454,14 @@ public class FichaInscripcion extends HttpServlet {
         table.addCell(cell);
 
         cell = new PdfPCell(new Phrase("Adeudado\n(bs.)", NEGRITA));
+        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+        cell.setBorder(Rectangle.NO_BORDER);
+        cell.setColspan(10);
+        cell.setBackgroundColor(BaseColor.GRAY);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase("Comprobante(s)", NEGRITA));
         cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
         cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
         cell.setBorder(Rectangle.NO_BORDER);
@@ -493,14 +501,14 @@ public class FichaInscripcion extends HttpServlet {
                 cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
                 cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
                 cell.setBorder(Rectangle.NO_BORDER);
-                cell.setColspan(15);
+                cell.setColspan(10);
                 table.addCell(cell);
 
                 cell = new PdfPCell(new Phrase(cuota.getDescripcion(), NORMAL));
                 cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
                 cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
                 cell.setBorder(Rectangle.NO_BORDER);
-                cell.setColspan(20);
+                cell.setColspan(15);
                 table.addCell(cell);
 
                 cell = new PdfPCell(new Phrase(cuota.monto(), NORMAL));
@@ -518,6 +526,13 @@ public class FichaInscripcion extends HttpServlet {
                 table.addCell(cell);
 
                 cell = new PdfPCell(new Phrase(cuota.adeudado(), NORMAL));
+                cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
+                cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+                cell.setBorder(Rectangle.NO_BORDER);
+                cell.setColspan(10);
+                table.addCell(cell);
+
+                cell = new PdfPCell(new Phrase(cuota.comprobantes(), NORMAL));
                 cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
                 cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
                 cell.setBorder(Rectangle.NO_BORDER);
@@ -550,7 +565,7 @@ public class FichaInscripcion extends HttpServlet {
                 cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
                 cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
                 cell.setBorder(Rectangle.NO_BORDER);
-                cell.setColspan(15);
+                cell.setColspan(10);
                 cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
                 table.addCell(cell);
 
@@ -558,7 +573,7 @@ public class FichaInscripcion extends HttpServlet {
                 cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
                 cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
                 cell.setBorder(Rectangle.NO_BORDER);
-                cell.setColspan(20);
+                cell.setColspan(15);
                 cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
                 table.addCell(cell);
 
@@ -579,6 +594,14 @@ public class FichaInscripcion extends HttpServlet {
                 table.addCell(cell);
 
                 cell = new PdfPCell(new Phrase(cuota.adeudado(), NORMAL));
+                cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
+                cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+                cell.setBorder(Rectangle.NO_BORDER);
+                cell.setColspan(10);
+                cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+                table.addCell(cell);
+
+                cell = new PdfPCell(new Phrase(cuota.comprobantes(), NORMAL));
                 cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
                 cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
                 cell.setBorder(Rectangle.NO_BORDER);

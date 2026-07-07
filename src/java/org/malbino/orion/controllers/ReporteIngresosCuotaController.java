@@ -26,9 +26,9 @@ import org.malbino.orion.util.Fecha;
  *
  * @author Tincho
  */
-@Named("ReporteIngresosModuloController")
+@Named("ReporteIngresosCuotaController")
 @SessionScoped
-public class ReporteIngresosModuloController extends AbstractController implements Serializable {
+public class ReporteIngresosCuotaController extends AbstractController implements Serializable {
 
     @Inject
     LoginController loginController;
@@ -39,21 +39,18 @@ public class ReporteIngresosModuloController extends AbstractController implemen
     private GestionAcademica seleccionGestionAcademica;
     private Carrera seleccionCarrera;
     private Campus seleccionCampus;
-    private Modulo seleccionModulo;
 
     @PostConstruct
     public void init() {
         seleccionGestionAcademica = null;
         seleccionCarrera = null;
         seleccionCampus = null;
-        seleccionModulo = null;
     }
 
     public void reinit() {
         seleccionGestionAcademica = null;
         seleccionCarrera = null;
         seleccionCampus = null;
-        seleccionModulo = null;
     }
 
     public List<Modulo> listaModulos() {
@@ -65,27 +62,26 @@ public class ReporteIngresosModuloController extends AbstractController implemen
     }
 
     public void generarReporte() throws IOException {
-        if (seleccionGestionAcademica != null && seleccionCarrera != null && seleccionCampus != null && seleccionModulo != null) {
+        if (seleccionGestionAcademica != null && seleccionCarrera != null && seleccionCampus != null) {
             this.insertarParametro("id_gestionacademica", seleccionGestionAcademica.getId_gestionacademica());
             this.insertarParametro("id_carrera", seleccionCarrera.getId_carrera());
             this.insertarParametro("id_campus", seleccionCampus.getId_campus());
-            this.insertarParametro("id_modulo", seleccionModulo.getId_modulo());
 
-            toIngresosModulo();
+            toIngresosCuota();
 
             //log
-            logFacade.create(new Log(Fecha.getDate(), EventoLog.READ, "Generación reporte ingresos por modulo", loginController.getUsr().toString()));
+            logFacade.create(new Log(Fecha.getDate(), EventoLog.READ, "Generación reporte ingresos por cuota", loginController.getUsr().toString()));
         }
     }
 
     public void toReporteIngresosModulo() throws IOException {
         reinit();
 
-        this.redireccionarViewId("/reportes/ingresos/modulo/reporteIngresosModulo");
+        this.redireccionarViewId("/reportes/ingresos/cuota/reporteIngresosCuota");
     }
 
-    public void toIngresosModulo() throws IOException {
-        this.redireccionarViewId("/reportes/ingresos/modulo/ingresosModulo");
+    public void toIngresosCuota() throws IOException {
+        this.redireccionarViewId("/reportes/ingresos/cuota/ingresosCuota");
     }
 
     /**
@@ -128,20 +124,6 @@ public class ReporteIngresosModuloController extends AbstractController implemen
      */
     public void setSeleccionCampus(Campus seleccionCampus) {
         this.seleccionCampus = seleccionCampus;
-    }
-
-    /**
-     * @return the seleccionModulo
-     */
-    public Modulo getSeleccionModulo() {
-        return seleccionModulo;
-    }
-
-    /**
-     * @param seleccionModulo the seleccionModulo to set
-     */
-    public void setSeleccionModulo(Modulo seleccionModulo) {
-        this.seleccionModulo = seleccionModulo;
     }
 
 }
