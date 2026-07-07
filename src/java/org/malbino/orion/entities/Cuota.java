@@ -176,8 +176,12 @@ public class Cuota implements Serializable {
         for (Detalle detalle : detalles) {
             if (sb.length() == 0) {
                 sb.append(detalle.getComprobante().getNumero());
+                sb.append(" - ");
+                sb.append(detalle.getComprobante().fecha_ddMMyyyy());
             } else {
                 sb.append("\n" + detalle.getComprobante().getNumero());
+                sb.append(" - ");
+                sb.append(detalle.getComprobante().fecha_ddMMyyyy());
             }
         }
         return sb.toString();

@@ -22,3 +22,6 @@ ALTER TABLE orion.detalle DROP COLUMN id_modulo;
 ALTER TABLE orion.detalle ADD id_cuota int(11) NULL;
 ALTER TABLE orion.detalle ADD CONSTRAINT FK_detalle_id_cuota FOREIGN KEY (id_cuota) REFERENCES orion.cuota(ID_CUOTA) ON DELETE RESTRICT ON UPDATE RESTRICT;
 UPDATE orion.recurso SET NOMBRE='Reportes > Ingresos > Cuota', URLPATTERN='/reportes/ingresos/cuota/' WHERE NOMBRE='Reportes > Ingresos > Modulo';
+
+INSERT INTO `recurso` (`ID_RECURSO`, `NOMBRE`, `URLPATTERN`) VALUES ((SELECT MAX(r.ID_RECURSO)+1 FROM `recurso` r), 'Reportes > Ficha Inscripción', '/reportes/fichaInscripcion/');
+INSERT INTO `privilegio` (`id_recurso`, `id_rol`) VALUES ((SELECT MAX(r.ID_RECURSO) FROM `recurso` r), 1);
