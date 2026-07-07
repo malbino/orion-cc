@@ -120,7 +120,7 @@ public class Inscrito implements Serializable {
         }
         return Redondeo.formatear_csm(adeudadoCuotas);
     }
-
+    
     /**
      * @return the id_inscrito
      */

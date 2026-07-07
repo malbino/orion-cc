@@ -45,8 +45,7 @@ import org.malbino.orion.util.Redondeo;
 @WebServlet(
         name = "ComprobantePago",
         urlPatterns = {
-            "/cajas/comprobanteConcepto/ComprobantePago",
-            "/cajas/comprobanteCuota/ComprobantePago",
+            "/cajas/nuevoComprobante/ComprobantePago",
             "/cajas/comprobantes/ComprobantePago",
             "/fileEstudiante/historialEconomico/comprobantePago"
         }

@@ -42,16 +42,6 @@
                                                 <f:selectItems value="#{NuevoComprobanteController.listaInscritos()}" var="inscrito" itemLabel="#{inscrito.toString()}" itemValue="#{inscrito}"/>
                                             </p:selectOneMenu>
                                         </div>
-
-                                        <div class="ui-g-12 ui-md-4">
-                                            <p:outputLabel for="descuento" value="Descuento:"/>
-                                            <p:selectOneMenu id="descuento" value="#{NuevoComprobanteController.seleccionDescuento}" converter="#{DescuentoConverter}" autoWidth="false">
-                                                <f:selectItem itemLabel="" itemValue=""/>
-                                                <f:selectItems value="#{NuevoComprobanteController.listaDescuentos()}" var="descuento" itemLabel="#{descuento.toString()}" itemValue="#{descuento}"/>
-                                                
-                                                <p:ajax listener="#{NuevoComprobanteController.aplicarDescuento()}" update="detalles"/>
-                                            </p:selectOneMenu>
-                                        </div>
                                     </div>
 
                                     <p:remoteCommand name="updateDetalle" update="detalles"/>
@@ -70,7 +60,7 @@
 
                                         <p:column headerText="Cantidad" >
                                             <p:cellEditor>
-                                                <f:facet name="output"><h:outputText value="#{detalle.cantidad}" style="float: right"/></f:facet>
+                                                <f:facet name="output"><h:outputText value="#{detalle.cantidad()}" style="float: right"/></f:facet>
                                                 <f:facet name="input"><p:inputText value="#{detalle.cantidad}" style="width:100%"/></f:facet>
                                             </p:cellEditor>
                                         </p:column>
@@ -84,15 +74,15 @@
                                         </p:column>
 
                                         <p:column headerText="Precio Unitario (Bs.)" >
-                                            <h:outputText value="#{detalle.precioUnitario}" style="float: right"/>
+                                            <h:outputText value="#{detalle.precioUnitario()}" style="float: right"/>
                                         </p:column>
 
                                         <p:column headerText="Descuento (Bs.)" >
-                                            <h:outputText value="#{detalle.descuento}" style="float: right"/>
+                                            <h:outputText value="#{detalle.descuento()}" style="float: right"/>
                                         </p:column>
 
                                         <p:column headerText="Subtotal (Bs.)" >
-                                            <h:outputText value="#{detalle.subtotal}" style="float: right"/>
+                                            <h:outputText value="#{detalle.subtotal()}" style="float: right"/>
                                         </p:column>
 
                                         <p:column style="width:35px">
@@ -110,7 +100,7 @@
 
                                         <f:facet name="footer" >
                                             <p:commandButton value="Añadir Concepto" icon="fa fa-plus"  actionListener="#{NuevoComprobanteController.toConceptosPago()}" update="form" />
-                                            <p:commandButton value="Añadir Modulo" icon="fa fa-plus"  actionListener="#{NuevoComprobanteController.toModulos()}" />
+                                            <p:commandButton value="Añadir Cuota" icon="fa fa-plus"  actionListener="#{NuevoComprobanteController.toCuotas()}" update="form" />
                                             <p:spacer width="5"/>
                                             <p:commandButton value="Eliminar" icon="fa fa-close"  actionListener="#{NuevoComprobanteController.eliminarDetalle()}" oncomplete="updateDetalle()"/>  
                                             <p:commandButton value="Limpiar" icon="fa fa-trash"  actionListener="#{NuevoComprobanteController.limpiarDetalle()}" oncomplete="updateDetalle()"/>

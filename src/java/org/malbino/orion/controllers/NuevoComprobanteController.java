@@ -16,15 +16,15 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import org.malbino.orion.entities.Comprobante;
 import org.malbino.orion.entities.ConceptoPago;
+import org.malbino.orion.entities.Cuota;
 import org.malbino.orion.entities.Detalle;
 import org.malbino.orion.entities.Estudiante;
 import org.malbino.orion.entities.Inscrito;
 import org.malbino.orion.entities.Log;
-import org.malbino.orion.entities.Modulo;
 import org.malbino.orion.enums.EntidadLog;
 import org.malbino.orion.enums.EventoLog;
-import org.malbino.orion.enums.UnidadMedida;
 import org.malbino.orion.facades.ConceptoPagoFacade;
+import org.malbino.orion.facades.CuotaFacade;
 import org.malbino.orion.facades.InscritoFacade;
 import org.malbino.orion.facades.ModuloFacade;
 import org.malbino.orion.facades.negocio.CajasFacade;
@@ -52,13 +52,15 @@ public class NuevoComprobanteController extends AbstractController implements Se
     ConceptoPagoFacade conceptoPagoFacade;
     @EJB
     ModuloFacade moduloFacade;
+    @EJB
+    CuotaFacade cuotaFacade;
     @Inject
     LoginController loginController;
 
     private Estudiante seleccionEstudiante;
     private Inscrito seleccionInscrito;
     private List<ConceptoPago> seleccionConceptosPago;
-    private List<Modulo> seleccionModulos;
+    private List<Cuota> seleccionCuotas;
 
     private Comprobante nuevoComprobante;
     private List<Detalle> detalles;
@@ -69,7 +71,7 @@ public class NuevoComprobanteController extends AbstractController implements Se
         seleccionEstudiante = null;
         seleccionInscrito = null;
         seleccionConceptosPago = new ArrayList<>();
-        seleccionModulos = new ArrayList<>();
+        seleccionCuotas = new ArrayList<>();
 
         nuevoComprobante = new Comprobante();
         detalles = new ArrayList<>();
@@ -80,7 +82,7 @@ public class NuevoComprobanteController extends AbstractController implements Se
         seleccionEstudiante = null;
         seleccionInscrito = null;
         seleccionConceptosPago = new ArrayList<>();
-        seleccionModulos = new ArrayList<>();
+        seleccionCuotas = new ArrayList<>();
 
         nuevoComprobante = new Comprobante();
         detalles = new ArrayList<>();
@@ -99,11 +101,11 @@ public class NuevoComprobanteController extends AbstractController implements Se
         return conceptoPagoFacade.listaConceptoPago();
     }
 
-    public List<Modulo> listaModulos() {
-        List<Modulo> l = new ArrayList<>();
+    public List<Cuota> listaCuotas() {
+        List<Cuota> l = new ArrayList<>();
 
         if (seleccionInscrito != null) {
-            l = moduloFacade.listaModulos(seleccionInscrito);
+            l = cuotaFacade.listaCuotasAdeudadas(seleccionInscrito.getId_inscrito());
         }
 
         return l;
@@ -130,17 +132,15 @@ public class NuevoComprobanteController extends AbstractController implements Se
         toNuevoComprobante();
     }
 
-    public void añadirDetalleModulo() throws IOException {
-        for (Modulo modulo : seleccionModulos) {
+    public void añadirDetalleCuota() throws IOException {
+        for (Cuota cuota : seleccionCuotas) {
             Detalle detalle = new Detalle();
-            detalle.setCodigo(modulo.getCodigo());
+            detalle.setCodigo(cuota.getCodigo());
             detalle.setCantidad(BigDecimal.ONE);
-            detalle.setUnidadMedida(UnidadMedida.UNIDAD_SERVICIOS.getNombre());
-            detalle.setDescripcion(modulo.getNombre());
-            detalle.setModulo(modulo);
-
-            BigDecimal precioUnitario = BigDecimal.ZERO;
-            detalle.setPrecioUnitario(precioUnitario);
+            detalle.setUnidadMedida(cuota.getUnidadMedida());
+            detalle.setDescripcion(cuota.getDescripcion());
+            detalle.setPrecioUnitario(cuota.getMonto());
+            detalle.setCuota(cuota);
 
             detalle.setDescuento(BigDecimal.ZERO);
 
@@ -223,10 +223,10 @@ public class NuevoComprobanteController extends AbstractController implements Se
         this.redireccionarViewId("/cajas/nuevoComprobante/conceptosPago");
     }
 
-    public void toModulos() throws IOException {
-        seleccionModulos.clear();
+    public void toCuotas() throws IOException {
+        seleccionCuotas.clear();
 
-        this.redireccionarViewId("/cajas/nuevoComprobante/modulos");
+        this.redireccionarViewId("/cajas/nuevoComprobante/cuotas");
     }
 
     public void toComprobantePago() throws IOException {
@@ -322,17 +322,17 @@ public class NuevoComprobanteController extends AbstractController implements Se
     }
 
     /**
-     * @return the seleccionModulos
+     * @return the seleccionCuotas
      */
-    public List<Modulo> getSeleccionModulos() {
-        return seleccionModulos;
+    public List<Cuota> getSeleccionCuotas() {
+        return seleccionCuotas;
     }
 
     /**
-     * @param seleccionModulos the seleccionModulos to set
+     * @param seleccionCuotas the seleccionCuotas to set
      */
-    public void setSeleccionModulos(List<Modulo> seleccionModulos) {
-        this.seleccionModulos = seleccionModulos;
+    public void setSeleccionCuotas(List<Cuota> seleccionCuotas) {
+        this.seleccionCuotas = seleccionCuotas;
     }
 
 }

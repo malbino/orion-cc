@@ -16,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import org.malbino.orion.util.Redondeo;
 
 /**
  *
@@ -45,11 +46,27 @@ public class Detalle implements Serializable {
     @ManyToOne(cascade = {CascadeType.REMOVE})
     private ConceptoPago conceptoPago;
 
-    @JoinColumn(name = "id_modulo")
+    @JoinColumn(name = "id_cuota")
     @ManyToOne(cascade = {CascadeType.REMOVE})
-    private Modulo modulo;
+    private Cuota cuota;
 
     public Detalle() {
+    }
+
+    public String cantidad() {
+        return Redondeo.formatear_csm(cantidad);
+    }
+
+    public String precioUnitario() {
+        return Redondeo.formatear_csm(precioUnitario);
+    }
+
+    public String descuento() {
+        return Redondeo.formatear_csm(descuento);
+    }
+
+    public String subtotal() {
+        return Redondeo.formatear_csm(subtotal);
     }
 
     /**
@@ -193,17 +210,17 @@ public class Detalle implements Serializable {
     }
 
     /**
-     * @return the modulo
+     * @return the cuota
      */
-    public Modulo getModulo() {
-        return modulo;
+    public Cuota getCuota() {
+        return cuota;
     }
 
     /**
-     * @param modulo the modulo to set
+     * @param cuota the cuota to set
      */
-    public void setModulo(Modulo modulo) {
-        this.modulo = modulo;
+    public void setCuota(Cuota cuota) {
+        this.cuota = cuota;
     }
 
 }
