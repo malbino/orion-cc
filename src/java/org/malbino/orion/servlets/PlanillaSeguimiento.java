@@ -240,24 +240,9 @@ public class PlanillaSeguimiento extends HttpServlet {
         cell = new PdfPCell(new Phrase("APELLIDOS Y NOMBRES", NEGRITA));
         cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
         cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
-        cell.setColspan(20);
+        cell.setColspan(30);
         table.addCell(cell);
 
-        /*
-        cell = new PdfPCell(new Phrase("Puntaje\n1er. Parcial", NEGRITA));
-        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
-        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
-        cell.setColspan(5);
-        cell.setRotation(90);
-        table.addCell(cell);
-
-        cell = new PdfPCell(new Phrase("Puntaje\n2do. Parcial", NEGRITA));
-        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
-        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
-        cell.setColspan(5);
-        cell.setRotation(90);
-        table.addCell(cell);
-         */
         cell = new PdfPCell(new Phrase("PROMEDIO\nANUAL", NEGRITA));
         cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
         cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
@@ -302,30 +287,9 @@ public class PlanillaSeguimiento extends HttpServlet {
             cell = new PdfPCell(new Phrase(nota.getEstudiante().toString(), NORMAL));
             cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
             cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
-            cell.setColspan(20);
+            cell.setColspan(30);
             table.addCell(cell);
 
-            /*
-            if (nota.getNota1() != null) {
-                cell = new PdfPCell(new Phrase(nota.getNota1().toString(), NORMAL));
-            } else {
-                cell = new PdfPCell(new Phrase(" ", NORMAL));
-            }
-            cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
-            cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
-            cell.setColspan(5);
-            table.addCell(cell);
-
-            if (nota.getNota2() != null) {
-                cell = new PdfPCell(new Phrase(nota.getNota2().toString(), NORMAL));
-            } else {
-                cell = new PdfPCell(new Phrase(" ", NORMAL));
-            }
-            cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
-            cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
-            cell.setColspan(5);
-            table.addCell(cell);
-             */
             if (nota.getNotaFinal() != null) {
                 cell = new PdfPCell(new Phrase(nota.getNotaFinal().toString(), NORMAL));
             } else {
@@ -379,7 +343,7 @@ public class PlanillaSeguimiento extends HttpServlet {
         table.addCell(cell);
 
         // fila 1
-        cell = new PdfPCell(new Phrase("Nota Mínima: 61", NORMAL));
+        cell = new PdfPCell(new Phrase("Nota Mínima: " + grupo.getGestionAcademica().getModalidadEvaluacion().getNotaMinimaAprobacion(), NORMAL));
         cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
         cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
         cell.setColspan(15);
@@ -566,107 +530,6 @@ public class PlanillaSeguimiento extends HttpServlet {
         cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
         cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
         cell.setColspan(100);
-        cell.setBorder(PdfPCell.NO_BORDER);
-        table.addCell(cell);
-
-        // fila 1
-        cell = new PdfPCell(new Phrase(" ", NORMAL));
-        cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
-        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
-        cell.setColspan(15);
-        cell.setBorder(PdfPCell.NO_BORDER);
-        table.addCell(cell);
-
-        cell = new PdfPCell(new Phrase("PARCIALES", NEGRITA));
-        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
-        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
-        cell.setColspan(20);
-        table.addCell(cell);
-
-        cell = new PdfPCell(new Phrase("FECHA", NEGRITA));
-        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
-        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
-        cell.setColspan(25);
-        table.addCell(cell);
-
-        cell = new PdfPCell(new Phrase("Vo. Bo. DIR. ACADEMICA", NEGRITA));
-        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
-        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
-        cell.setColspan(25);
-        table.addCell(cell);
-
-        cell = new PdfPCell(new Phrase(" ", NORMAL));
-        cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
-        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
-        cell.setColspan(15);
-        cell.setBorder(PdfPCell.NO_BORDER);
-        table.addCell(cell);
-
-        // fila 2
-        cell = new PdfPCell(new Phrase(" ", NORMAL));
-        cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
-        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
-        cell.setColspan(15);
-        cell.setBorder(PdfPCell.NO_BORDER);
-        table.addCell(cell);
-
-        cell = new PdfPCell(new Phrase("1er. Parcial", NORMAL));
-        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
-        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
-        cell.setColspan(20);
-        table.addCell(cell);
-
-        cell = new PdfPCell(new Phrase(" ", NEGRITA));
-        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
-        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
-        cell.setColspan(25);
-        cell.setBackgroundColor(new BaseColor(197, 217, 241));
-        table.addCell(cell);
-
-        cell = new PdfPCell(new Phrase(" ", NEGRITA));
-        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
-        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
-        cell.setColspan(25);
-        table.addCell(cell);
-
-        cell = new PdfPCell(new Phrase(" ", NORMAL));
-        cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
-        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
-        cell.setColspan(15);
-        cell.setBorder(PdfPCell.NO_BORDER);
-        table.addCell(cell);
-
-        // fila 3
-        cell = new PdfPCell(new Phrase(" ", NORMAL));
-        cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
-        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
-        cell.setColspan(15);
-        cell.setBorder(PdfPCell.NO_BORDER);
-        table.addCell(cell);
-
-        cell = new PdfPCell(new Phrase("2do. Parcial", NORMAL));
-        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
-        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
-        cell.setColspan(20);
-        table.addCell(cell);
-
-        cell = new PdfPCell(new Phrase(" ", NEGRITA));
-        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
-        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
-        cell.setColspan(25);
-        cell.setBackgroundColor(new BaseColor(197, 217, 241));
-        table.addCell(cell);
-
-        cell = new PdfPCell(new Phrase(" ", NEGRITA));
-        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
-        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
-        cell.setColspan(25);
-        table.addCell(cell);
-
-        cell = new PdfPCell(new Phrase(" ", NORMAL));
-        cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
-        cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
-        cell.setColspan(15);
         cell.setBorder(PdfPCell.NO_BORDER);
         table.addCell(cell);
 
