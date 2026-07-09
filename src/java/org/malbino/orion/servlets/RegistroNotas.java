@@ -196,7 +196,40 @@ public class RegistroNotas extends HttpServlet {
         cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
         table.addCell(cell);
 
-        if (tipoNota.equals(TipoNota.RECUPERATORIO_MODULAR_2P)) {
+        if (tipoNota.equals(TipoNota.NOTAFINAL_MODULAR)) {
+            List<Nota> notasFaltantes = notaFacade.listaRegistroNotasNotaFinal(gestionAcademica.getId_gestionacademica(), carrera.getId_carrera(), campus.getId_campus());
+            for (int i = 0; i < notasFaltantes.size(); i++) {
+                Nota nota = notasFaltantes.get(i);
+
+                cell = new PdfPCell(new Phrase(String.valueOf(i + 1), NORMAL));
+                cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+                cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+                cell.setColspan(5);
+                table.addCell(cell);
+
+                cell = new PdfPCell(new Phrase(String.valueOf(nota.getEstudiante().toString()), NORMAL));
+                cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+                cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+                cell.setColspan(30);
+                table.addCell(cell);
+
+                cell = new PdfPCell(new Phrase(String.valueOf(nota.getModulo().toString()), NORMAL));
+                cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+                cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+                cell.setColspan(35);
+                table.addCell(cell);
+
+                if (nota.getGrupo().getEmpleado() != null) {
+                    cell = new PdfPCell(new Phrase(nota.getGrupo().getEmpleado().toString(), NORMAL));
+                } else {
+                    cell = new PdfPCell(new Phrase(" ", NORMAL));
+                }
+                cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+                cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+                cell.setColspan(30);
+                table.addCell(cell);
+            }
+        } else if (tipoNota.equals(TipoNota.RECUPERATORIO_MODULAR)) {
             int contador = 1;
 
             List<Inscrito> listaInscritosPruebaRecuperacion = inscritoFacade.listaInscritosPruebaRecuperacion(gestionAcademica, carrera, campus);
@@ -234,39 +267,6 @@ public class RegistroNotas extends HttpServlet {
 
                     contador++;
                 }
-            }
-        } else {
-            List<Nota> notasFaltantes = notaFacade.listaRegistroNotasModular(gestionAcademica.getId_gestionacademica(), carrera.getId_carrera(), campus.getId_campus(), tipoNota);
-            for (int i = 0; i < notasFaltantes.size(); i++) {
-                Nota nota = notasFaltantes.get(i);
-
-                cell = new PdfPCell(new Phrase(String.valueOf(i + 1), NORMAL));
-                cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
-                cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
-                cell.setColspan(5);
-                table.addCell(cell);
-
-                cell = new PdfPCell(new Phrase(String.valueOf(nota.getEstudiante().toString()), NORMAL));
-                cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
-                cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
-                cell.setColspan(30);
-                table.addCell(cell);
-
-                cell = new PdfPCell(new Phrase(String.valueOf(nota.getModulo().toString()), NORMAL));
-                cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
-                cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
-                cell.setColspan(35);
-                table.addCell(cell);
-
-                if (nota.getGrupo().getEmpleado() != null) {
-                    cell = new PdfPCell(new Phrase(nota.getGrupo().getEmpleado().toString(), NORMAL));
-                } else {
-                    cell = new PdfPCell(new Phrase(" ", NORMAL));
-                }
-                cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
-                cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
-                cell.setColspan(30);
-                table.addCell(cell);
             }
         }
 

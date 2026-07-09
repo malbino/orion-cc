@@ -19,7 +19,6 @@ import org.malbino.orion.entities.Inscrito;
 import org.malbino.orion.entities.Nota;
 import org.malbino.orion.enums.Condicion;
 import org.malbino.orion.enums.Modalidad;
-import org.malbino.orion.enums.TipoNota;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -348,17 +347,10 @@ public class NotaFacade extends AbstractFacade<Nota> {
         return l;
     }
 
-    public List<Nota> listaRegistroNotasModular(int id_gestionacademica, int id_carrera, int id_campus, TipoNota tipoNota) {
+    public List<Nota> listaRegistroNotasNotaFinal(int id_gestionacademica, int id_carrera, int id_campus) {
         List<Nota> l = new ArrayList();
         try {
-            Query q = null;
-
-            if (tipoNota.equals(TipoNota.PRIMER_PARCIAL_MODULAR_2P)) {
-                q = em.createQuery("SELECT n FROM Nota n JOIN n.gestionAcademica ga JOIN n.modulo m JOIN m.carrera c JOIN n.estudiante e JOIN n.inscrito i JOIN i.campus a WHERE ga.id_gestionacademica=:id_gestionacademica AND c.id_carrera=:id_carrera AND a.id_campus=:id_campus AND n.modalidad=:modalidad AND n.nota1 IS NULL ORDER BY e.primerApellido, e.segundoApellido, e.nombre");
-            } else if (tipoNota.equals(TipoNota.SEGUNDO_PARCIAL_MODULAR_2P)) {
-                q = em.createQuery("SELECT n FROM Nota n JOIN n.gestionAcademica ga JOIN n.modulo m JOIN m.carrera c JOIN n.estudiante e JOIN n.inscrito i JOIN i.campus a WHERE ga.id_gestionacademica=:id_gestionacademica AND c.id_carrera=:id_carrera AND a.id_campus=:id_campus AND n.modalidad=:modalidad AND n.nota2 IS NULL ORDER BY e.primerApellido, e.segundoApellido, e.nombre");
-            }
-
+            Query q = em.createQuery("SELECT n FROM Nota n JOIN n.gestionAcademica ga JOIN n.modulo m JOIN m.carrera c JOIN n.estudiante e JOIN n.inscrito i JOIN i.campus a WHERE ga.id_gestionacademica=:id_gestionacademica AND c.id_carrera=:id_carrera AND a.id_campus=:id_campus AND n.modalidad=:modalidad AND n.notaFinal IS NULL ORDER BY e.primerApellido, e.segundoApellido, e.nombre");
             q.setParameter("id_gestionacademica", id_gestionacademica);
             q.setParameter("id_carrera", id_carrera);
             q.setParameter("id_campus", id_campus);
