@@ -15,7 +15,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import org.malbino.orion.entities.CarreraEstudiante;
 import org.malbino.orion.entities.Estudiante;
-import org.malbino.orion.entities.GestionAcademica;
 import org.malbino.orion.entities.Log;
 import org.malbino.orion.entities.Modulo;
 import org.malbino.orion.entities.Nota;
@@ -76,50 +75,6 @@ public class HistorialAcademicoController extends AbstractController implements 
         logs = new ArrayList<>();
     }
 
-    public void sumaNota1() {
-        Integer nota1 = 0;
-        if (seleccionNota.getTeoria1() != null) {
-            nota1 += seleccionNota.getTeoria1();
-        }
-        if (seleccionNota.getPractica1() != null) {
-            nota1 += seleccionNota.getPractica1();
-        }
-        seleccionNota.setNota1(nota1);
-    }
-
-    public void sumaNota2() {
-        Integer nota2 = 0;
-        if (seleccionNota.getTeoria2() != null) {
-            nota2 += seleccionNota.getTeoria2();
-        }
-        if (seleccionNota.getPractica2() != null) {
-            nota2 += seleccionNota.getPractica2();
-        }
-        seleccionNota.setNota2(nota2);
-    }
-
-    public void sumaNota3() {
-        Integer nota3 = 0;
-        if (seleccionNota.getTeoria3() != null) {
-            nota3 += seleccionNota.getTeoria3();
-        }
-        if (seleccionNota.getPractica3() != null) {
-            nota3 += seleccionNota.getPractica3();
-        }
-        seleccionNota.setNota3(nota3);
-    }
-
-    public void sumaNota4() {
-        Integer nota4 = 0;
-        if (seleccionNota.getTeoria4() != null) {
-            nota4 += seleccionNota.getTeoria4();
-        }
-        if (seleccionNota.getPractica4() != null) {
-            nota4 += seleccionNota.getPractica4();
-        }
-        seleccionNota.setNota4(nota4);
-    }
-
     public List<CarreraEstudiante> listaCarrerasEstudiante() {
         List<CarreraEstudiante> l = new ArrayList();
         if (seleccionEstudiante != null) {
@@ -143,15 +98,6 @@ public class HistorialAcademicoController extends AbstractController implements 
 
     public void logNota() {
         logs = logFacade.listaLogNota(seleccionNota.getId_nota());
-    }
-
-    public void editarParcial() throws IOException {
-        if (fileEstudianteFacade.editarParcial(seleccionNota)) {
-            //log
-            logFacade.create(new Log(Fecha.getDate(), EventoLog.UPDATE, EntidadLog.NOTA, seleccionNota.getId_nota(), "Actualización nota parcial", loginController.getUsr().toString()));
-
-            toHistorialAcademico();
-        }
     }
 
     public void editarRecuperatorio() throws IOException {

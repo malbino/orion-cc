@@ -12,9 +12,9 @@ import java.util.Arrays;
  * @author Martin
  */
 public enum TipoNota {
-    PRIMER_PARCIAL_MODULAR_2P("PRIMER PARCIAL", ModalidadEvaluacion.MODULAR_2P),
-    SEGUNDO_PARCIAL_MODULAR_2P("SEGUNDO PARCIAL", ModalidadEvaluacion.MODULAR_2P),
-    RECUPERATORIO_MODULAR_2P("RECUPERATORIO", ModalidadEvaluacion.MODULAR_2P);
+    PRIMER_PARCIAL_MODULAR_2P("PRIMER PARCIAL", ModalidadEvaluacion.MODULAR),
+    SEGUNDO_PARCIAL_MODULAR_2P("SEGUNDO PARCIAL", ModalidadEvaluacion.MODULAR),
+    RECUPERATORIO_MODULAR_2P("RECUPERATORIO", ModalidadEvaluacion.MODULAR);
 
     private String nombre;
     private ModalidadEvaluacion modalidadEvaluacion;

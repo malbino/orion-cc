@@ -348,48 +348,6 @@ public class NotaFacade extends AbstractFacade<Nota> {
         return l;
     }
 
-    public List<Nota> listaNotasFaltantesSemestral(GestionAcademica gestionAcademica, int id_carrera, int id_campus) {
-        List<Nota> l = new ArrayList();
-        try {
-            String qlString = null;
-            if (gestionAcademica.getModalidadEvaluacion().getCantidadParciales() == 2) {
-                qlString = "SELECT n FROM Nota n JOIN n.gestionAcademica ga JOIN n.modulo m JOIN m.carrera c JOIN n.estudiante e JOIN n.grupo g JOIN g.campus a WHERE ga.id_gestionacademica=:id_gestionacademica AND c.id_carrera=:id_carrera AND a.id_campus=:id_campus AND n.modalidad=:modalidad AND (n.nota1 IS NULL OR n.nota2 IS NULL) ORDER BY e.primerApellido, e.segundoApellido, e.nombre";
-
-            } else if (gestionAcademica.getModalidadEvaluacion().getCantidadParciales() == 3) {
-                qlString = "SELECT n FROM Nota n JOIN n.gestionAcademica ga JOIN n.modulo m JOIN m.carrera c JOIN n.estudiante e JOIN n.grupo g JOIN g.campus a WHERE ga.id_gestionacademica=:id_gestionacademica AND c.id_carrera=:id_carrera AND a.id_campus=:id_campus AND n.modalidad=:modalidad AND (n.nota1 IS NULL OR n.nota2 IS NULL OR n.nota3 IS NULL) ORDER BY e.primerApellido, e.segundoApellido, e.nombre";
-            }
-
-            Query q = em.createQuery(qlString);
-            q.setParameter("id_gestionacademica", gestionAcademica.getId_gestionacademica());
-            q.setParameter("id_carrera", id_carrera);
-            q.setParameter("id_campus", id_campus);
-            q.setParameter("modalidad", Modalidad.REGULAR);
-
-            l = q.getResultList();
-        } catch (Exception e) {
-            log.error(e.toString());
-        }
-
-        return l;
-    }
-
-    public List<Nota> listaNotasFaltantesAnual(int id_gestionacademica, int id_carrera) {
-        List<Nota> l = new ArrayList();
-        try {
-            Query q = em.createQuery("SELECT n FROM Nota n JOIN n.gestionAcademica ga JOIN n.modulo m JOIN m.carrera c JOIN n.estudiante e WHERE ga.id_gestionacademica=:id_gestionacademica AND c.id_carrera=:id_carrera AND n.modalidad=:modalidad AND (n.nota1 IS NULL OR n.nota2 IS NULL OR n.nota3 IS NULL OR n.nota4 IS NULL) ORDER BY e.primerApellido, e.segundoApellido, e.nombre");
-            q.setParameter("id_gestionacademica", id_gestionacademica);
-            q.setParameter("id_carrera", id_carrera);
-            q.setParameter("curricular", Boolean.TRUE);
-            q.setParameter("modalidad", Modalidad.REGULAR);
-
-            l = q.getResultList();
-        } catch (Exception e) {
-
-        }
-
-        return l;
-    }
-
     public List<Nota> listaRegistroNotasModular(int id_gestionacademica, int id_carrera, int id_campus, TipoNota tipoNota) {
         List<Nota> l = new ArrayList();
         try {

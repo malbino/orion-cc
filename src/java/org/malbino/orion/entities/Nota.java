@@ -30,27 +30,11 @@ public class Nota implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id_nota;
 
-    private Integer teoria1;
-    private Integer practica1;
-    private Integer nota1;
-
-    private Integer teoria2;
-    private Integer practica2;
-    private Integer nota2;
-
-    private Integer teoria3;
-    private Integer practica3;
-    private Integer nota3;
-
-    private Integer teoria4;
-    private Integer practica4;
-    private Integer nota4;
-
     private Integer notaFinal;
     private Integer recuperatorio;
     private Modalidad modalidad;
     private Condicion condicion;
-    
+
     private Integer numeroLibro;
     private Integer numeroFolio;
 
@@ -88,6 +72,28 @@ public class Nota implements Serializable {
         this.grupo = grupo;
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 53 * hash + Objects.hashCode(this.id_nota);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Nota other = (Nota) obj;
+        return Objects.equals(this.id_nota, other.id_nota);
+    }
+
     /**
      * @return the id_nota
      */
@@ -100,174 +106,6 @@ public class Nota implements Serializable {
      */
     public void setId_nota(Integer id_nota) {
         this.id_nota = id_nota;
-    }
-
-    /**
-     * @return the teoria1
-     */
-    public Integer getTeoria1() {
-        return teoria1;
-    }
-
-    /**
-     * @param teoria1 the teoria1 to set
-     */
-    public void setTeoria1(Integer teoria1) {
-        this.teoria1 = teoria1;
-    }
-
-    /**
-     * @return the practica1
-     */
-    public Integer getPractica1() {
-        return practica1;
-    }
-
-    /**
-     * @param practica1 the practica1 to set
-     */
-    public void setPractica1(Integer practica1) {
-        this.practica1 = practica1;
-    }
-
-    /**
-     * @return the nota1
-     */
-    public Integer getNota1() {
-        return nota1;
-    }
-
-    /**
-     * @param nota1 the nota1 to set
-     */
-    public void setNota1(Integer nota1) {
-        this.nota1 = nota1;
-    }
-
-    /**
-     * @return the teoria2
-     */
-    public Integer getTeoria2() {
-        return teoria2;
-    }
-
-    /**
-     * @param teoria2 the teoria2 to set
-     */
-    public void setTeoria2(Integer teoria2) {
-        this.teoria2 = teoria2;
-    }
-
-    /**
-     * @return the practica2
-     */
-    public Integer getPractica2() {
-        return practica2;
-    }
-
-    /**
-     * @param practica2 the practica2 to set
-     */
-    public void setPractica2(Integer practica2) {
-        this.practica2 = practica2;
-    }
-
-    /**
-     * @return the nota2
-     */
-    public Integer getNota2() {
-        return nota2;
-    }
-
-    /**
-     * @param nota2 the nota2 to set
-     */
-    public void setNota2(Integer nota2) {
-        this.nota2 = nota2;
-    }
-
-    /**
-     * @return the teoria3
-     */
-    public Integer getTeoria3() {
-        return teoria3;
-    }
-
-    /**
-     * @param teoria3 the teoria3 to set
-     */
-    public void setTeoria3(Integer teoria3) {
-        this.teoria3 = teoria3;
-    }
-
-    /**
-     * @return the practica3
-     */
-    public Integer getPractica3() {
-        return practica3;
-    }
-
-    /**
-     * @param practica3 the practica3 to set
-     */
-    public void setPractica3(Integer practica3) {
-        this.practica3 = practica3;
-    }
-
-    /**
-     * @return the nota3
-     */
-    public Integer getNota3() {
-        return nota3;
-    }
-
-    /**
-     * @param nota3 the nota3 to set
-     */
-    public void setNota3(Integer nota3) {
-        this.nota3 = nota3;
-    }
-
-    /**
-     * @return the teoria4
-     */
-    public Integer getTeoria4() {
-        return teoria4;
-    }
-
-    /**
-     * @param teoria4 the teoria4 to set
-     */
-    public void setTeoria4(Integer teoria4) {
-        this.teoria4 = teoria4;
-    }
-
-    /**
-     * @return the practica4
-     */
-    public Integer getPractica4() {
-        return practica4;
-    }
-
-    /**
-     * @param practica4 the practica4 to set
-     */
-    public void setPractica4(Integer practica4) {
-        this.practica4 = practica4;
-    }
-
-    /**
-     * @return the nota4
-     */
-    public Integer getNota4() {
-        return nota4;
-    }
-
-    /**
-     * @param nota4 the nota4 to set
-     */
-    public void setNota4(Integer nota4) {
-        this.nota4 = nota4;
     }
 
     /**
@@ -324,6 +162,34 @@ public class Nota implements Serializable {
      */
     public void setCondicion(Condicion condicion) {
         this.condicion = condicion;
+    }
+
+    /**
+     * @return the numeroLibro
+     */
+    public Integer getNumeroLibro() {
+        return numeroLibro;
+    }
+
+    /**
+     * @param numeroLibro the numeroLibro to set
+     */
+    public void setNumeroLibro(Integer numeroLibro) {
+        this.numeroLibro = numeroLibro;
+    }
+
+    /**
+     * @return the numeroFolio
+     */
+    public Integer getNumeroFolio() {
+        return numeroFolio;
+    }
+
+    /**
+     * @param numeroFolio the numeroFolio to set
+     */
+    public void setNumeroFolio(Integer numeroFolio) {
+        this.numeroFolio = numeroFolio;
     }
 
     /**
@@ -396,56 +262,4 @@ public class Nota implements Serializable {
         this.grupo = grupo;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 41 * hash + Objects.hashCode(this.getId_nota());
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Nota other = (Nota) obj;
-        if (!Objects.equals(this.id_nota, other.id_nota)) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * @return the numeroLibro
-     */
-    public Integer getNumeroLibro() {
-        return numeroLibro;
-    }
-
-    /**
-     * @param numeroLibro the numeroLibro to set
-     */
-    public void setNumeroLibro(Integer numeroLibro) {
-        this.numeroLibro = numeroLibro;
-    }
-
-    /**
-     * @return the numeroFolio
-     */
-    public Integer getNumeroFolio() {
-        return numeroFolio;
-    }
-
-    /**
-     * @param numeroFolio the numeroFolio to set
-     */
-    public void setNumeroFolio(Integer numeroFolio) {
-        this.numeroFolio = numeroFolio;
-    }
 }

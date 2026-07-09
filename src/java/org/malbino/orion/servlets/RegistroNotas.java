@@ -101,7 +101,7 @@ public class RegistroNotas extends HttpServlet {
 
                 document.add(titulo(gestionAcademica, carrera, campus, tipoNota));
 
-                if (gestionAcademica.getModalidadEvaluacion().equals(ModalidadEvaluacion.MODULAR_2P)) {
+                if (gestionAcademica.getModalidadEvaluacion().equals(ModalidadEvaluacion.MODULAR)) {
                     document.add(contenidoModular(gestionAcademica, carrera, campus, tipoNota));
                 }
 

@@ -45,7 +45,6 @@ import org.malbino.orion.facades.EstudianteFacade;
 import org.malbino.orion.facades.GestionAcademicaFacade;
 import org.malbino.orion.facades.LogFacade;
 import org.malbino.orion.facades.UsuarioFacade;
-import org.malbino.orion.util.Redondeo;
 import org.primefaces.PrimeFaces;
 
 /**
@@ -199,7 +198,7 @@ public abstract class AbstractController implements Serializable {
     public List<ConceptoPago> listaConceptosPago() {
         return conceptoPagoFacade.listaConceptoPago();
     }
-    
+
     public Turno[] listaTurnos() {
         return Turno.values();
     }
@@ -249,154 +248,19 @@ public abstract class AbstractController implements Serializable {
     }
 
     public void editarNota(Nota nota) {
-        Integer nota1 = 0;
-        if (nota.getTeoria1() != null) {
-            nota1 += nota.getTeoria1();
-        }
-        if (nota.getPractica1() != null) {
-            nota1 += nota.getPractica1();
-        }
-        if (nota.getTeoria1() == null && nota.getPractica1() == null) {
-            nota.setNota1(null);
-        } else {
-            nota.setNota1(nota1);
-        }
-
-        Integer nota2 = 0;
-        if (nota.getTeoria2() != null) {
-            nota2 += nota.getTeoria2();
-        }
-        if (nota.getPractica2() != null) {
-            nota2 += nota.getPractica2();
-        }
-        if (nota.getTeoria2() == null && nota.getPractica2() == null) {
-            nota.setNota2(null);
-        } else {
-            nota.setNota2(nota2);
-        }
-
-        if (nota.getGestionAcademica().getModalidadEvaluacion().getCantidadParciales() >= 3) {
-            Integer nota3 = 0;
-            if (nota.getTeoria3() != null) {
-                nota3 += nota.getTeoria3();
-            }
-            if (nota.getPractica3() != null) {
-                nota3 += nota.getPractica3();
-            }
-            if (nota.getTeoria3() == null && nota.getPractica3() == null) {
-                nota.setNota3(null);
+        if (nota.getRecuperatorio() != null) {
+            if (nota.getRecuperatorio() >= nota.getGestionAcademica().getModalidadEvaluacion().getNotaMinimaAprobacion()) {
+                nota.setCondicion(Condicion.APROBADO);
             } else {
-                nota.setNota3(nota3);
+                nota.setCondicion(Condicion.REPROBADO);
             }
-        }
-
-        if (nota.getGestionAcademica().getModalidadEvaluacion().getCantidadParciales() == 4) {
-            Integer nota4 = 0;
-            if (nota.getTeoria4() != null) {
-                nota4 += nota.getTeoria4();
-            }
-            if (nota.getPractica4() != null) {
-                nota4 += nota.getPractica4();
-            }
-            if (nota.getTeoria4() == null && nota.getPractica4() == null) {
-                nota.setNota4(null);
-            } else {
-                nota.setNota4(nota4);
-            }
-        }
-
-        Integer notaFinal = 0;
-        if (nota.getNota1() != null) {
-            notaFinal += nota.getNota1();
-        }
-        if (nota.getNota2() != null) {
-            notaFinal += nota.getNota2();
-        }
-        if (nota.getGestionAcademica().getModalidadEvaluacion().getCantidadParciales() >= 3) {
-            if (nota.getNota3() != null) {
-                notaFinal += nota.getNota3();
-            }
-        }
-        if (nota.getGestionAcademica().getModalidadEvaluacion().getCantidadParciales() == 4) {
-            if (nota.getNota4() != null) {
-                notaFinal += nota.getNota4();
-            }
-        }
-
-        if (nota.getGestionAcademica().getModalidadEvaluacion().getCantidadParciales() == 2) {
-            if (nota.getNota1() == null && nota.getNota2() == null) {
-                nota.setNotaFinal(null);
+        } else if (nota.getNotaFinal() != null) {
+            if (nota.getNotaFinal() >= nota.getGestionAcademica().getModalidadEvaluacion().getNotaMinimaAprobacion()) {
+                nota.setCondicion(Condicion.APROBADO);
+            } else if (nota.getNotaFinal() == 0) {
                 nota.setCondicion(Condicion.ABANDONO);
             } else {
-                Double promedio = notaFinal.doubleValue() / nota.getGestionAcademica().getModalidadEvaluacion().getCantidadParciales().doubleValue();
-                Integer promedioRedondeado = Redondeo.redondear_HALFUP(promedio, 0).intValue();
-                nota.setNotaFinal(promedioRedondeado);
-
-                if (nota.getRecuperatorio() != null) {
-                    if (nota.getRecuperatorio() >= nota.getGestionAcademica().getModalidadEvaluacion().getNotaMinimaAprobacion()) {
-                        nota.setCondicion(Condicion.APROBADO);
-                    } else {
-                        nota.setCondicion(Condicion.REPROBADO);
-                    }
-                } else if (nota.getNotaFinal() != null) {
-                    if (nota.getNotaFinal() >= nota.getGestionAcademica().getModalidadEvaluacion().getNotaMinimaAprobacion()) {
-                        nota.setCondicion(Condicion.APROBADO);
-                    } else if (nota.getNotaFinal() == 0) {
-                        nota.setCondicion(Condicion.ABANDONO);
-                    } else {
-                        nota.setCondicion(Condicion.REPROBADO);
-                    }
-                }
-            }
-        } else if (nota.getGestionAcademica().getModalidadEvaluacion().getCantidadParciales() == 3) {
-            if (nota.getNota1() == null && nota.getNota2() == null && nota.getNota3() == null) {
-                nota.setNotaFinal(null);
-                nota.setCondicion(Condicion.ABANDONO);
-            } else {
-                Double promedio = notaFinal.doubleValue() / nota.getGestionAcademica().getModalidadEvaluacion().getCantidadParciales().doubleValue();
-                Integer promedioRedondeado = Redondeo.redondear_HALFUP(promedio, 0).intValue();
-                nota.setNotaFinal(promedioRedondeado);
-
-                if (nota.getRecuperatorio() != null) {
-                    if (nota.getRecuperatorio() >= nota.getGestionAcademica().getModalidadEvaluacion().getNotaMinimaAprobacion()) {
-                        nota.setCondicion(Condicion.APROBADO);
-                    } else {
-                        nota.setCondicion(Condicion.REPROBADO);
-                    }
-                } else if (nota.getNotaFinal() != null) {
-                    if (nota.getNotaFinal() >= nota.getGestionAcademica().getModalidadEvaluacion().getNotaMinimaAprobacion()) {
-                        nota.setCondicion(Condicion.APROBADO);
-                    } else if (nota.getNotaFinal() == 0) {
-                        nota.setCondicion(Condicion.ABANDONO);
-                    } else {
-                        nota.setCondicion(Condicion.REPROBADO);
-                    }
-                }
-            }
-        } else if (nota.getGestionAcademica().getModalidadEvaluacion().getCantidadParciales() == 4) {
-            if (nota.getNota1() == null && nota.getNota2() == null && nota.getNota3() == null && nota.getNota4() == null) {
-                nota.setNotaFinal(null);
-                nota.setCondicion(Condicion.ABANDONO);
-            } else {
-                Double promedio = notaFinal.doubleValue() / nota.getGestionAcademica().getModalidadEvaluacion().getCantidadParciales().doubleValue();
-                Integer promedioRedondeado = Redondeo.redondear_HALFUP(promedio, 0).intValue();
-                nota.setNotaFinal(promedioRedondeado);
-
-                if (nota.getRecuperatorio() != null) {
-                    if (nota.getRecuperatorio() >= nota.getGestionAcademica().getModalidadEvaluacion().getNotaMinimaAprobacion()) {
-                        nota.setCondicion(Condicion.APROBADO);
-                    } else {
-                        nota.setCondicion(Condicion.REPROBADO);
-                    }
-                } else if (nota.getNotaFinal() != null) {
-                    if (nota.getNotaFinal() >= nota.getGestionAcademica().getModalidadEvaluacion().getNotaMinimaAprobacion()) {
-                        nota.setCondicion(Condicion.APROBADO);
-                    } else if (nota.getNotaFinal() == 0) {
-                        nota.setCondicion(Condicion.ABANDONO);
-                    } else {
-                        nota.setCondicion(Condicion.REPROBADO);
-                    }
-                }
+                nota.setCondicion(Condicion.REPROBADO);
             }
         }
     }

@@ -10,25 +10,23 @@ package org.malbino.orion.enums;
  * @author Martin
  */
 public enum ModalidadEvaluacion {
-    MODULAR_2P("MODULAR", 3, 2, 80, 60);
+    MODULAR("MODULAR", 3, 80, 60);
 
     private String nombre;
     private Integer cantidadMaximaReprobaciones;
-    private Integer cantidadParciales;
     private Integer notaMinimaAprobacion;
     private Integer notaMinimmaPruebaRecuperacion;
 
-    private ModalidadEvaluacion(String nombre, Integer cantidadMaximaReprobaciones, Integer cantidadParciales, Integer notaMinimaAprobacion, Integer notaMinimmaPruebaRecuperacion) {
+    private ModalidadEvaluacion(String nombre, Integer cantidadMaximaReprobaciones, Integer notaMinimaAprobacion, Integer notaMinimmaPruebaRecuperacion) {
         this.nombre = nombre;
         this.cantidadMaximaReprobaciones = cantidadMaximaReprobaciones;
-        this.cantidadParciales = cantidadParciales;
         this.notaMinimaAprobacion = notaMinimaAprobacion;
         this.notaMinimmaPruebaRecuperacion = notaMinimmaPruebaRecuperacion;
     }
 
     @Override
     public String toString() {
-        return nombre + " [" + cantidadParciales + " PARCIALES]";
+        return nombre;
     }
 
     /**
@@ -57,20 +55,6 @@ public enum ModalidadEvaluacion {
      */
     public void setCantidadMaximaReprobaciones(Integer cantidadMaximaReprobaciones) {
         this.cantidadMaximaReprobaciones = cantidadMaximaReprobaciones;
-    }
-
-    /**
-     * @return the cantidadParciales
-     */
-    public Integer getCantidadParciales() {
-        return cantidadParciales;
-    }
-
-    /**
-     * @param cantidadParciales the cantidadParciales to set
-     */
-    public void setCantidadParciales(Integer cantidadParciales) {
-        this.cantidadParciales = cantidadParciales;
     }
 
     /**

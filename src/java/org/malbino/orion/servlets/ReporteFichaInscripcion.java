@@ -83,7 +83,7 @@ public class ReporteFichaInscripcion extends HttpServlet {
                 document.open();
 
                 document.add(cabecera(inscrito));
-                if (inscrito.getGestionAcademica().getModalidadEvaluacion().equals(ModalidadEvaluacion.MODULAR_2P)) {
+                if (inscrito.getGestionAcademica().getModalidadEvaluacion().equals(ModalidadEvaluacion.MODULAR)) {
                     document.add(modulos(inscrito));
                 }
                 document.add(cuotas(inscrito));
