@@ -96,71 +96,23 @@
                                                 </p:column>
 
                                                 <p:column>
-                                                    <h:outputText value="GR" />
+                                                    <h:outputText value="Grupo" />
                                                 </p:column>
 
                                                 <p:column>
-                                                    <h:outputText value="MO" />
+                                                    <h:outputText value="Modalidad" />
                                                 </p:column>
 
                                                 <p:column>
-                                                    <h:outputText value="T1" />
+                                                    <h:outputText value="Nota Final" />
                                                 </p:column>
 
                                                 <p:column>
-                                                    <h:outputText value="P1" />
+                                                    <h:outputText value="Recuperatorio" />
                                                 </p:column>
 
                                                 <p:column>
-                                                    <h:outputText value="N1" />
-                                                </p:column>
-
-                                                <p:column>
-                                                    <h:outputText value="T2" />
-                                                </p:column>
-
-                                                <p:column>
-                                                    <h:outputText value="P2" />
-                                                </p:column>
-
-                                                <p:column>
-                                                    <h:outputText value="N2" />
-                                                </p:column>
-
-                                                <p:column rendered="#{nota.gestionAcademica.modalidadEvaluacion.cantidadParciales >= 3}">
-                                                    <h:outputText value="T3" />
-                                                </p:column>
-
-                                                <p:column rendered="#{nota.gestionAcademica.modalidadEvaluacion.cantidadParciales >= 3}">
-                                                    <h:outputText value="P3" />
-                                                </p:column>
-
-                                                <p:column rendered="#{nota.gestionAcademica.modalidadEvaluacion.cantidadParciales >= 3}">
-                                                    <h:outputText value="N3" />
-                                                </p:column>
-
-                                                <p:column rendered="#{nota.gestionAcademica.modalidadEvaluacion.cantidadParciales == 4}">
-                                                    <h:outputText value="T4" />
-                                                </p:column>
-
-                                                <p:column rendered="#{nota.gestionAcademica.modalidadEvaluacion.cantidadParciales == 4}">
-                                                    <h:outputText value="P4" />
-                                                </p:column>
-
-                                                <p:column rendered="#{nota.gestionAcademica.modalidadEvaluacion.cantidadParciales == 4}">
-                                                    <h:outputText value="N4" />
-                                                </p:column>
-
-                                                <p:column>
-                                                    <h:outputText value="NF" />
-                                                </p:column>
-
-                                                <p:column>
-                                                    <h:outputText value="RE" />
-                                                </p:column>
-
-                                                <p:column>
-                                                    <h:outputText value="CO" />
+                                                    <h:outputText value="Condicion" />
                                                 </p:column>
 
                                                 <p:column>
@@ -199,55 +151,7 @@
                                             </p:column>
 
                                             <p:column>  
-                                                <h:outputText value="#{nota.modalidad.abreviatura}"/>
-                                            </p:column>
-
-                                            <p:column>  
-                                                <h:outputText value="#{nota.teoria1}" />
-                                            </p:column>
-
-                                            <p:column>  
-                                                <h:outputText value="#{nota.practica1}" />
-                                            </p:column>
-
-                                            <p:column>  
-                                                <h:outputText value="#{nota.nota1}"/>
-                                            </p:column>
-
-                                            <p:column>  
-                                                <h:outputText value="#{nota.teoria2}" />
-                                            </p:column>
-
-                                            <p:column>  
-                                                <h:outputText value="#{nota.practica2}" />
-                                            </p:column>
-
-                                            <p:column>  
-                                                <h:outputText value="#{nota.nota2}" />
-                                            </p:column>
-
-                                            <p:column rendered="#{nota.gestionAcademica.modalidadEvaluacion.cantidadParciales >= 3}">  
-                                                <h:outputText value="#{nota.teoria3}" />
-                                            </p:column>
-
-                                            <p:column rendered="#{nota.gestionAcademica.modalidadEvaluacion.cantidadParciales >= 3}">  
-                                                <h:outputText value="#{nota.practica3}" />
-                                            </p:column>
-
-                                            <p:column rendered="#{nota.gestionAcademica.modalidadEvaluacion.cantidadParciales >= 3}">  
-                                                <h:outputText value="#{nota.nota3}" />
-                                            </p:column>
-
-                                            <p:column rendered="#{nota.gestionAcademica.modalidadEvaluacion.cantidadParciales == 4}">  
-                                                <h:outputText value="#{nota.teoria4}" />
-                                            </p:column>
-
-                                            <p:column rendered="#{nota.gestionAcademica.modalidadEvaluacion.cantidadParciales == 4}">  
-                                                <h:outputText value="#{nota.practica4}" />
-                                            </p:column>
-
-                                            <p:column rendered="#{nota.gestionAcademica.modalidadEvaluacion.cantidadParciales == 4}">  
-                                                <h:outputText value="#{nota.nota4}" />
+                                                <h:outputText value="#{nota.modalidad.nombre}"/>
                                             </p:column>
 
                                             <p:column>  
@@ -259,15 +163,15 @@
                                             </p:column>
 
                                             <p:column>  
-                                                <h:outputText id="condicion" value="#{nota.condicion.abreviatura}"/>
+                                                <h:outputText id="condicion" value="#{nota.condicion.nombre}"/>
                                             </p:column>
 
                                             <p:column exportable="false"> 
                                                 <h:panelGroup id="group" >
-                                                    <p:commandButton id="editarParcial" process="@this" value="P" title="Editar parcial" rendered="#{nota.modalidad.regular}">  
+                                                    <p:commandButton id="editarNotaFinal" process="@this" value="NF" title="Editar nota final" rendered="#{nota.modalidad.regular}">  
                                                         <f:setPropertyActionListener value="#{nota}" target="#{HistorialAcademicoController.seleccionNota}" />
 
-                                                        <f:actionListener binding="#{HistorialAcademicoController.toEditarParcial()}"/>
+                                                        <f:actionListener binding="#{HistorialAcademicoController.toEditarNotaFinal()}"/>
                                                     </p:commandButton>
 
                                                     <p:commandButton id="editarRecuperatorio" process="@this" value="RE" title="Editar recuperatorio" rendered="#{nota.modalidad.regular}">  

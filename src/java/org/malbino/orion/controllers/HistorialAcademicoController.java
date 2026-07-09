@@ -100,13 +100,26 @@ public class HistorialAcademicoController extends AbstractController implements 
         logs = logFacade.listaLogNota(seleccionNota.getId_nota());
     }
 
+    public void editarNotaFinal() throws IOException {
+        if (seleccionNota.getRecuperatorio() == null) {
+            if (fileEstudianteFacade.editarNota(seleccionNota)) {
+                //log
+                logFacade.create(new Log(Fecha.getDate(), EventoLog.UPDATE, EntidadLog.NOTA, seleccionNota.getId_nota(), "Actualización nota final", loginController.getUsr().toString()));
+
+                toHistorialAcademico();
+            }
+        } else {
+            this.mensajeDeError("El recuperatorio debe ser nulo para editar la nota final.");
+        }
+    }
+
     public void editarRecuperatorio() throws IOException {
         List<Nota> listaNotasReprobadas = notaFacade.listaNotasReprobadas(seleccionNota.getGestionAcademica(), seleccionNota.getModulo().getCarrera(), seleccionNota.getEstudiante());
         if (listaNotasReprobadas.size() <= seleccionNota.getGestionAcademica().getModalidadEvaluacion().getCantidadMaximaReprobaciones()) {
             if (seleccionNota.getNotaFinal() != null
                     && seleccionNota.getNotaFinal() >= seleccionNota.getGestionAcademica().getModalidadEvaluacion().getNotaMinimmaPruebaRecuperacion()
                     && seleccionNota.getNotaFinal() < seleccionNota.getGestionAcademica().getModalidadEvaluacion().getNotaMinimaAprobacion()) {
-                if (fileEstudianteFacade.editarRecuperatorio(seleccionNota)) {
+                if (fileEstudianteFacade.editarNota(seleccionNota)) {
                     //log
                     logFacade.create(new Log(Fecha.getDate(), EventoLog.UPDATE, EntidadLog.NOTA, seleccionNota.getId_nota(), "Actualización nota recuperatorio", loginController.getUsr().toString()));
 
@@ -159,8 +172,8 @@ public class HistorialAcademicoController extends AbstractController implements 
         this.redireccionarViewId("/fileEstudiante/historialAcademico/historialAcademico");
     }
 
-    public void toEditarParcial() throws IOException {
-        this.redireccionarViewId("/fileEstudiante/historialAcademico/editarParcial");
+    public void toEditarNotaFinal() throws IOException {
+        this.redireccionarViewId("/fileEstudiante/historialAcademico/editarNotaFinal");
     }
 
     public void toEditarRecuperatorio() throws IOException {

@@ -12,9 +12,8 @@ import java.util.Arrays;
  * @author Martin
  */
 public enum Modalidad {
+    
     REGULAR("REGULAR", "R", true),
-    CONVALIDACION("CONVALIDACIÓN", "C", false),
-    TRASPASO("TRASPASO", "T", false),
     MIGRACION("MIGRACIÓN", "M", false);
 
     private String nombre;

@@ -46,26 +46,6 @@ public class FileEstudianteFacade {
     @EJB
     CarreraEstudianteFacade carreraEstudianteFacade;
 
-    @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public boolean editarRecuperatorio(Nota nota) {
-        if (nota.getRecuperatorio() != null) {
-            if (nota.getRecuperatorio() >= nota.getGestionAcademica().getModalidadEvaluacion().getNotaMinimaAprobacion()) {
-                nota.setCondicion(Condicion.APROBADO);
-            } else {
-                nota.setCondicion(Condicion.REPROBADO);
-            }
-        } else if (nota.getNotaFinal() != null) {
-            if (nota.getNotaFinal() >= nota.getGestionAcademica().getModalidadEvaluacion().getNotaMinimaAprobacion()) {
-                nota.setCondicion(Condicion.APROBADO);
-            } else {
-                nota.setCondicion(Condicion.REPROBADO);
-            }
-        }
-
-        em.merge(nota);
-
-        return true;
-    }
 
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public boolean registrarEstudiante(Estudiante estudiante, List<CarreraEstudiante> seleccionCarrerasEstudiante) {
