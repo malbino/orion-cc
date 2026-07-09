@@ -22,6 +22,8 @@ import org.malbino.orion.enums.EntidadLog;
 import org.malbino.orion.enums.EventoLog;
 import org.malbino.orion.facades.negocio.RegistroDocenteFacade;
 import org.malbino.orion.util.Fecha;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -30,6 +32,8 @@ import org.malbino.orion.util.Fecha;
 @Named("RegistroNotasPruebaRecuperacionController")
 @SessionScoped
 public class RegistroNotasPruebaRecuperacionController extends AbstractController implements Serializable {
+
+    private static final Logger log = LoggerFactory.getLogger(RegistroNotasPruebaRecuperacionController.class);
 
     @EJB
     RegistroDocenteFacade registroDocenteFacade;
@@ -59,6 +63,7 @@ public class RegistroNotasPruebaRecuperacionController extends AbstractControlle
     public void actualizarNotas() {
         if (seleccionGestionAcademica != null && seleccionCampus != null && seleccionEmpleado != null) {
             notas = registroDocenteFacade.listaRecuperatorios(seleccionGestionAcademica, seleccionCampus, seleccionEmpleado.getId_persona());
+            log.info("notas=" + notas.size());
         }
     }
 

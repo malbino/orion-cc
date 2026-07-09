@@ -122,7 +122,7 @@ public class NotaFacade extends AbstractFacade<Nota> {
 
             l = q.getResultList();
         } catch (Exception e) {
-
+            log.error(e.toString());
         }
 
         return l;
