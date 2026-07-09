@@ -19,7 +19,6 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -188,8 +187,7 @@ public class NotasFaltantes extends HttpServlet {
         cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
         table.addCell(cell);
 
-        ///List<Nota> notasFaltantes = notaFacade.listaNotasFaltantesSemestral(gestionAcademica, carrera.getId_carrera(), campus.getId_campus());
-        List<Nota> notasFaltantes = new ArrayList<>();
+        List<Nota> notasFaltantes = notaFacade.listaNotasFaltantesModular(gestionAcademica, carrera.getId_carrera(), campus.getId_campus());
         for (int i = 0; i < notasFaltantes.size(); i++) {
             Nota nota = notasFaltantes.get(i);
 

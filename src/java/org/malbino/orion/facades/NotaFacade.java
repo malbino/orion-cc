@@ -380,4 +380,21 @@ public class NotaFacade extends AbstractFacade<Nota> {
 
         return l;
     }
+
+    public List<Nota> listaNotasFaltantesModular(GestionAcademica gestionAcademica, int id_carrera, int id_campus) {
+        List<Nota> l = new ArrayList();
+        try {
+            Query q = em.createQuery("SELECT n FROM Nota n JOIN n.gestionAcademica ga JOIN n.modulo m JOIN m.carrera c JOIN n.estudiante e JOIN n.inscrito i JOIN i.campus a WHERE ga.id_gestionacademica=:id_gestionacademica AND c.id_carrera=:id_carrera AND a.id_campus=:id_campus AND n.modalidad=:modalidad AND n.notaFinal IS NULL ORDER BY e.primerApellido, e.segundoApellido, e.nombre");
+            q.setParameter("id_gestionacademica", gestionAcademica.getId_gestionacademica());
+            q.setParameter("id_carrera", id_carrera);
+            q.setParameter("id_campus", id_campus);
+            q.setParameter("modalidad", Modalidad.REGULAR);
+
+            l = q.getResultList();
+        } catch (Exception e) {
+            log.error(e.toString());
+        }
+
+        return l;
+    }
 }
