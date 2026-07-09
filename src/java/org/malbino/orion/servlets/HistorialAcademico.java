@@ -491,7 +491,7 @@ public class HistorialAcademico extends HttpServlet {
         table.addCell(cell);
 
         //fila 3
-        cell = new PdfPCell(new Phrase("0 a 80", NORMAL));
+        cell = new PdfPCell(new Phrase("0 a 79", NORMAL));
         cell.setColspan(12);
         cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
         table.addCell(cell);
