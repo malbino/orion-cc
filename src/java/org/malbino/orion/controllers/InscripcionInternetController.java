@@ -172,30 +172,26 @@ public class InscripcionInternetController extends AbstractController implements
         if (!actividadFacade.listaActividades(Fecha.getDate(), Funcionalidad.INSCRIPCION_INTERNET, seleccionInscrito.getGestionAcademica().getId_gestionacademica()).isEmpty()) {
             if (!ofertaModulos.isEmpty()) {
                 if (verificarGrupos()) {
-                    if (detalleFacade.modulosPagados(seleccionInscrito, ofertaModulos)) {
-                        List<Nota> aux = new ArrayList();
-                        for (Modulo modulo : ofertaModulos) {
-                            Nota nota = new Nota(0, Modalidad.REGULAR, Condicion.ABANDONO, seleccionInscrito.getGestionAcademica(), modulo, seleccionInscrito.getEstudiante(), seleccionInscrito, modulo.getGrupo());
-                            aux.add(nota);
-                        }
+                    List<Nota> aux = new ArrayList();
+                    for (Modulo modulo : ofertaModulos) {
+                        Nota nota = new Nota(0, Modalidad.REGULAR, Condicion.ABANDONO, seleccionInscrito.getGestionAcademica(), modulo, seleccionInscrito.getEstudiante(), seleccionInscrito, modulo.getGrupo());
+                        aux.add(nota);
+                    }
 
-                        try {
-                            if (inscripcionesFacade.tomarModulos(aux)) {
-                                copiarInscrito(seleccionInscrito.getEstudiante(), aux);
+                    try {
+                        if (inscripcionesFacade.tomarModulos(aux)) {
+                            copiarInscrito(seleccionInscrito.getEstudiante(), aux);
 
+                            //log
+                            for (Nota nota : aux) {
                                 //log
-                                for (Nota nota : aux) {
-                                    //log
-                                    logFacade.create(new Log(Fecha.getDate(), EventoLog.CREATE, EntidadLog.NOTA, nota.getId_nota(), "Creación de nota por toma de modulos por internet", loginController.getUsr().toString()));
-                                }
-
-                                toEstadoInscripcion();
+                                logFacade.create(new Log(Fecha.getDate(), EventoLog.CREATE, EntidadLog.NOTA, nota.getId_nota(), "Creación de nota por toma de modulos por internet", loginController.getUsr().toString()));
                             }
-                        } catch (EJBException e) {
-                            this.mensajeDeError(e.getMessage());
+
+                            toEstadoInscripcion();
                         }
-                    } else {
-                        this.mensajeDeError("Existen modulos pendientes de pago.");
+                    } catch (EJBException e) {
+                        this.mensajeDeError(e.getMessage());
                     }
                 } else {
                     this.mensajeDeError("Existen modulos sin grupos.");
