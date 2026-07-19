@@ -32,7 +32,8 @@ public enum EntidadLog {
     PERIODO("Periodo"),
     RECURSO("Recurso"),
     ROL("Rol"),
-    USUARIO("Usuario");
+    USUARIO("Usuario"),
+    CUOTA("Cuota");
 
     private String nombre;
 
