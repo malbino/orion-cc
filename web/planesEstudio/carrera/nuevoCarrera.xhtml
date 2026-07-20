@@ -50,7 +50,7 @@
 
                                         <div class="ui-g-12 ui-md-4">
                                             <p:outputLabel for="precio" value="Precio (Bs.):" style="font-size: small"/>
-                                            <p:inputNumber id="precio" value="#{CarreraController.nuevaCarrera.precio}" minValue="0" decimalPlaces="2" required="true" requiredMessage="* Precio requerido."/>
+                                            <p:inputNumber id="precio" value="#{CarreraController.nuevaCarrera.precio}" minValue="0" decimalPlaces="2" decimalSeparator="." thousandSeparator="," required="true" requiredMessage="* Precio requerido."/>
                                         </div>
 
                                         <div class="ui-g-12 ui-md-4">
@@ -103,7 +103,7 @@
                                                     <h:outputText value="#{planPago.montoCuota()}"/>
                                                 </f:facet>
                                                 <f:facet name="input">
-                                                    <p:inputNumber value="#{planPago.montoCuota}" minValue="0" decimalPlaces="2" emptyValue="zero" size="10">
+                                                    <p:inputNumber value="#{planPago.montoCuota}" minValue="0" decimalPlaces="2" decimalSeparator="." thousandSeparator="," emptyValue="zero" size="10">
                                                         <p:ajax event="change" oncomplete="pp()"/>
                                                     </p:inputNumber>
                                                 </f:facet>
