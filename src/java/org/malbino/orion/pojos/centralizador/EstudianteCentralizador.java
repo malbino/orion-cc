@@ -11,126 +11,69 @@ package org.malbino.orion.pojos.centralizador;
  */
 public class EstudianteCentralizador {
 
-    private String numero;
-    private String nombre;
-    private String ci;
-    private String[] notas;
-    private String estado;
-    private String observacion;
+    private Integer numero;
+    private String estudiante;
+    private NotaCentralizador[] notasCentralizador;
+    private String observaciones;
 
-    private int cantidadMaximaModulos;
-
-    public EstudianteCentralizador(String numero, String nombre, String ci, String estado, String observacion, int cantidadMaximaModulos) {
-        this.numero = numero;
-        this.nombre = nombre;
-        this.ci = ci;
-        this.notas = notas = new String[cantidadMaximaModulos];
-        this.estado = estado;
-        this.observacion = observacion;
-    }
-
-    public EstudianteCentralizador(String numero, String nombre, String ci, int cantidadMaximaModulos) {
-        this.numero = numero;
-        this.nombre = nombre;
-        this.ci = ci;
-        this.notas = notas = new String[cantidadMaximaModulos];
+    public EstudianteCentralizador() {
     }
 
     /**
      * @return the numero
      */
-    public String getNumero() {
+    public Integer getNumero() {
         return numero;
     }
 
     /**
      * @param numero the numero to set
      */
-    public void setNumero(String numero) {
+    public void setNumero(Integer numero) {
         this.numero = numero;
     }
 
     /**
-     * @return the nombre
+     * @return the estudiante
      */
-    public String getNombre() {
-        return nombre;
+    public String getEstudiante() {
+        return estudiante;
     }
 
     /**
-     * @param nombre the nombre to set
+     * @param estudiante the estudiante to set
      */
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setEstudiante(String estudiante) {
+        this.estudiante = estudiante;
     }
 
     /**
-     * @return the ci
+     * @return the notasCentralizador
      */
-    public String getCi() {
-        return ci;
+    public NotaCentralizador[] getNotasCentralizador() {
+        return notasCentralizador;
     }
 
     /**
-     * @param ci the ci to set
+     * @param notasCentralizador the notasCentralizador to set
      */
-    public void setCi(String ci) {
-        this.ci = ci;
+    public void setNotasCentralizador(NotaCentralizador[] notasCentralizador) {
+        this.notasCentralizador = notasCentralizador;
     }
 
     /**
-     * @return the notas
+     * @return the observaciones
      */
-    public String[] getNotas() {
-        return notas;
+    public String getObservaciones() {
+        return observaciones;
     }
 
     /**
-     * @param notas the notas to set
+     * @param observaciones the observaciones to set
      */
-    public void setNotas(String[] notas) {
-        this.notas = notas;
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
     }
-
-    /**
-     * @return the estado
-     */
-    public String getEstado() {
-        return estado;
-    }
-
-    /**
-     * @param estado the estado to set
-     */
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
-
-    /**
-     * @return the cantidadMaximaModulos
-     */
-    public int getCantidadMaximaModulos() {
-        return cantidadMaximaModulos;
-    }
-
-    /**
-     * @param cantidadMaximaModulos the cantidadMaximaModulos to set
-     */
-    public void setCantidadMaximaModulos(int cantidadMaximaModulos) {
-        this.cantidadMaximaModulos = cantidadMaximaModulos;
-    }
-
-    /**
-     * @return the observacion
-     */
-    public String getObservacion() {
-        return observacion;
-    }
-
-    /**
-     * @param observacion the observacion to set
-     */
-    public void setObservacion(String observacion) {
-        this.observacion = observacion;
-    }
+    
+    
 }

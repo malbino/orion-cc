@@ -5,98 +5,135 @@
  */
 package org.malbino.orion.pojos.centralizador;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  *
  * @author Tincho
  */
 public class Centralizador {
+    
+    private String instituto;
+    private String gestion;
+    private String carrera;
+    private String campus;
+    private String turno;
+    private String paralelo;
 
-    private String ubicacion;
-    private String institucion;
-    private String resolucionMinisterial;
-    private String caracter;
+    private String[] modulosCentralizador;
+    private EstudianteCentralizador[] estudiantesCentralizador;
 
-    private List<PaginaCentralizador> paginasCentralizador;
+    public Centralizador() {
+    } 
 
-    public Centralizador(String ubicacion, String institucion, String resolucionMinisterial, String caracter) {
-        this.ubicacion = ubicacion;
-        this.institucion = institucion;
-        this.resolucionMinisterial = resolucionMinisterial;
-        this.caracter = caracter;
-
-        this.paginasCentralizador = new ArrayList();
+    /**
+     * @return the instituto
+     */
+    public String getInstituto() {
+        return instituto;
     }
 
     /**
-     * @return the ubicacion
+     * @param instituto the instituto to set
      */
-    public String getUbicacion() {
-        return ubicacion;
+    public void setInstituto(String instituto) {
+        this.instituto = instituto;
     }
 
     /**
-     * @param ubicacion the ubicacion to set
+     * @return the gestion
      */
-    public void setUbicacion(String ubicacion) {
-        this.ubicacion = ubicacion;
+    public String getGestion() {
+        return gestion;
     }
 
     /**
-     * @return the institucion
+     * @param gestion the gestion to set
      */
-    public String getInstitucion() {
-        return institucion;
+    public void setGestion(String gestion) {
+        this.gestion = gestion;
     }
 
     /**
-     * @param institucion the institucion to set
+     * @return the carrera
      */
-    public void setInstitucion(String institucion) {
-        this.institucion = institucion;
+    public String getCarrera() {
+        return carrera;
     }
 
     /**
-     * @return the resolucionMinisterial
+     * @param carrera the carrera to set
      */
-    public String getResolucionMinisterial() {
-        return resolucionMinisterial;
+    public void setCarrera(String carrera) {
+        this.carrera = carrera;
     }
 
     /**
-     * @param resolucionMinisterial the resolucionMinisterial to set
+     * @return the campus
      */
-    public void setResolucionMinisterial(String resolucionMinisterial) {
-        this.resolucionMinisterial = resolucionMinisterial;
+    public String getCampus() {
+        return campus;
     }
 
     /**
-     * @return the caracter
+     * @param campus the campus to set
      */
-    public String getCaracter() {
-        return caracter;
+    public void setCampus(String campus) {
+        this.campus = campus;
     }
 
     /**
-     * @param caracter the caracter to set
+     * @return the turno
      */
-    public void setCaracter(String caracter) {
-        this.caracter = caracter;
+    public String getTurno() {
+        return turno;
     }
 
     /**
-     * @return the paginasCentralizador
+     * @param turno the turno to set
      */
-    public List<PaginaCentralizador> getPaginasCentralizador() {
-        return paginasCentralizador;
+    public void setTurno(String turno) {
+        this.turno = turno;
     }
 
     /**
-     * @param paginasCentralizador the paginasCentralizador to set
+     * @return the paralelo
      */
-    public void setPaginasCentralizador(List<PaginaCentralizador> paginasCentralizador) {
-        this.paginasCentralizador = paginasCentralizador;
+    public String getParalelo() {
+        return paralelo;
     }
+
+    /**
+     * @param paralelo the paralelo to set
+     */
+    public void setParalelo(String paralelo) {
+        this.paralelo = paralelo;
+    }
+
+    /**
+     * @return the modulosCentralizador
+     */
+    public String[] getModulosCentralizador() {
+        return modulosCentralizador;
+    }
+
+    /**
+     * @param modulosCentralizador the modulosCentralizador to set
+     */
+    public void setModulosCentralizador(String[] modulosCentralizador) {
+        this.modulosCentralizador = modulosCentralizador;
+    }
+
+    /**
+     * @return the estudiantesCentralizador
+     */
+    public EstudianteCentralizador[] getEstudiantesCentralizador() {
+        return estudiantesCentralizador;
+    }
+
+    /**
+     * @param estudiantesCentralizador the estudiantesCentralizador to set
+     */
+    public void setEstudiantesCentralizador(EstudianteCentralizador[] estudiantesCentralizador) {
+        this.estudiantesCentralizador = estudiantesCentralizador;
+    }
+
 }

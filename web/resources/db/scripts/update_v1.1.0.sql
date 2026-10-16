@@ -28,3 +28,6 @@ INSERT INTO `privilegio` (`id_recurso`, `id_rol`) VALUES ((SELECT MAX(r.ID_RECUR
 
 INSERT INTO `recurso` (`ID_RECURSO`, `NOMBRE`, `URLPATTERN`) VALUES ((SELECT MAX(r.ID_RECURSO)+1 FROM `recurso` r), 'Inscripciones > Cuotas Estudiante', '/inscripciones/cuotasEstudiante.xhtml');
 INSERT INTO `privilegio` (`id_recurso`, `id_rol`) VALUES ((SELECT MAX(r.ID_RECURSO) FROM `recurso` r), 1);
+
+INSERT INTO `recurso` (`ID_RECURSO`, `NOMBRE`, `URLPATTERN`) VALUES ((SELECT MAX(r.ID_RECURSO)+1 FROM `recurso` r), 'Reportes > Centralizador Calificaciones', '/reportes/centralizadorCalificaciones/');
+INSERT INTO `privilegio` (`id_recurso`, `id_rol`) VALUES ((SELECT MAX(r.ID_RECURSO) FROM `recurso` r), 1);
